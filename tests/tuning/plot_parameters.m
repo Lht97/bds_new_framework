@@ -87,9 +87,11 @@ if isfield(options, 'log_color') && options.log_color
     max_perf = max(perfs(:));
     min_perf = min(perfs(:));
     C = min_perf + (max_perf - min_perf) .* log(perfs - min_perf + 1) ./ log(max_perf - min_perf + 1);
-    surf(p1, p2, perfs, C, 'FaceColor','interp');
+    surf(p1, p2, perfs, C, 'FaceColor','interp', 'FaceAlpha', 0.8, ...
+         'EdgeColor', [0.2 0.2 0.2], 'LineWidth', 0.5);  % 更深的灰色，更粗的线
 else
-    surf(p1, p2, perfs, 'FaceColor','interp');
+    surf(p1, p2, perfs, 'FaceColor','interp', 'FaceAlpha', 0.8, ...
+         'EdgeColor', [0.2 0.2 0.2], 'LineWidth', 0.5);  % 更深的灰色，更粗的线
 end
 
 title(gca, strrep(feature_str, '_', '-')); 
@@ -101,20 +103,29 @@ colorbar;
 % Find the top 10 maximum values
 [~, idx] = maxk(perfs(:), 10); % Find the indices of the top 10 maximum values
 
-% Set larger marker size
-markerSize = 12; % Increase marker size
-plot3(p1(idx), p2(idx), perfs(idx), 'o', 'MarkerSize', markerSize, ...
-      'MarkerFaceColor', 'k', 'MarkerEdgeColor', 'k'); % Black solid circle
+% 设置参数
+markerSize = 14;
+labelFontSize = 12;
 
-% Set larger font size for the labels
-labelFontSize = 12; % Increase font size for the labels
+% 添加一个微小的偏移以确保点在表面之上
+z_offset = (max(perfs(:)) - min(perfs(:))) * 0.001;
 
-% Add text labels for the top 10 points at the center of the markers
+% 使用深一点的灰色
+h_points = plot3(p1(idx), p2(idx), perfs(idx) + z_offset, 'o', 'MarkerSize', markerSize, ...
+      'MarkerFaceColor', [0.2 0.2 0.2], 'MarkerEdgeColor', 'k');
+
+% 添加标号
+h_text = zeros(length(idx), 1);
 for i = 1:length(idx)
-    % Place the label exactly on the point
-    text(p1(idx(i)), p2(idx(i)), perfs(idx(i)), num2str(i), ...
+    h_text(i) = text(p1(idx(i)), p2(idx(i)), perfs(idx(i)) + z_offset, num2str(i), ...
          'VerticalAlignment', 'middle', 'HorizontalAlignment', 'center', ...
          'Color', 'w', 'FontSize', labelFontSize, 'FontWeight', 'bold');
+end
+
+% 将点和文本移到最上层
+uistack(h_points, 'top');
+for i = 1:length(h_text)
+    uistack(h_text(i), 'top');
 end
 
 view(3) % 3D view
