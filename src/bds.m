@@ -206,7 +206,7 @@ end
 random_stream = RandStream("mt19937ar", "Seed", options.seed);
 
 % Set the default value of noisy.
-if ~ifield(options, "is_noisy")
+if ~isfield(options, "is_noisy")
     options.noisy = get_default_constant("is_noisy");
 end
 
@@ -660,85 +660,83 @@ if output_xhist
 end
 output.fhist = fhist(1:nf);
 
-% Plot alpha_hist and decrease.
-if output_alpha_hist
+% % Plot alpha_hist and decrease.
+% if output_alpha_hist
 
-    x = 1:size(output.alpha_hist, 2);
-    y = mean(output.alpha_hist, 1);
-    % Create a plot to record the history of step sizes.
-    figure;  
-    plot(x, y, '-o');
-    xlabel('iteration number');
-    ylabel('average step size');
-    title('average step size');
-    grid on;
+%     x = 1:size(output.alpha_hist, 2);
+%     y = mean(output.alpha_hist, 1);
+%     % Create a plot to record the history of step sizes.
+%     figure;  
+%     plot(x, y, '-o');
+%     xlabel('iteration number');
+%     ylabel('average step size');
+%     title('average step size');
+%     grid on;
 
-    set(gca, 'YScale', 'log');
+%     set(gca, 'YScale', 'log');
 
-    ylim([1e-8, 1e4]);
+%     ylim([1e-8, 1e4]);
 
-    yticks(10.^(-8:4));
+%     yticks(10.^(-8:4));
 
-    filePath = mfilename('fullpath');
-    [scriptPath, ~, ~] = fileparts(filePath);
+%     filePath = mfilename('fullpath');
+%     [scriptPath, ~, ~] = fileparts(filePath);
 
-    print(fullfile(scriptPath, 'average_step_size.eps'), '-depsc');  % Use the -depsc option to save as a color EPS
+%     print(fullfile(scriptPath, 'average_step_size.eps'), '-depsc');  % Use the -depsc option to save as a color EPS
 
-    % Create a plot to record the maximum of the step sizes.
-    figure;
-    plot(x, max(output.alpha_hist, [], 1), '-o');
-    xlabel('iteration number');
-    ylabel('maximum step size');
-    title('maximum step size');
-    grid on;
+%     % Create a plot to record the maximum of the step sizes.
+%     figure;
+%     plot(x, max(output.alpha_hist, [], 1), '-o');
+%     xlabel('iteration number');
+%     ylabel('maximum step size');
+%     title('maximum step size');
+%     grid on;
 
-    set(gca, 'YScale', 'log');
+%     set(gca, 'YScale', 'log');
 
-    ylim([1e-8, 1e4]);
+%     ylim([1e-8, 1e4]);
 
-    yticks(10.^(-8:4));
+%     yticks(10.^(-8:4));
 
-    % Save as EPS format to the path where the current file is located
-    print(fullfile(scriptPath, 'maximum_step_size.eps'), '-depsc');  % Use the -depsc option to save as a color EPS
-
-
-    % Create a plot to record the minimum of the step sizes.
-    figure;
-    plot(x, min(output.alpha_hist, [], 1), '-o');
-    xlabel('iteration number');
-    ylabel('minimum step size');
-    title('minimum step size');
-    grid on;
-
-    set(gca, 'YScale', 'log');
-
-    ylim([1e-8, 1e4]);
-
-    yticks(10.^(-8:4));
-
-    % Save as EPS format to the path where the current file is located
-    print(fullfile(scriptPath, 'minimum_step_size.eps'), '-depsc');  % Use the -depsc option to save as a color EPS
-
-    % Create a plot to record sufficient_decrease.
-    figure;
-    plot(1:length(sufficient_decrease), sufficient_decrease, '-o');
-    xlabel('X Axis Label');
-    ylabel('sufficient decrease');
-    title('sufficient decrease');
-    grid on;
-
-    set(gca, 'YScale', 'log');
-
-    ylim([1e-16, 1e4]);
-
-    yticks(10.^(-16:4));
-
-    % Save as EPS format to the path where the current file is located
-    print(fullfile(scriptPath, 'sufficient_decrease.eps'), '-depsc');  % Use the -depsc option to save as a color EPS
-
-end
+%     % Save as EPS format to the path where the current file is located
+%     print(fullfile(scriptPath, 'maximum_step_size.eps'), '-depsc');  % Use the -depsc option to save as a color EPS
 
 
+%     % Create a plot to record the minimum of the step sizes.
+%     figure;
+%     plot(x, min(output.alpha_hist, [], 1), '-o');
+%     xlabel('iteration number');
+%     ylabel('minimum step size');
+%     title('minimum step size');
+%     grid on;
+
+%     set(gca, 'YScale', 'log');
+
+%     ylim([1e-8, 1e4]);
+
+%     yticks(10.^(-8:4));
+
+%     % Save as EPS format to the path where the current file is located
+%     print(fullfile(scriptPath, 'minimum_step_size.eps'), '-depsc');  % Use the -depsc option to save as a color EPS
+
+%     % Create a plot to record sufficient_decrease.
+%     figure;
+%     plot(1:length(sufficient_decrease), sufficient_decrease, '-o');
+%     xlabel('X Axis Label');
+%     ylabel('sufficient decrease');
+%     title('sufficient decrease');
+%     grid on;
+
+%     set(gca, 'YScale', 'log');
+
+%     ylim([1e-16, 1e4]);
+
+%     yticks(10.^(-16:4));
+
+%     % Save as EPS format to the path where the current file is located
+%     print(fullfile(scriptPath, 'sufficient_decrease.eps'), '-depsc');  % Use the -depsc option to save as a color EPS
+
+% end
 
 % Set the message according to exitflag.
 switch exitflag

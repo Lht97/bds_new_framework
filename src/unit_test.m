@@ -129,12 +129,28 @@ constant_name = "Algorithm";
 constant_value = "cbds";
 verifyEqual(testCase, get_default_constant(constant_name), constant_value)
 
-constant_name = "expand";
+constant_name = "expand_small";
 constant_value = 2;
 verifyEqual(testCase, get_default_constant(constant_name), constant_value)
 
-constant_name = "shrink";
+constant_name = "shrink_small";
 constant_value = 0.5;
+verifyEqual(testCase, get_default_constant(constant_name), constant_value)
+
+constant_name = "expand_big";
+constant_value = 2;
+verifyEqual(testCase, get_default_constant(constant_name), constant_value)
+
+constant_name = "shrink_big";
+constant_value = 0.5;
+verifyEqual(testCase, get_default_constant(constant_name), constant_value)
+
+constant_name = "expand_big_noisy";
+constant_value = 1.25;
+verifyEqual(testCase, get_default_constant(constant_name), constant_value)
+
+constant_name = "shrink_big_noisy";
+constant_value = 0.85;
 verifyEqual(testCase, get_default_constant(constant_name), constant_value)
 
 assert(strcmp(func2str(get_default_constant("forcing_function")), func2str(@(alpha) alpha^2)));
