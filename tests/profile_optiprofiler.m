@@ -146,33 +146,33 @@ function profile_optiprofiler(options)
             case 'ds'
                 solvers{i} = @ds_test;
             case 'ds-noisy'
-                solvers{i} = @ds_test_noisy;
+                solvers{i} = @(fun, x0) ds_test_noisy(fun, x0, true);
             case 'pbds'
                 solvers{i} = @pbds_test;
             case 'cbds'
                 solvers{i} = @cbds_test;
             case 'cbds-noisy'
-                solvers{i} = @cbds_test_noisy;
+                solvers{i} = @(fun, x0) cbds_test_noisy(fun, x0, true);
             case 'cbds-half'
                 solvers{i} = @cbds_half_test;
             case 'cbds-half-noisy'
-                solvers{i} = @cbds_half_test_noisy;
+                solvers{i} = @(fun, x0) cbds_half_test_noisy(fun, x0, true);
             case 'cbds-quarter'
                 solvers{i} = @cbds_quarter_test;
             case 'cbds-quarter-noisy'
-                solvers{i} = @cbds_quarter_test_noisy;
+                solvers{i} = @(fun, x0) cbds_quarter_test_noisy(fun, x0, true);
             case 'cbds-randomized-orthogonal'
                 solvers{i} = @cbds_randomized_orthogonal_test;
             case 'cbds-randomized-orthogonal-noisy'
-                solvers{i} = @cbds_randomized_orthogonal_test_noisy;
+                solvers{i} = @(fun, x0) cbds_randomized_orthogonal_test_noisy(fun, x0, true);
             case 'cbds-randomized-gaussian'
                 solvers{i} = @cbds_randomized_gaussian_test;
             case 'cbds-randomized-gaussian-noisy'
-                solvers{i} = @cbds_randomized_gaussian_test_noisy;
+                solvers{i} = @(fun, x0) cbds_randomized_gaussian_test_noisy(fun, x0, true);
             case 'cbds-permuted'
                 solvers{i} = @cbds_permuted_test;
             case 'cbds-permuted-noisy'
-                solvers{i} = @cbds_permuted_test_noisy;
+                solvers{i} = @(fun, x0) cbds_permuted_test_noisy(fun, x0, true);
             case 'bfo'
                 solvers{i} = @bfo_test;
             case 'newuoa'
