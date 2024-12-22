@@ -91,7 +91,15 @@ function profile_optiprofiler(options)
     % such that it can not decide the step size.
     feature_adaptive = {'noisy', 'custom'};
     if ismember('fminunc', options.solver_names) && ismember(options.feature_name, feature_adaptive)
-        options.solver_names(strcmp(options.solver_names, 'fminunc')) = {'fminunc-adaptive'};
+        options.solver_names(strcmpi(options.solver_names, 'fminunc')) = {'fminunc-adaptive'};
+    end
+    if ismember('cbds', options.solver_names) && ismember(options.feature_name, feature_adaptive)
+        options.solver_names(strcmpi(options.solver_names, 'cbds')) = {'cbds-noisy'};
+        options.solver_names(strcmpi(options.solver_names, 'cbds-half')) = {'cbds-half-noisy'};
+        options.solver_names(strcmpi(options.solver_names, 'cbds-quarter')) = {'cbds-quarter-noisy'};
+        options.solver_names(strcmpi(options.solver_names, 'cbds-randomized-orthogonal')) = {'cbds-randomized-orthogonal-noisy'};
+        options.solver_names(strcmpi(options.solver_names, 'cbds-randomized-gaussian')) = {'cbds-randomized-gaussian-noisy'};
+        options.solver_names(strcmpi(options.solver_names, 'cbds-permuted')) = {'cbds-permuted-noisy'};
     end
     if ~isfield(options, 'n_runs')
         if strcmpi(options.feature_name, 'plain') || strcmpi(options.feature_name, 'quantized')
@@ -137,22 +145,34 @@ function profile_optiprofiler(options)
                 solvers{i} = @fminsearch_test;
             case 'ds'
                 solvers{i} = @ds_test;
+            case 'ds-noisy'
+                solvers{i} = @ds_test_noisy;
             case 'pbds'
                 solvers{i} = @pbds_test;
             case 'cbds'
                 solvers{i} = @cbds_test;
+            case 'cbds-noisy'
+                solvers{i} = @cbds_test_noisy;
             case 'cbds-half'
                 solvers{i} = @cbds_half_test;
+            case 'cbds-half-noisy'
+                solvers{i} = @cbds_half_test_noisy;
             case 'cbds-quarter'
                 solvers{i} = @cbds_quarter_test;
+            case 'cbds-quarter-noisy'
+                solvers{i} = @cbds_quarter_test_noisy;
             case 'cbds-randomized-orthogonal'
                 solvers{i} = @cbds_randomized_orthogonal_test;
+            case 'cbds-randomized-orthogonal-noisy'
+                solvers{i} = @cbds_randomized_orthogonal_test_noisy;
             case 'cbds-randomized-gaussian'
                 solvers{i} = @cbds_randomized_gaussian_test;
+            case 'cbds-randomized-gaussian-noisy'
+                solvers{i} = @cbds_randomized_gaussian_test_noisy;
             case 'cbds-permuted'
                 solvers{i} = @cbds_permuted_test;
-            case 'cbds-original'
-                solvers{i} = @cbds_original_test;
+            case 'cbds-permuted-noisy'
+                solvers{i} = @cbds_permuted_test_noisy;
             case 'bfo'
                 solvers{i} = @bfo_test;
             case 'newuoa'
@@ -400,6 +420,13 @@ function x = ds_test(fun, x0)
     x = bds(fun, x0, option);
 end
 
+function x = ds_test_noisy(fun, x0, is_noisy)
+
+    option.Algorithm = 'ds';
+    option.is_noisy = is_noisy;
+    x = bds(fun, x0, option);
+end
+
 function x = pbds_test(fun, x0)
 
     option.Algorithm = 'pbds';
@@ -410,34 +437,50 @@ end
 function x = cbds_test(fun, x0)
 
     option.Algorithm = 'cbds';
-    option.expand = 1.25;
-    option.shrink = 0.85;
+    x = bds(fun, x0, option);
+    
+end
+
+function x = cbds_test_noisy(fun, x0, is_noisy)
+
+    option.Algorithm = 'cbds';
+    option.is_noisy = is_noisy;
     x = bds(fun, x0, option);
     
 end
 
 function x = cbds_half_test(fun, x0)
 
-    option.expand = 1.25;
-    option.shrink = 0.85;
     option.num_blocks = ceil(numel(x0)/2);
+    x = bds(fun, x0, option);
+    
+end
+
+function x = cbds_half_test_noisy(fun, x0, is_noisy)
+
+    option.num_blocks = ceil(numel(x0)/2);
+    option.is_noisy = is_noisy;
     x = bds(fun, x0, option);
     
 end
 
 function x = cbds_quarter_test(fun, x0)
 
-    option.expand = 1.25;
-    option.shrink = 0.85;
     option.num_blocks = ceil(numel(x0)/4);
+    x = bds(fun, x0, option);
+    
+end
+
+function x = cbds_quarter_test_noisy(fun, x0, is_noisy)
+
+    option.num_blocks = ceil(numel(x0)/4);
+    option.is_noisy = is_noisy;
     x = bds(fun, x0, option);
     
 end
 
 function x = cbds_randomized_orthogonal_test(fun, x0)
 
-    option.expand = 1.25;
-    option.shrink = 0.85;
     [Q,R] = qr(randn(numel(x0), numel(x0)));
     Q(:, diag(R) < 0) = -Q(:, diag(R) < 0);
     option.direction_set = Q;
@@ -445,19 +488,33 @@ function x = cbds_randomized_orthogonal_test(fun, x0)
     
 end
 
+function x = cbds_randomized_orthogonal_test_noisy(fun, x0, is_noisy)
+
+    [Q,R] = qr(randn(numel(x0), numel(x0)));
+    Q(:, diag(R) < 0) = -Q(:, diag(R) < 0);
+    option.direction_set = Q;
+    option.is_noisy = is_noisy;
+    x = bds(fun, x0, option);
+    
+end
+
 function x = cbds_randomized_gaussian_test(fun, x0)
 
-    option.expand = 1.25;
-    option.shrink = 0.85;
     option.direction_set = randn(numel(x0), numel(x0));
+    x = bds(fun, x0, option);
+    
+end
+
+function x = cbds_randomized_gaussian_test_noisy(fun, x0, is_noisy)
+
+    option.direction_set = randn(numel(x0), numel(x0));
+    option.is_noisy = is_noisy;
     x = bds(fun, x0, option);
     
 end
 
 function x = cbds_permuted_test(fun, x0)
 
-    option.expand = 1.25;
-    option.shrink = 0.85;
     p = randperm(numel(x0));
     P = eye(numel(x0));
     P = P(p,:);
@@ -466,9 +523,13 @@ function x = cbds_permuted_test(fun, x0)
     
 end
 
-function x = cbds_original_test(fun, x0)
+function x = cbds_permuted_test_noisy(fun, x0, is_noisy)
 
-    option.Algorithm = 'cbds';
+    p = randperm(numel(x0));
+    P = eye(numel(x0));
+    P = P(p,:);
+    option.direction_set = P;
+    option.is_noisy = is_noisy;
     x = bds(fun, x0, option);
     
 end

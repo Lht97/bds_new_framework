@@ -28,6 +28,7 @@ function [xopt, fopt, exitflag, output] = bds(fun, x0, options)
 %                               If direction_set is not singular, then we will revise the direction_set
 %                               to make it linear independent. See get_direction_set.m for details.
 %                               Default: eye(n).
+%   is_noisy                    A flag deciding whether the problem is noisy or not. Default: false.
 %   expand                      Expanding factor of step size. A real number no less than 1.
 %                               Default: 2.
 %   shrink                      Shrinking factor of step size. A positive number less than 1.
@@ -141,7 +142,7 @@ num_directions = size(D, 2);
 %     options.Algorithm = get_default_constant("Algorithm");
 % end
 Algorithm_list = ["ds", "cbds", "pbds", "rbds", "pads", "scbds"];
-if isfield(options, "Algorithm") && ~ismember(options.Algorithm, Algorithm_list)
+if isfield(options, "Algorithm") && ~ismember(lower(options.Algorithm), Algorithm_list)
     error("The Algorithm input is invalid");
 end
 
@@ -204,18 +205,38 @@ if ~isfield(options, "seed")
 end
 random_stream = RandStream("mt19937ar", "Seed", options.seed);
 
-% Set the factor for expanding the step sizes.
+% Set the default value of noisy.
+if ~ifield(options, "is_noisy")
+    options.noisy = get_default_constant("is_noisy");
+end
+
+% Judge whether the dimension of the problem is small or big.
+if numel(x0) <= 5
+    expand_key = "expand_small";
+    shrink_key = "shrink_small";
+else
+    % Judge whether the problem is noisy or not.
+    if isfield(options, "is_noisy") && options.is_noisy
+        expand_key = "expand_big_noisy";
+        shrink_key = "shrink_big_noisy";
+    else
+        expand_key = "expand_big";
+        shrink_key = "shrink_big";
+    end
+end
+
+% Set the value of expand.
 if isfield(options, "expand")
     expand = options.expand;
 else
-    expand = get_default_constant("expand");
+    expand = get_default_constant(expand_key);
 end
 
-% Set the factor for shrinking the step sizes.
+% Set the value of shrink.
 if isfield(options, "shrink")
     shrink = options.shrink;
 else
-    shrink = get_default_constant("shrink");
+    shrink = get_default_constant(shrink_key);
 end
  
 % Set the value of reduction_factor.
