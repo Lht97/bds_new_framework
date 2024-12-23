@@ -9,6 +9,10 @@ switch constant_name
         constant_value = "cbds";
     case {"is_noisy"}
         constant_value = false;
+    case {"ds_expand"}
+        constant_value = 2;
+    case {"ds_shrink"}
+        constant_value = 0.5;
     case {"expand_small"}
         constant_value = 2;
     case {"shrink_small"}

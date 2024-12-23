@@ -1,40 +1,19 @@
-function plot_parameters(parameters, solver, competitor, options)
+function plot_mat(p1, p2, perfs, perfs_saved, options, parameters, solver, competitor)
 % parameters: a structure with two fields; the field names are the names of the parameters; for each
 % field, the value is a vector representing the values of the corresponding parameter.
 % solver: a string representing the solver whose performance is to be evaluated.
 % competitor: a string representing the competitor solver.
 % options: a structure representing the options to be passed to the performance function.
+% p1: a vector representing the values of the first parameter.
+% p2: a vector representing the values of the second parameter.
+% perfs: a matrix representing the differ in performance between the solver and the competitor.
+% perfs_saved: a matrix representing the differ in performance between the solver and the competitor saved in the previous run.
 
 % Get parameter names
 param_names = fieldnames(parameters);
 assert(length(param_names) == 2, 'There should be two parameters.');
 param1_name = param_names{1};
 param2_name = param_names{2};
-
-% Create a grid of parameter values
-[p1, p2] = meshgrid(parameters.(param1_name), parameters.(param2_name));
-
-% Initialize performance matrix
-perfs = NaN(size(p1));
-% Initialize performance matrix for saving
-perfs_saved = cell(size(p1, 1), size(p1, 2));
-
-% Get performance for each parameter combination
-parfor ip = 1:numel(p1)
-    % Set solver options
-    solver_options = struct();
-    solver_options.(param1_name) = p1(ip);
-    solver_options.(param2_name) = p2(ip);
-
-    % Pass solver_options to the performance function via local_options. The performance function
-    % should then pass solver_options to the solver.
-    local_options = options;
-    local_options.solver_options = solver_options;
-
-    % Compute performance
-    fprintf('Evaluating performance for %s = %f, %s = %f\n', param1_name, p1(ip), param2_name, p2(ip));
-    [perfs(ip), perfs_saved{ip}] = eval_performance(solver, competitor, local_options);
-end
 
 % We save the results in the `data_path` folder. 
 current_path = fileparts(mfilename("fullpath"));

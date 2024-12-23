@@ -151,6 +151,8 @@ function profile_optiprofiler(options)
                 solvers{i} = @pbds_test;
             case 'cbds'
                 solvers{i} = @cbds_test;
+            case 'cbds-orig'
+                solvers{i} = @cbds_orig_test;
             case 'cbds-noisy'
                 solvers{i} = @(fun, x0) cbds_test_noisy(fun, x0, true);
             case 'cbds-half'
@@ -437,6 +439,15 @@ end
 function x = cbds_test(fun, x0)
 
     option.Algorithm = 'cbds';
+    x = bds(fun, x0, option);
+    
+end
+
+function x = cbds_orig_test(fun, x0)
+
+    option.Algorithm = 'cbds';
+    option.expand = 2;
+    option.shrink = 0.5;
     x = bds(fun, x0, option);
     
 end

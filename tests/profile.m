@@ -48,11 +48,11 @@ try
     % Get the parameters that the test needs.
     parameters = set_profile_options(parameters);
 
-    % Tell MATLAB where to find MatCUTEst.
-    locate_matcutest();
-
     % Get list of problems
     if isfield(parameters, "test_type") && strcmpi(parameters.test_type, "matcutest")
+
+        % Tell MATLAB where to find MatCUTEst.
+        locate_matcutest();
 
         s.type = parameters.problem_type; % Unconstrained: 'u'
         s.mindim = parameters.problem_mindim; % Minimum of dimension
@@ -153,7 +153,7 @@ try
             end
         end
     end
-
+    
     fprintf("We will load %d problems\n\n", length(problem_names));
 
     % Some fixed (relatively) options

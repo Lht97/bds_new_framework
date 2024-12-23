@@ -210,33 +210,35 @@ if ~isfield(options, "is_noisy")
     options.noisy = get_default_constant("is_noisy");
 end
 
-% Judge whether the dimension of the problem is small or big.
-if numel(x0) <= 5
-    expand_key = "expand_small";
-    shrink_key = "shrink_small";
+% Set the value of expand and shrink according to the dimension of the problem
+% and whether the problem is noisy or not, also according to the Algorithm.
+if strcmpi(options.Algorithm, "ds")
+    expand = get_default_constant("ds_expand");
+    shrink = get_default_constant("ds_shrink");
 else
-    % Judge whether the problem is noisy or not.
-    if isfield(options, "is_noisy") && options.is_noisy
-        expand_key = "expand_big_noisy";
-        shrink_key = "shrink_big_noisy";
+    if numel(x0) <= 5
+        expand = get_default_constant("expand_small");
+        shrink = get_default_constant("shrink_small");
     else
-        expand_key = "expand_big";
-        shrink_key = "shrink_big";
+        % Judge whether the problem is noisy or not.
+        if isfield(options, "is_noisy") && options.is_noisy
+            expand = get_default_constant("expand_big_noisy");
+            shrink = get_default_constant("shrink_big_noisy");
+        else
+            expand = get_default_constant("expand_big");
+            shrink = get_default_constant("shrink_big");
+        end
     end
 end
 
-% Set the value of expand.
+% Set the value of expand if options contains expand.
 if isfield(options, "expand")
     expand = options.expand;
-else
-    expand = get_default_constant(expand_key);
 end
 
-% Set the value of shrink.
+% Set the value of shrink if options contains shrink.
 if isfield(options, "shrink")
     shrink = options.shrink;
-else
-    shrink = get_default_constant(shrink_key);
 end
  
 % Set the value of reduction_factor.
