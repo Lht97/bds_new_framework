@@ -88,10 +88,10 @@ if isfield(options, 'log_color') && options.log_color
     min_perf = min(perfs(:));
     C = min_perf + (max_perf - min_perf) .* log(perfs - min_perf + 1) ./ log(max_perf - min_perf + 1);
     surf(p1, p2, perfs, C, 'FaceColor','interp', 'FaceAlpha', 0.8, ...
-         'EdgeColor', [0.2 0.2 0.2], 'LineWidth', 0.5);  % 更深的灰色，更粗的线
+         'EdgeColor', [0.2 0.2 0.2], 'LineWidth', 0.5);
 else
     surf(p1, p2, perfs, 'FaceColor','interp', 'FaceAlpha', 0.8, ...
-         'EdgeColor', [0.2 0.2 0.2], 'LineWidth', 0.5);  % 更深的灰色，更粗的线
+         'EdgeColor', [0.2 0.2 0.2], 'LineWidth', 0.5);
 end
 
 title(gca, strrep(feature_str, '_', '-')); 
@@ -101,25 +101,24 @@ ylabel(param2_name);
 colorbar; 
 
 % Find the top 10 maximum values
-[~, idx] = maxk(perfs(:), 10); % Find the indices of the top 10 maximum values
+[~, idx] = maxk(perfs(:), 10);
 
-% 设置参数
-markerSize = 14;
-labelFontSize = 12;
+markerSize = 10;  % 减小圆圈大小
+labelFontSize = 10;  % 减小字体大小
 
-% 添加一个微小的偏移以确保点在表面之上
+% 添加偏移
 z_offset = (max(perfs(:)) - min(perfs(:))) * 0.001;
 
-% 使用深一点的灰色
+% 画空心圆，使用深色边缘
 h_points = plot3(p1(idx), p2(idx), perfs(idx) + z_offset, 'o', 'MarkerSize', markerSize, ...
-      'MarkerFaceColor', [0.2 0.2 0.2], 'MarkerEdgeColor', 'k');
+      'MarkerFaceColor', 'none', 'MarkerEdgeColor', [0.1 0.1 0.1], 'LineWidth', 1.5);
 
-% 添加标号
+% 添加黑色标号
 h_text = zeros(length(idx), 1);
 for i = 1:length(idx)
     h_text(i) = text(p1(idx(i)), p2(idx(i)), perfs(idx(i)) + z_offset, num2str(i), ...
          'VerticalAlignment', 'middle', 'HorizontalAlignment', 'center', ...
-         'Color', 'w', 'FontSize', labelFontSize, 'FontWeight', 'bold');
+         'Color', 'k', 'FontSize', labelFontSize, 'FontWeight', 'bold');
 end
 
 % 将点和文本移到最上层
