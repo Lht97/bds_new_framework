@@ -213,8 +213,19 @@ end
 % Set the value of expand and shrink according to the dimension of the problem
 % and whether the problem is noisy or not, also according to the Algorithm.
 if strcmpi(options.Algorithm, "ds")
-    expand = get_default_constant("ds_expand");
-    shrink = get_default_constant("ds_shrink");
+    if numel(x0) <= 5
+        expand = get_default_constant("ds_expand_small");
+        shrink = get_default_constant("ds_shrink_small");
+    else
+        % Judge whether the problem is noisy or not.
+        if isfield(options, "is_noisy") && options.is_noisy
+            expand = get_default_constant("ds_expand_big_noisy");
+            shrink = get_default_constant("ds_shrink_big_noisy");
+        else
+            expand = get_default_constant("ds_expand_big");
+            shrink = get_default_constant("ds_shrink_big");
+        end
+    end
 else
     if numel(x0) <= 5
         expand = get_default_constant("expand_small");
