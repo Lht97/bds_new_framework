@@ -30,9 +30,11 @@ function [xopt, fopt, exitflag, output] = bds(fun, x0, options)
 %                               Default: eye(n).
 %   is_noisy                    A flag deciding whether the problem is noisy or not. Default: false.
 %   expand                      Expanding factor of step size. A real number no less than 1.
-%                               Default: 2.
+%                               It depends on the dimension of the problem and whether the problem
+%                               is noisy or not and the Algorithm.
 %   shrink                      Shrinking factor of step size. A positive number less than 1.
-%                               Default: 0.5.
+%                               It depends on the dimension of the problem and whether the problem
+%                               is noisy or not and the Algorithm.
 %   alpha_threshold             The threshold of the step size. When the step size shrinks, 
 %                               the step size will be updated to be the maximum of alpha_threshold 
 %                               and shrink*alpha. It should be strictly less than StepTolerance.
@@ -155,7 +157,7 @@ if isfield(options, "Algorithm")
 else
     if isfield(options, "num_blocks")
         if options.num_blocks > num_directions
-            error("The number of blocks should be less than or equal to the number of directions.");
+            error("The number of blocks should be less than or equal to the number of directions.\n");
         end
         if options.num_blocks > n
             warning("The number of blocks should be less than or equal to the dimension of the problem.\n");
