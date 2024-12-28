@@ -61,6 +61,21 @@ function profile_optiprofiler(options)
         else
             options.significant_digits = 6;
         end
+        % Notice that the function value is set as when the feature is truncated:
+        % f = f + rand_stream_truncated.rand() * 10 ^ (-digits).
+        % Thus, the noise level can be regarded as 10 ^ (-digits).
+        switch options.significant_digits
+            case 1
+                options.noise_level = 0.1;
+            case 2
+                options.noise_level = 0.01;
+            case 3
+                options.noise_level = 0.001;
+            case 4
+                options.noise_level = 0.0001;
+            otherwise
+                error('Unknown significant digits');
+        end
         options.feature_name = 'truncated';
     end
     if startsWith(options.feature_name, 'quantized')
@@ -89,7 +104,7 @@ function profile_optiprofiler(options)
     end
     % Why we remove the truncated form feature adaptive? Fminunc do not know the noise level
     % such that it can not decide the step size.
-    feature_adaptive = {'noisy', 'custom'};
+    feature_adaptive = {'noisy', 'custom', 'truncated'};
     if ismember('fminunc', options.solver_names) && ismember(options.feature_name, feature_adaptive)
         options.solver_names(strcmpi(options.solver_names, 'fminunc')) = {'fminunc-adaptive'};
     end
@@ -196,6 +211,7 @@ function profile_optiprofiler(options)
             options.benchmark_id = [options.benchmark_id, '_', 'rotation_noisy', '_', int2str(int32(-log10(options.noise_level)))];
         case 'truncated'
             options.benchmark_id = [options.benchmark_id, '_', options.feature_name, '_', int2str(options.significant_digits)];
+            options = rmfield(options, 'noise_level');
         case 'quantized'
             options.benchmark_id = [options.benchmark_id, '_', options.feature_name, '_', int2str(int32(-log10(options.mesh_size)))];
         case 'random_nan'
