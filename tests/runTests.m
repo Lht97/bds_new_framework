@@ -17,12 +17,12 @@ suite = testsuite(path_src, 'IncludeSubfolders', true);
 % Create a test runner
 runner = TestRunner.withTextOutput('OutputDetail',Verbosity.Detailed); 
 
-% 创建覆盖率插件
+% Create a coverage plugin
 sourceFolder = fullfile(path_root, "src");
 reportFile = 'coverage.xml';
 reportFormat = CoberturaFormat(reportFile);
 
-% 使用 IncludeSubfolders 来包含所有子文件夹
+% Use IncludeSubfolders to include all subfolders
 p = CodeCoveragePlugin.forFolder(sourceFolder, ...
     'IncludingSubfolders', true, ...
     'Producing', reportFormat);
