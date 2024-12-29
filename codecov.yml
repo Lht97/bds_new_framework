@@ -1,7 +1,6 @@
-# Codecov
-
 codecov:
-  token: 43d14d1f-aab0-4b34-ae45-c550fdbc98b2
+  require_ci_to_pass: true
+  token: ${CODECOV_TOKEN}  # 不要直接放token在这里
 
 coverage:
   status:
