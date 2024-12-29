@@ -40,21 +40,9 @@ jobs:
       fail-fast: false
       matrix:
         # Only the following combinations of OS and MATLAB support parfor
-        os: [ubuntu-latest, windows-latest, macos-13]
-        matlab: [R2023b, R2024a, latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        matlab: [R2023b, R2024a, R2024b, latest]
         Algorithm: [cbds, pbds, rbds, scbds, pads, ds]
-
-        # Exclude some versions of OS and MATLAB.
-        exclude:
-          # The following combinations are not available as of 20230928.
-          - os: windows-latest
-            matlab: latest
-          - os: macos-13
-            matlab: latest
-          - os: macos-latest
-            matlab: latest
-          - os: ubuntu-latest
-            matlab: latest
 
     steps:
 
