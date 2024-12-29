@@ -22,10 +22,11 @@ sourceFolder = fullfile(path_root, "src");
 reportFile = 'coverage.xml';
 reportFormat = CoberturaFormat(reportFile);
 
+% 只包含src目录下的文件
 p = CodeCoveragePlugin.forFolder(sourceFolder, ...
     'IncludingSubfolders', true, ...
     'Producing', reportFormat, ...
-    'Filter', @(filePath) isSourceFile(filePath, sourceFolder));
+    'Filter', fullfile(sourceFolder, '*.m'));
 
 runner.addPlugin(p)
  
@@ -36,11 +37,3 @@ assert(nfailed == 0,[num2str(nfailed) ' test(s) failed.'])
 
 % Remove paths
 rmpath(path_src);
-
-function tf = isSourceFile(filePath, sourceFolder)
-    % 确保文件在src目录下
-    tf = startsWith(filePath, sourceFolder) && ...
-         ~contains(filePath, 'tests') && ...
-         ~contains(filePath, '_test') && ...
-         ~contains(filePath, fullfile('tests', ''));
-end
