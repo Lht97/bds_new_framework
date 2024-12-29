@@ -14,29 +14,33 @@ addpath(path_src);
 % Create a test suite 
 suite = testsuite(path_src, 'IncludeSubfolders', true);
 
-% Create a test runner that displays test run progress at the matlab.unittest.Verbosity.Detailed level
+% Create a test runner
 runner = TestRunner.withTextOutput('OutputDetail',Verbosity.Detailed); 
 
-% Create a CodeCoveragePlugin instance and add it to the test runner
+% 创建覆盖率插件
 sourceFolder = fullfile(path_root, "src");
 reportFile = 'coverage.xml';
 reportFormat = CoberturaFormat(reportFile);
-% Use the CodeCoveragePlugin to collect coverage information for all the .m files in the src folder
+
 p = CodeCoveragePlugin.forFolder(sourceFolder, ...
     'IncludingSubfolders', true, ...
     'Producing', reportFormat, ...
-    'Files', fullfile(sourceFolder, '**', '*.m'), ... % Only contain .m files in the src folder
-    'ExcludeFiles', {...
-        fullfile(sourceFolder, '**', 'test_*.m'), ... % Exclude test files
-        fullfile(sourceFolder, '**', '*_test.m'), ...
-        fullfile(sourceFolder, '**', 'tests', '*.m') ...
-    });
+    'Filter', @(filePath) isSourceFile(filePath, sourceFolder));
+
 runner.addPlugin(p)
  
-% Run the tests and fail the build if any of the tests fails
+% Run tests
 results = runner.run(suite);  
 nfailed = nnz([results.Failed]);
 assert(nfailed == 0,[num2str(nfailed) ' test(s) failed.'])
 
 % Remove paths
 rmpath(path_src);
+
+function tf = isSourceFile(filePath, sourceFolder)
+    % 确保文件在src目录下
+    tf = startsWith(filePath, sourceFolder) && ...
+         ~contains(filePath, 'tests') && ...
+         ~contains(filePath, '_test') && ...
+         ~contains(filePath, fullfile('tests', ''));
+end
