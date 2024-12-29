@@ -212,45 +212,60 @@ if ~isfield(options, "is_noisy")
     options.noisy = get_default_constant("is_noisy");
 end
 
-% Set the value of expand and shrink according to the dimension of the problem
-% and whether the problem is noisy or not, also according to the Algorithm.
-if strcmpi(options.Algorithm, "ds")
-    if numel(x0) <= 5
-        expand = get_default_constant("ds_expand_small");
-        shrink = get_default_constant("ds_shrink_small");
-    else
-        % Judge whether the problem is noisy or not.
-        if isfield(options, "is_noisy") && options.is_noisy
-            expand = get_default_constant("ds_expand_big_noisy");
-            shrink = get_default_constant("ds_shrink_big_noisy");
+% Set the value of expand and shrink based on the dimension of the problem and the Algorithm,
+% and whether the problem is noisy or not. The default values of expand and shrink are
+% selected based on the S2MPJ problems (see https://github.com/GrattonToint/S2MPJ).
+% If options contain expand or shrink, then expand or shrink is set to the corresponding value.
+if ~isfield(options, "expand")
+    if strcmpi(options.Algorithm, "ds")
+        if numel(x0) <= 5
+            expand = get_default_constant("ds_expand_small");
         else
-            expand = get_default_constant("ds_expand_big");
-            shrink = get_default_constant("ds_shrink_big");
+            % Judge whether the problem is noisy or not.
+            if isfield(options, "is_noisy") && options.is_noisy
+                expand = get_default_constant("ds_expand_big_noisy");
+            else
+                expand = get_default_constant("ds_expand_big");
+            end
+        end
+    else
+        if numel(x0) <= 5
+            expand = get_default_constant("expand_small");
+        else
+            if isfield(options, "is_noisy") && options.is_noisy
+                expand = get_default_constant("expand_big_noisy");
+            else
+                expand = get_default_constant("expand_big");
+            end
         end
     end
 else
-    if numel(x0) <= 5
-        expand = get_default_constant("expand_small");
-        shrink = get_default_constant("shrink_small");
-    else
-        % Judge whether the problem is noisy or not.
-        if isfield(options, "is_noisy") && options.is_noisy
-            expand = get_default_constant("expand_big_noisy");
-            shrink = get_default_constant("shrink_big_noisy");
-        else
-            expand = get_default_constant("expand_big");
-            shrink = get_default_constant("shrink_big");
-        end
-    end
-end
-
-% Set the value of expand if options contains expand.
-if isfield(options, "expand")
     expand = options.expand;
 end
 
-% Set the value of shrink if options contains shrink.
-if isfield(options, "shrink")
+if ~isfield(options, "shrink")
+    if strcmpi(options.Algorithm, "ds")
+        if numel(x0) <= 5
+            shrink = get_default_constant("ds_shrink_small");
+        else
+            if isfield(options, "is_noisy") && options.is_noisy
+                shrink = get_default_constant("ds_shrink_big_noisy");
+            else
+                shrink = get_default_constant("ds_shrink_big");
+            end
+        end
+    else
+        if numel(x0) <= 5
+            shrink = get_default_constant("shrink_small");
+        else
+            if isfield(options, "is_noisy") && options.is_noisy
+                shrink = get_default_constant("shrink_big_noisy");
+            else
+                shrink = get_default_constant("shrink_big");
+            end
+        end
+    end
+else
     shrink = options.shrink;
 end
  
