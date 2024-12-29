@@ -22,11 +22,10 @@ sourceFolder = fullfile(path_root, "src");
 reportFile = 'coverage.xml';
 reportFormat = CoberturaFormat(reportFile);
 
-% 只包含src目录下的文件
+% 使用 IncludeSubfolders 来包含所有子文件夹
 p = CodeCoveragePlugin.forFolder(sourceFolder, ...
     'IncludingSubfolders', true, ...
-    'Producing', reportFormat, ...
-    'Filter', fullfile(sourceFolder, '*.m'));
+    'Producing', reportFormat);
 
 runner.addPlugin(p)
  
