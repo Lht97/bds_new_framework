@@ -108,7 +108,8 @@ function profile_optiprofiler(options)
     if ismember('fminunc', options.solver_names) && ismember(options.feature_name, feature_adaptive)
         options.solver_names(strcmpi(options.solver_names, 'fminunc')) = {'fminunc-adaptive'};
     end
-    if ismember('cbds', options.solver_names) && ismember(options.feature_name, feature_adaptive)
+    if (ismember('cbds', options.solver_names) || ismember('pbds', options.solver_names)) && ismember(options.feature_name, feature_adaptive)
+        options.solver_names(strcmpi(options.solver_names, 'pbds')) = {'pbds-noisy'};
         options.solver_names(strcmpi(options.solver_names, 'cbds')) = {'cbds-noisy'};
         options.solver_names(strcmpi(options.solver_names, 'cbds-half')) = {'cbds-half-noisy'};
         options.solver_names(strcmpi(options.solver_names, 'cbds-quarter')) = {'cbds-quarter-noisy'};
@@ -164,6 +165,8 @@ function profile_optiprofiler(options)
                 solvers{i} = @(fun, x0) ds_test_noisy(fun, x0, true);
             case 'pbds'
                 solvers{i} = @pbds_test;
+            case 'pbds-noisy'
+                solvers{i} = @(fun, x0) pbds_test_noisy(fun, x0, true);
             case 'cbds'
                 solvers{i} = @cbds_test;
             case 'cbds-orig'
@@ -450,6 +453,14 @@ function x = pbds_test(fun, x0)
     option.Algorithm = 'pbds';
     x = bds(fun, x0, option);
     
+end
+
+function x = pbds_test_noisy(fun, x0, is_noisy)
+
+    option.Algorithm = 'pbds';
+    option.is_noisy = is_noisy;
+    x = bds(fun, x0, option);
+
 end
 
 function x = cbds_test(fun, x0)
