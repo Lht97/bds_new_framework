@@ -96,7 +96,9 @@ The following tests are implemented by [Optiprofiler](https://github.com/optipro
 - [Tests](https://github.com/optimlib/bds/actions) at [optimlib/bds](https://github.com/optimlib/bds)
 
     - [![Profile cbds with permuted matrix input, big](https://github.com/optimlib/bds/actions/workflows/profile_cbds_permuted_big.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_cbds_permuted_big.yml)
-    - [![Profile cbds with permuted matrix input, small](https://github.com/optimlib/bds/actions/workflows/profile_cbds_permuted_small.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_cbds_permuted_small.yml)   
+    - [![Profile cbds with permuted matrix input, small](https://github.com/optimlib/bds/actions/workflows/profile_cbds_permuted_small.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_cbds_permuted_small.yml)  
+    - [![Profile cbds and pbds using optiprofiler, big](https://github.com/optimlib/bds/actions/workflows/profile_cbds_pbds_big.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_cbds_pbds_big.yml)
+    - [![Profile cbds and pbds using optiprofiler, small](https://github.com/optimlib/bds/actions/workflows/profile_cbds_pbds_small.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_cbds_pbds_small.yml)    
 
 - [Tests](https://github.com/gradient-free-optimization/bds/actions) at [gradient-free-optimization/bds](https://github.com/gradient-free-optimization/bds)
 
