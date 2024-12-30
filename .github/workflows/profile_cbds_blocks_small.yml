@@ -85,6 +85,7 @@ jobs:
               options.dim = '${{ matrix.dim }}';
               options.run_plain = ${{ matrix.run_plain }};
               options.summarize_log_ratio_profiles = ${{ matrix.summarize_log_ratio_profiles }};
+              options.test_blocks = true;
               profile_optiprofiler(options);
               cd(root_dir);
               cd(fullfile(root_dir, 'tests', 'out'));

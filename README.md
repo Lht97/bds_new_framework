@@ -91,7 +91,9 @@ The following tests are implemented by [Optiprofiler](https://github.com/optipro
 - [Tests](https://github.com/opt-lab/bds/actions) at [opt-lab/bds](https://github.com/opt-lab/bds)
 
     - [![Profile cbds with randomized orthogonal matrix input, big](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_randomized_orthogonal_big.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_randomized_orthogonal_big.yml)
-    - [![Profile cbds with randomized orthogonal matrix input, small](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_randomized_orthogonal_small.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_randomized_orthogonal_small.yml)  
+    - [![Profile cbds with randomized orthogonal matrix input, small](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_randomized_orthogonal_small.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_randomized_orthogonal_small.yml)
+    - [![Profile cbds with rbds using optiprofiler, big](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_rbds_big.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_rbds_big.yml)
+    - [![Profile cbds with rbds using optiprofiler, small](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_rbds_small.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_rbds_small.yml)   
 
 - [Tests](https://github.com/optimlib/bds/actions) at [optimlib/bds](https://github.com/optimlib/bds)
 
