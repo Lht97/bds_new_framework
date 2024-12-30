@@ -112,20 +112,22 @@ function profile_optiprofiler(options)
     % Why we remove the truncated form feature adaptive? Fminunc do not know the noise level
     % such that it can not decide the step size.
     feature_adaptive = {'noisy', 'custom', 'truncated'};
-    if ismember('fminunc', options.solver_names) && ismember(options.feature_name, feature_adaptive)
-        options.solver_names(strcmpi(options.solver_names, 'fminunc')) = {'fminunc-adaptive'};
-    end
-    bds_Algorithms = {'ds', 'pbds', 'rbds', 'pads', 'scbds', 'cbds', 'cbds-randomized-orthogonal', 'cbds-randomized-gaussian', 'cbds-permuted'};
-    if ismember(bds_Algorithms, options.solver_names) && ismember(options.feature_name, feature_adaptive)
-        options.solver_names(strcmpi(options.solver_names, 'ds')) = {'ds-noisy'};
-        options.solver_names(strcmpi(options.solver_names, 'pbds')) = {'pbds-noisy'};
-        options.solver_names(strcmpi(options.solver_names, 'rbds')) = {'rbds-noisy'};
-        options.solver_names(strcmpi(options.solver_names, 'pads')) = {'pads-noisy'};
-        options.solver_names(strcmpi(options.solver_names, 'scbds')) = {'scbds-noisy'};
-        options.solver_names(strcmpi(options.solver_names, 'cbds')) = {'cbds-noisy'};
-        options.solver_names(strcmpi(options.solver_names, 'cbds-randomized-orthogonal')) = {'cbds-randomized-orthogonal-noisy'};
-        options.solver_names(strcmpi(options.solver_names, 'cbds-randomized-gaussian')) = {'cbds-randomized-gaussian-noisy'};
-        options.solver_names(strcmpi(options.solver_names, 'cbds-permuted')) = {'cbds-permuted-noisy'};
+    if ismember(options.feature_name, feature_adaptive)
+        if ismember('fminunc', options.solver_names)
+            options.solver_names(strcmpi(options.solver_names, 'fminunc')) = {'fminunc-adaptive'};
+        end
+        bds_Algorithms = {'ds', 'pbds', 'rbds', 'pads', 'scbds', 'cbds', 'cbds-randomized-orthogonal', 'cbds-randomized-gaussian', 'cbds-permuted'};
+        if any(ismember(bds_Algorithms, options.solver_names))
+            options.solver_names(strcmpi(options.solver_names, 'ds')) = {'ds-noisy'};
+            options.solver_names(strcmpi(options.solver_names, 'pbds')) = {'pbds-noisy'};
+            options.solver_names(strcmpi(options.solver_names, 'rbds')) = {'rbds-noisy'};
+            options.solver_names(strcmpi(options.solver_names, 'pads')) = {'pads-noisy'};
+            options.solver_names(strcmpi(options.solver_names, 'scbds')) = {'scbds-noisy'};
+            options.solver_names(strcmpi(options.solver_names, 'cbds')) = {'cbds-noisy'};
+            options.solver_names(strcmpi(options.solver_names, 'cbds-randomized-orthogonal')) = {'cbds-randomized-orthogonal-noisy'};
+            options.solver_names(strcmpi(options.solver_names, 'cbds-randomized-gaussian')) = {'cbds-randomized-gaussian-noisy'};
+            options.solver_names(strcmpi(options.solver_names, 'cbds-permuted')) = {'cbds-permuted-noisy'};
+        end
     end
 
     if ~isfield(options, 'n_runs')
