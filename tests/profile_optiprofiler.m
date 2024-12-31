@@ -106,6 +106,7 @@ function profile_optiprofiler(options)
         options.solver_names(strcmpi(options.solver_names, 'cbds')) = {'cbds-block'};
         options.solver_names(strcmpi(options.solver_names, 'cbds-half')) = {'cbds-half-block'};
         options.solver_names(strcmpi(options.solver_names, 'cbds-quarter')) = {'cbds-quarter-block'};
+        options.solver_names(strcmpi(options.solver_names, 'cbds-eighth')) = {'cbds-eighth-block'};
         options.solver_names(strcmpi(options.solver_names, 'ds')) = {'ds-block'};
         options = rmfield(options, 'test_blocks');
     end
@@ -206,6 +207,8 @@ function profile_optiprofiler(options)
                 solvers{i} = @cbds_half_block_test;
             case 'cbds-quarter-block'
                 solvers{i} = @cbds_quarter_block_test;
+            case 'cbds-eighth-block'
+                solvers{i} = @cbds_eighth_block_test;
             case 'cbds-randomized-orthogonal'
                 solvers{i} = @cbds_randomized_orthogonal_test;
             case 'cbds-randomized-orthogonal-noisy'
@@ -542,6 +545,15 @@ end
 function x = cbds_quarter_block_test(fun, x0)
 
     option.num_blocks = ceil(numel(x0)/4);
+    option.expand = 2;
+    option.shrink = 0.5;
+    x = bds(fun, x0, option);
+    
+end
+
+function x = cbds_eighth_block_test(fun, x0)
+
+    option.num_blocks = ceil(numel(x0)/8);
     option.expand = 2;
     option.shrink = 0.5;
     x = bds(fun, x0, option);
