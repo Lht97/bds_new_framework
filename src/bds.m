@@ -140,9 +140,6 @@ D = get_direction_set(n, options);
 num_directions = size(D, 2);
 
 % % Set the default Algorithm of BDS, which is "cbds".
-% if ~isfield(options, "Algorithm")
-%     options.Algorithm = get_default_constant("Algorithm");
-% end
 Algorithm_list = ["ds", "cbds", "pbds", "rbds", "pads", "scbds"];
 if isfield(options, "Algorithm") && ~ismember(lower(options.Algorithm), Algorithm_list)
     error("The Algorithm input is invalid");
@@ -167,7 +164,7 @@ else
     end
 end
 
-% Set the default value of Algorithm.
+% Set the default value of Algorithm if options do not contain Algorithm.
 if ~isfield(options, "Algorithm")
     options.Algorithm = get_default_constant("Algorithm");
 end
