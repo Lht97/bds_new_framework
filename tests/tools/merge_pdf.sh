@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Define keywords to search for PDF files
 keywords=(
     "plain"
@@ -22,7 +24,8 @@ keywords=(
 )
 
 output_file="merged.pdf"
-declare -a pdf_files  # Use an array to store PDF files
+declare -A keyword_to_files  # Associative array to map keywords to files
+declare -A seen_files  # Associative array to track seen files (for deduplication)
 
 # Print all PDF files for debugging
 echo "Found these PDF files:"
@@ -30,16 +33,14 @@ find . -maxdepth 1 -name "summary*.pdf" -type f | while read -r file; do
     echo "  $file"
 done
 
-# Create an associative array to store keyword to files mapping
-declare -A keyword_to_files
-
 # Function to add files to array in natural sort order
 add_files_sorted() {
     local key=$1
     local files=("${@:2}")
     if [ ${#files[@]} -gt 0 ]; then
         # Convert array to newline-separated string, sort, and store
-        keyword_to_files[$key]="$(printf "%s\n" "${files[@]}" | sort -V)"
+        sorted_files=$(printf "%s\n" "${files[@]}" | sort -V)
+        keyword_to_files[$key]="$sorted_files"
     fi
 }
 
@@ -48,17 +49,14 @@ for keyword in "${keywords[@]}"; do
     echo "Searching for keyword: $keyword"
     case "$keyword" in
         "perturbed_x0")
-            # Match perturbed_x0.pdf, perturbed_x0_01.pdf, perturbed_x0_10.pdf
             files=($(find . -maxdepth 1 -type f -name "summary*perturbed_x0*.pdf"))
             add_files_sorted "$keyword" "${files[@]}"
             ;;
         "random_nan")
-            # Match random_nan_05.pdf, random_nan_10.pdf, random_nan_20.pdf
             files=($(find . -maxdepth 1 -type f -name "summary*random_nan*.pdf"))
             add_files_sorted "$keyword" "${files[@]}"
             ;;
         "truncated")
-            # Match truncated_1.pdf through truncated_4.pdf
             files=($(find . -maxdepth 1 -type f -name "summary*truncated*.pdf"))
             add_files_sorted "$keyword" "${files[@]}"
             ;;
@@ -72,19 +70,20 @@ done
 # Clear array to store PDF files in order of keywords
 pdf_files=()
 
-# Add PDF files to the array in order of keywords
+# Add PDF files to the array in order of keywords, ensuring no duplicates
 for keyword in "${keywords[@]}"; do
     if [[ -n "${keyword_to_files[$keyword]}" ]]; then
         while IFS= read -r file; do
-            if [[ -f "$file" ]]; then
+            if [[ -f "$file" && -z "${seen_files[$file]}" ]]; then
                 pdf_files+=("$file")
+                seen_files["$file"]=1  # Mark file as seen
             fi
         done <<< "${keyword_to_files[$keyword]}"
     fi
 done
 
 # Print the array content for debugging
-echo -e "\nFiles in order of keywords:"
+echo -e "\nFiles in order of keywords (no duplicates):"
 printf '%s\n' "${pdf_files[@]}"
 
 # Print total number of files found
