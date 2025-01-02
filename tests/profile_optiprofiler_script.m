@@ -1,9 +1,10 @@
 clear all
 % options.dim = 'big';
-options.mindim = 2;
-options.maxdim = 2;
-options.feature_name = 'permuted_noisy_1e-1';
-options.solver_names = {'cbds', 'ds'};
+options.mindim = 1;
+options.maxdim = 1;
+% options.n_jobs = 1;
+options.feature_name = 'noisy_1e-3';
+options.solver_names = {'pbds', 'cbds-orig'};
 profile_optiprofiler(options);
 
 % options.solver_names = {'cbds', 'nomad'};
