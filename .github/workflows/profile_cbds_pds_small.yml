@@ -1,4 +1,4 @@
-name: Profile cbds and pds using optiprofiler, big
+name: Profile cbds and pds using optiprofiler, small
 
 on:
   # Trigger the workflow on # push or pull request
@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    name: Profile CBDS and PDS, big
+    name: Profile CBDS and PDS, small
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
