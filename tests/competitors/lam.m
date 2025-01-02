@@ -63,19 +63,11 @@ end
 
 % Set the value of expand factor. Since the expand factor in the paper A derivative-free algorithm for bound constrained optimization,
 % G. Liuzzi, and S. Lucidi, Computational Optimization and Applications, 2002 is set to 2, we set the default value of expand to 2.
-if isfield(options, "expand")
-    expand = options.expand;
-else
-    expand = get_default_constant("expand");
-end
+expand = 2;
 
 % Set the value of shrink factor. Since the shrink factor in the paper A derivative-free algorithm for bound constrained optimization,
 % G. Liuzzi, and S. Lucidi, Computational Optimization and Applications, 2002 is set to 0.5, we set the default value of shrink to 0.5.
-if isfield(options, "shrink")
-    shrink = options.shrink;
-else
-    shrink = get_default_constant("shrink");
-end
+shrink = 0.5;
 
 % Set the boolean value of WITH_CYCLING_MEMORY. 
 if isfield(options, "with_cycling_memory")
