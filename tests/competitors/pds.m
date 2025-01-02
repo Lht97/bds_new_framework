@@ -1,4 +1,4 @@
-function [xopt, fopt, exitflag, output] = dspd(fun, x0, options)
+function [xopt, fopt, exitflag, output] = pds(fun, x0, options)
 %DSPD (direct search probabilistic descent) solves unconstrained optimization problems without using derivatives.
 %
 %   It is supported in MATLAB R2017b or later.
@@ -99,14 +99,14 @@ n = length(x0);
 if isfield(options, "expand")
     expand = options.expand;
 else
-    expand = get_default_constant("expand");
+    expand = 2;
 end
 
 % Set the value of shrinking factor.
 if isfield(options, "shrink")
     shrink = options.shrink;
 else
-    shrink = get_default_constant("shrink");
+    shrink = 0.5;
 end
 
 % Get the number of directions.
@@ -133,7 +133,7 @@ maxit = MaxFunctionEvaluations;
 if isfield(options, "reduction_factor")
     reduction_factor = options.reduction_factor;
 else
-    reduction_factor = get_default_constant("reduction_factor");
+    reduction_factor = [0, 1e-3, 1e-3];
 end
 
 

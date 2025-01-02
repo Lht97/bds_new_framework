@@ -221,6 +221,8 @@ function profile_optiprofiler(options)
                 solvers{i} = @cbds_permuted_test;
             case 'cbds-permuted-noisy'
                 solvers{i} = @(fun, x0) cbds_permuted_test_noisy(fun, x0, true);
+            case 'pds'
+                solvers{i} = @pds_test;
             case 'bfo'
                 solvers{i} = @bfo_test;
             case 'newuoa'
@@ -663,6 +665,12 @@ function x = scbds_test_noisy(fun, x0, is_noisy)
     option.Algorithm = 'scbds';
     option.is_noisy = is_noisy;
     x = bds(fun, x0, option);
+    
+end
+
+function x = pds_test(fun, x0)
+
+    x = pds(fun, x0);
     
 end
 

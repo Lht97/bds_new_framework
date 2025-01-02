@@ -82,6 +82,8 @@ The following tests are implemented by [Optiprofiler](https://github.com/optipro
     - [![Profile cbds and simplex using optiprofiler, small](https://github.com/gradient-free-opt/bds/actions/workflows/profile_cbds_simplex_small.yml/badge.svg)](https://github.com/gradient-free-opt/bds/actions/workflows/profile_cbds_simplex_small.yml)
     - [![Profile original cbds and simplex using optiprofiler, big](https://github.com/gradient-free-opt/bds/actions/workflows/profile_orig_cbds_simplex_big.yml/badge.svg)](https://github.com/gradient-free-opt/bds/actions/workflows/profile_orig_cbds_simplex_big.yml)
     - [![Profile original cbds and simplex using optiprofiler, small](https://github.com/gradient-free-opt/bds/actions/workflows/profile_orig_cbds_simplex_small.yml/badge.svg)](https://github.com/gradient-free-opt/bds/actions/workflows/profile_orig_cbds_simplex_small.yml)
+    - [![Profile cbds and pds using optiprofiler, big](https://github.com/gradient-free-opt/bds/actions/workflows/profile_cbds_pds_big.yml/badge.svg)](https://github.com/gradient-free-opt/bds/actions/workflows/profile_cbds_pds_big.yml)
+    - [![Profile cbds and pds using optiprofiler, small](https://github.com/gradient-free-opt/bds/actions/workflows/profile_cbds_pds_small.yml/badge.svg)](https://github.com/gradient-free-opt/bds/actions/workflows/profile_cbds_pds_small.yml)
 
 - [Tests](https://github.com/libblades/bds/actions) at [libblades/bds](https://github.com/libblades/bds)
 
