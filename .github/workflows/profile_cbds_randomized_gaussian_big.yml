@@ -1,16 +1,16 @@
-name: Profile cbds with randomized orthogonal matrix input, big
+name: Profile cbds with randomized Gaussian matrix input, big
 
 on:
   # Trigger the workflow on # push or pull request
   # push:
   # Trigger the workflow manually
   schedule:
-  - cron: '0 6 */1 * *'
+  - cron: '0 0 */1 * *'
   workflow_dispatch:
 
 jobs:
   test:
-    name: Profile BDS with randomized orthogonal matrix input, big
+    name: Profile BDS with randomized Gaussian matrix input, big
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -20,7 +20,7 @@ jobs:
         dim: [big]
         with_optim_toolbox: [yes]
         solver: [cbds]
-        competitor_1: [cbds-randomized-orthogonal]
+        competitor_1: [cbds-randomized-gaussian]
         run_plain: [false]
         summarize_log_ratio_profiles: [false]
         feature: [plain, noisy_1e-1, noisy_1e-2, noisy_1e-3, noisy_1e-4, linearly_transformed, rotation_noisy_1e-1, rotation_noisy_1e-2, rotation_noisy_1e-3, rotation_noisy_1e-4]

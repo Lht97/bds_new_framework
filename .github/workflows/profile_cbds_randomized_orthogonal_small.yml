@@ -5,7 +5,7 @@ on:
   # push:
   # Trigger the workflow manually
   schedule:
-  - cron: '0 12 */1 * *'
+  - cron: '0 6 */1 * *'
   workflow_dispatch:
 
 jobs:
@@ -21,7 +21,6 @@ jobs:
         with_optim_toolbox: [yes]
         solver: [cbds]
         competitor_1: [cbds-randomized-orthogonal]
-        competitor_2: [cbds-randomized-gaussian]
         run_plain: [false]
         summarize_log_ratio_profiles: [false]
         feature: [plain, noisy_1e-1, noisy_1e-2, noisy_1e-3, noisy_1e-4, linearly_transformed, rotation_noisy_1e-1, rotation_noisy_1e-2, rotation_noisy_1e-3, rotation_noisy_1e-4]
@@ -80,7 +79,7 @@ jobs:
               cd(fullfile(root_dir, 'tests'));
               options = struct();
               options.feature_name = '${{ matrix.feature }}';
-              options.solver_names = {'${{ matrix.solver }}', '${{ matrix.competitor_1 }}', '${{ matrix.competitor_2 }}'};
+              options.solver_names = {'${{ matrix.solver }}', '${{ matrix.competitor_1 }}'};
               options.dim = '${{ matrix.dim }}';
               options.run_plain = ${{ matrix.run_plain }};
               options.summarize_log_ratio_profiles = ${{ matrix.summarize_log_ratio_profiles }};
@@ -123,7 +122,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3.1.2
         with:
-          name: profile_optiprofiler_${{ matrix.solver }}_${{ matrix.competitor_1 }}_${{ matrix.competitor_2 }}_${{ matrix.feature }}_${{ matrix.dim }}
+          name: profile_optiprofiler_${{ matrix.solver }}_${{ matrix.competitor_1 }}_${{ matrix.dim }}_${{ matrix.feature }}
           path: ./tests/out/**
 
   merge_artifacts:
@@ -184,7 +183,7 @@ jobs:
         env:
           BASE_INFO: ${{ env.BASE_INFO }}
         with:
-          name: merged_profiles_randomized_orthogonal_small
+          name: merged_profiles_randomized_orthogonal_big
           path: tests/testdata/downloaded_artifacts/**
 
       - name: Upload summary files
@@ -192,5 +191,5 @@ jobs:
         env:
           BASE_INFO: ${{ env.BASE_INFO }}
         with:
-          name: summary_files_randomized_orthogonal_small
+          name: summary_files_randomized_orthogonal_big
           path: tests/testdata/downloaded_artifacts/summary_${{ env.BASE_INFO }}/**
