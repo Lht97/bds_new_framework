@@ -231,6 +231,8 @@ function profile_optiprofiler(options)
                 solvers{i} = @lam_test;
             case 'nomad'
                 solvers{i} = @nomad_test;
+            case 'nomad-6'
+                solvers{i} = @nomad_6_test;
             otherwise
                 error('Unknown solver');
         end
@@ -712,6 +714,33 @@ function x = nomad_test(fun, x0)
     MaxFunctionEvaluations = 500*n;
 
     params = struct('MAX_BB_EVAL', num2str(MaxFunctionEvaluations), 'max_eval',num2str(MaxFunctionEvaluations));
+
+    % As of NOMAD version 4.4.0 and OptiProfiler commit 24d8cc0, the following line is 
+    % necessary. Otherwise, NOMAD will throw an error, complaining that the blackbox 
+    % evaluation fails. This seems to be because OptiProfiler wraps the function 
+    % handle in a way that NOMAD does not expect: NOMAD expects a function handle 
+    % `fun` with the signature fun(x), where x is a column vector, while OptiProfiler 
+    % produces one with the signature @(varargin)featured_problem.fun(varargin{:}).
+    fun = @(x) fun(x(:));
+
+    [x, ~, ~, ~, ~] = nomadOpt(fun,x0,lb,ub,params);
+    
+end
+
+function x = nomad_6_test(fun, x0)
+    
+    % Dimension:
+    n = numel(x0);
+
+    % Set the default bounds.
+    lb = -inf(n, 1);
+    ub = inf(n, 1);
+
+    % Set MAXFUN to the maximum number of function evaluations.
+    MaxFunctionEvaluations = 500*n;
+
+    params = struct('min_frame_size','* 0.000001', 'min_mesh_size', '* 0.000001', ...
+    'MAX_BB_EVAL', num2str(MaxFunctionEvaluations), 'max_eval',num2str(MaxFunctionEvaluations));
 
     % As of NOMAD version 4.4.0 and OptiProfiler commit 24d8cc0, the following line is 
     % necessary. Otherwise, NOMAD will throw an error, complaining that the blackbox 

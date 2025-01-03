@@ -1,23 +1,23 @@
-name: Profile cbds with different blocks input, big
+name: Profile cbds with different number of blocks, small
 
 on:
   # Trigger the workflow on # push or pull request
   # push:
   # Trigger the workflow manually
   schedule:
-  - cron: '0 0 */1 * *'
+  - cron: '0 6 */1 * *'
   workflow_dispatch:
 
 jobs:
   test:
-    name: Profile BDS with different blocks input, big
+    name: Profile BDS with different number of blocks, small
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
         matlab: [latest]
-        dim: [big]
+        dim: [small]
         with_optim_toolbox: [yes]
         solver: [cbds]
         competitor_1: [cbds-half]
@@ -84,7 +84,6 @@ jobs:
               options.feature_name = '${{ matrix.feature }}';
               options.solver_names = {'${{ matrix.solver }}', '${{ matrix.competitor_1 }}', '${{ matrix.competitor_2 }}', '${{ matrix.competitor_3 }}', '${{ matrix.competitor_4 }}'};
               options.dim = '${{ matrix.dim }}';
-              options.n_runs = 1;
               options.run_plain = ${{ matrix.run_plain }};
               options.summarize_log_ratio_profiles = ${{ matrix.summarize_log_ratio_profiles }};
               options.test_blocks = true;
@@ -188,7 +187,7 @@ jobs:
         env:
           BASE_INFO: ${{ env.BASE_INFO }}
         with:
-          name: merged_profiles_blocks_big
+          name: merged_profiles_blocks_small
           path: tests/testdata/downloaded_artifacts/**
 
       - name: Upload summary files
@@ -196,5 +195,5 @@ jobs:
         env:
           BASE_INFO: ${{ env.BASE_INFO }}
         with:
-          name: summary_files_blocks_big
+          name: summary_files_blocks_small
           path: tests/testdata/downloaded_artifacts/summary_${{ env.BASE_INFO }}/**

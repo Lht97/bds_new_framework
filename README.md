@@ -108,8 +108,8 @@ The following tests are implemented by [Optiprofiler](https://github.com/optipro
 
 - [Tests](https://github.com/gradient-free-optimization/bds/actions) at [gradient-free-optimization/bds](https://github.com/gradient-free-optimization/bds)
 
-    - [![Profile cbds with different blocks input, big](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_blocks_big.yml/badge.svg)](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_blocks_big.yml)
-    - [![Profile cbds with different blocks input, small](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_blocks_small.yml/badge.svg)](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_blocks_small.yml) 
+    - [![Profile cbds with different blocks input, big](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_block_number_big.yml/badge.svg)](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_block_number_big.yml)
+    - [![Profile cbds with different blocks input, small](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_block_number_small.yml/badge.svg)](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_block_number_small.yml) 
     - [![Profile cbds and pads using optiprofiler, big](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_pads_big.yml/badge.svg)](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_pads_big.yml)
     - [![Profile cbds and pads using optiprofiler, small](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_pads_small.yml/badge.svg)](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_pads_small.yml) 
     - [![Profile cbds and scbds using optiprofiler, big](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_scbds_big.yml/badge.svg)](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_scbds_big.yml)
