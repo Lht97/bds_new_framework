@@ -445,7 +445,7 @@ if isfield(options, "output_sufficient_decrease")
 else
     output_sufficient_decrease = get_default_constant("output_sufficient_decrease");
 end
-if num_blocks == n
+if strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds")
     try
         sufficient_decrease_value = NaN(num_blocks, MaxFunctionEvaluations);
     catch
@@ -524,7 +524,8 @@ for iter = 1:maxit
 
     % Use central difference to estimate the gradient of the function at xopt if the sufficient decrease
     % condition is not achieved in the previous iteration and the problem is not noisy.
-    if iter > 1 && ~all(sufficient_decrease(:, iter-1)) && ~is_noisy
+    if iter > 1 && ~is_noisy && (strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds")) ...
+        && ~all(sufficient_decrease(:, iter-1))
         if verbose
             fprintf("The Algorithm is %s and failed to achieve sufficient decrease " ...
         + "in the previous iteration.\n", options.Algorithm);
@@ -615,7 +616,7 @@ for iter = 1:maxit
 
         % Record the sufficient decrease value and the boolean value of whether the sufficient decrease
         % is achieved or not.
-        if num_blocks == n
+        if strcmpi(options.Algorithm, "cbds") && strcmpi(options.Algorithm, "pbds")
             sufficient_decrease_value(i_real, iter) = sub_output.sufficient_decrease_value;
             sufficient_decrease(i_real, iter) = sub_output.sufficient_decrease;
         end
@@ -749,7 +750,7 @@ end
 if output_alpha_hist
     output.alpha_hist = alpha_hist(:, 1:min(iter, maxit));
 end
-if num_blocks == n && output_sufficient_decrease
+if output_sufficient_decrease
     output.sufficient_decrease = sufficient_decrease(:, 1:min(iter, maxit));
     output.sufficient_decrease_value = sufficient_decrease_value(:, 1:min(iter, maxit));
     output.grad_hist = grad_hist;
