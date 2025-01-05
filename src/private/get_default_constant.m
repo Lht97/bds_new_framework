@@ -43,10 +43,12 @@ switch constant_name
         constant_value = @(alpha) alpha^2;
     case {"alpha_init"}
         constant_value = 1;
-    case {"alpha_threshold"}
-        constant_value = eps;
+    case {"alpha_threshold_ratio"}
+        constant_value = 1e-3;
     case {"StepTolerance"}
         constant_value = 1e-6;
+    case {"grad_tol"}
+        constant_value = 1e-4;
     case {"permuting_period"}
         constant_value = 1;
     case {"replacement_delay"}
@@ -68,6 +70,8 @@ switch constant_name
     case {"output_block_hist"}
         constant_value = false;
     case {"output_xhist_failed"}
+        constant_value = false;
+    case {"output_sufficient_decrease"}
         constant_value = false;
     case {"verbose"}
         constant_value = false;

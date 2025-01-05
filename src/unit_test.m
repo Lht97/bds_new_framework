@@ -219,6 +219,10 @@ constant_name = "alpha_init";
 constant_value = 1;
 verifyEqual(testCase, get_default_constant(constant_name), constant_value)
 
+constant_name = "alpha_threshold_ratio";
+constant_value = 1e-3;
+verifyEqual(testCase, get_default_constant(constant_name), constant_value)
+
 constant_name = "seed";
 constant_value = "shuffle";
 verifyEqual(testCase, get_default_constant(constant_name), constant_value)

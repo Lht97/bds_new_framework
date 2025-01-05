@@ -79,6 +79,12 @@ if isfield(options, "alpha_init")
     end
 end
 
+if isfield(options, "alpha_threshold_ratio")
+    if ~(isrealscalar(options.alpha_threshold_ratio) && options.alpha_threshold_ratio > 0)
+        error("options.alpha_threshold_ratio should be a positive real number.");
+    end
+end
+
 if isfield(options, "alpha_all")
     if ~(isrealscalar(options.alpha_all) && options.alpha_all > 0)
         error("options.alpha_all should be a positive real vector.");

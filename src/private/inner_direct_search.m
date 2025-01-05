@@ -94,7 +94,7 @@ for j = 1 : num_directions
     % in outer_direct_search. 
     if sufficient_decrease && ~strcmpi(polling_inner, "complete")
         direction_indices = cycling(direction_indices, j, cycling_strategy, with_cycling_memory);
-        output.sufficient_decrease = fbase - fnew;
+        output.sufficient_decrease_value = fbase - fnew;
         break;
     end
 
@@ -122,6 +122,12 @@ output.xhist = xhist(:, 1:nf);
 output.nf = nf;
 output.direction_indices = direction_indices;
 output.terminate = terminate;
+if sufficient_decrease
+    output.sufficient_decrease = true;
+else
+    output.sufficient_decrease = false;
+    output.sufficient_decrease_value = 0;
+end
 
 end
 

@@ -415,7 +415,7 @@ function x = fminsearch_test(fun, x0)
     % Set MAXFUN to the maximum number of function evaluations.
     MaxFunctionEvaluations = 500*n;
 
-    % Set the value of StepTolerance.
+    % Set the value of StepTolerance. The default value is 1e-4.
     tol = 1e-6;
 
     options = optimset("MaxFunEvals", MaxFunctionEvaluations, "maxiter", 10^20, "tolfun", eps, "tolx", tol);    

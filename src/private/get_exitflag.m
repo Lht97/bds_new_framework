@@ -22,6 +22,8 @@ switch information
         exitflag = 2;
     case "MAXIT_REACHED"
         exitflag = 3;
+    case "GRADIENT_SMALL"
+        exitflag = 4;
     otherwise
         exitflag = -1;
 end
