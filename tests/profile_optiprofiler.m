@@ -66,13 +66,33 @@ function profile_optiprofiler(options)
         % Thus, the noise level can be regarded as 10 ^ (-digits).
         switch options.significant_digits
             case 1
-                options.noise_level = 0.1;
+                % The function value can be rewritten as a.bcdefg... * 10 ^ n
+                % Thus, the extreme case would be a = 1, b = c = d = e = f = g = 9 = ...
+                % Then, the truncation error would almost the half of the function value.
+                % The opposite case would be 0, which is the smallest truncation error.
+                % We select the average of the two cases as the noise level.
+                options.noise_level = 0.25;
             case 2
-                options.noise_level = 0.01;
+                % The function value can be rewritten as ab.cdefg... * 10 ^ n
+                % Thus, the extreme case would be a = 1, b = 0, c = d = e = f = g = 9 = ...
+                % Then, the truncation error would almost the 0.09 of the function value.
+                % The opposite case would be 0, which is the smallest truncation error.
+                % We select the average of the two cases as the noise level.
+                options.noise_level = 0.045;
             case 3
-                options.noise_level = 0.001;
+                % The function value can be rewritten as abc.defg... * 10 ^ n
+                % Thus, the extreme case would be a = 1, b = c = 0, d = e = f = g = 9 = ...
+                % Then, the truncation error would almost the 0.01 of the function value.
+                % The opposite case would be 0, which is the smallest truncation error.
+                % We select the average of the two cases as the noise level.
+                options.noise_level = 0.005;
             case 4
-                options.noise_level = 0.0001;
+                % The function value can be rewritten as abcd.efg... * 10 ^ n
+                % Thus, the extreme case would be a = 1, b = c = d = 0, e = f = g = 9 = ...
+                % Then, the truncation error would almost the 0.001 of the function value.
+                % The opposite case would be 0, which is the smallest truncation error.
+                % We select the average of the two cases as the noise level.
+                options.noise_level = 0.0005;
             otherwise
                 error('Unknown significant digits');
         end
