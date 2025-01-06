@@ -41,15 +41,93 @@ if isfield(options, "Algorithm")
     end
 end
 
-if isfield(options, "expand")
+if isfield(options, "is_noisy")
+    if ~islogical(options.is_noisy)
+        error("options.is_noisy should be a logical value.");
+    end
+end
+
+if isfield(options, "ds_expand_small")
     if ~(isrealscalar(options.expand) && options.expand >= 1)
         error("options.expand should be a real number greater than or equal to 1.");
     end
 end
 
-if isfield(options, "shrink")
+if isfield(options, "ds_shrink_small")
     if ~(isrealscalar(options.shrink) && options.shrink > 0 && options.shrink < 1)
-        error("options.shrink should be a real number in [0, 1).");
+        error("options.shrink should be a real number in (0, 1).");
+    end
+end
+
+if isfield(options, "ds_expand_small_noisy")
+    if ~(isrealscalar(options.expand) && options.expand >= 1)
+        error("options.expand should be a real number greater than or equal to 1.");
+    end
+end
+
+if isfield(options, "ds_shrink_small_noisy")
+    if ~(isrealscalar(options.shrink) && options.shrink > 0 && options.shrink < 1)
+        error("options.shrink should be a real number in (0, 1).");
+    end
+end
+
+if isfield(options, "ds_expand_big")
+    if ~(isrealscalar(options.expand) && options.expand >= 1)
+        error("options.expand should be a real number greater than or equal to 1.");
+    end
+end
+
+if isfield(options, "ds_shrink_big")
+    if ~(isrealscalar(options.shrink) && options.shrink > 0 && options.shrink < 1)
+        error("options.shrink should be a real number in (0, 1).");
+    end
+end
+
+if isfield(options, "ds_expand_big_noisy")
+    if ~(isrealscalar(options.expand) && options.expand >= 1)
+        error("options.expand should be a real number greater than or equal to 1.");
+    end
+end
+
+if isfield(options, "ds_shrink_big_noisy")
+    if ~(isrealscalar(options.shrink) && options.shrink > 0 && options.shrink < 1)
+        error("options.shrink should be a real number in (0, 1).");
+    end
+end
+
+if isfield(options, "expand_small")
+    if ~(isrealscalar(options.expand) && options.expand >= 1)
+        error("options.expand should be a real number greater than or equal to 1.");
+    end
+end
+
+if isfield(options, "shrink_small")
+    if ~(isrealscalar(options.shrink) && options.shrink > 0 && options.shrink < 1)
+        error("options.shrink should be a real number in (0, 1).");
+    end
+end
+
+if isfield(options, "expand_big")
+    if ~(isrealscalar(options.expand) && options.expand >= 1)
+        error("options.expand should be a real number greater than or equal to 1.");
+    end
+end
+
+if isfield(options, "shrink_big")
+    if ~(isrealscalar(options.shrink) && options.shrink > 0 && options.shrink < 1)
+        error("options.shrink should be a real number in (0, 1).");
+    end
+end
+
+if isfield(options, "expand_big_noisy")
+    if ~(isrealscalar(options.expand) && options.expand >= 1)
+        error("options.expand should be a real number greater than or equal to 1.");
+    end
+end
+
+if isfield(options, "shrink_big_noisy")
+    if ~(isrealscalar(options.shrink) && options.shrink > 0 && options.shrink < 1)
+        error("options.shrink should be a real number in (0, 1).");
     end
 end
 
@@ -85,15 +163,15 @@ if isfield(options, "alpha_threshold_ratio")
     end
 end
 
-if isfield(options, "alpha_all")
-    if ~(isrealscalar(options.alpha_all) && options.alpha_all > 0)
-        error("options.alpha_all should be a positive real vector.");
-    end
-end
-
 if isfield(options, "StepTolerance")
     if ~(isrealscalar(options.StepTolerance) && options.StepTolerance >= 0)
         error("options.StepTolerance should be a real number greater than or equal to 0.");
+    end
+end
+
+if isfield(options, "alpha_all")
+    if ~(isrealscalar(options.alpha_all) && options.alpha_all > 0)
+        error("options.alpha_all should be a positive real vector.");
     end
 end
 
@@ -148,6 +226,18 @@ end
 if isfield(options, "output_block_hist")
     if ~islogical(options.output_block_hist)
         error("options.output_block_hist should be a logical value.");
+    end
+end
+
+if isfield(options, "output_xhist_failed")
+    if ~islogical(options.output_xhist_failed)
+        error("options.output_xhist_failed should be a logical value.");
+    end
+end
+
+if isfield(options, "output_sufficient_decrease")
+    if ~islogical(options.output_sufficient_decrease)
+        error("options.output_sufficient_decrease should be a logical value.");
     end
 end
 
