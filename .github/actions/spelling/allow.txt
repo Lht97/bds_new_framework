@@ -4,6 +4,7 @@ Abadie
 Abbeel
 abbrev
 abc
+abcd
 Absil
 acmcs
 actan
@@ -106,6 +107,7 @@ bbgreekl
 bbm
 bbold
 bbopt
+bcdefg
 Beckenstein
 Beckermann
 beforepartskip
@@ -232,6 +234,7 @@ Cartis
 cbds
 cc
 CCIT
+cdefg
 cdot
 cdots
 cellfun
@@ -362,6 +365,7 @@ ddag
 ddagger
 ddot
 ddots
+defg
 definecolor
 Delahaye
 Delbos
@@ -455,6 +459,7 @@ Dynamiques
 EDIIS
 edu
 eference
+efg
 Efstathiou
 Ehlert
 eigen
