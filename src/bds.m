@@ -70,10 +70,13 @@ function [xopt, fopt, exitflag, output] = bds(fun, x0, options)
 %                               is "opportunistic". Default: true.
 %   permuting_period            It is only used in PBDS, which shuffles the blocks every
 %                               permuting_period iterations. A positive integer. Default: 1.
+%   num_selected_blocks         It is only used for RBDS. Suppose that rbds_num_selected_blocks
+%                               is k. In each iteration, k blocks are randomly selected to visit.
+%                               A positive integer. Default: 1.
 %   replacement_delay           It is only used for RBDS. Suppose that replacement_delay is r.
 %                               If block i is selected at iteration k, then it will not be
 %                               selected at iterations k+1, ..., k+r. An integer between 0
-%                               and num_blocks-1. Default: 0.
+%                               and ceil(num_blocks/rbds_num_selected_blocks)-1. Default: 0.
 %   seed                        The seed for permuting blocks in PBDS or randomly choosing
 %                               one block in RBDS.
 %                               It is only for reproducibility in experiments. A positive integer.
@@ -305,14 +308,21 @@ if strcmpi(options.Algorithm, "pbds")
 end
 
 % Set replacement_delay. This is done only when Algorithm is "rbds", which
-% randomly selects a block to visit in each iteration. If replacement_delay is r,
-% then the block that is selected in the current iteration will not be selected in
-% the next r iterations. Note that replacement_delay cannot exceed num_blocks-1.
+% randomly selects num_selected_blocks blocks in each iteration.
+% If replacement_delay is r, then the block that is selected in the current 
+% iteration will not be selected in the next r iterations. Note that 
+% replacement_delay cannot exceed ceil(num_blocks/num_selected_blocks)-1.
 if strcmpi(options.Algorithm, "rbds")
-    if isfield(options, "replacement_delay")
-        replacement_delay = min(options.replacement_delay, num_blocks-1);
+    if isfield(options, "num_selected_blocks")
+        num_selected_blocks = min(options.num_selected_blocks, num_blocks);
     else
-        replacement_delay = min(get_default_constant("replacement_delay"), num_blocks-1);
+        num_selected_blocks = min(get_default_constant("num_selected_blocks"), num_blocks);
+    end
+
+    if isfield(options, "replacement_delay")
+        replacement_delay = min(options.replacement_delay, ceil(num_blocks/num_selected_blocks)-1);
+    else
+        replacement_delay = min(get_default_constant("replacement_delay"), ceil(num_blocks/num_selected_blocks)-1);
     end
 end
 

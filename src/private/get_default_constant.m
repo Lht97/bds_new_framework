@@ -53,6 +53,8 @@ switch constant_name
         constant_value = 1;
     case {"replacement_delay"}
         constant_value = 1;
+    case {"num_selected_blocks"}
+        constant_value = 1;
     case {"seed"}
         constant_value = "shuffle";
     case {"ftarget"}

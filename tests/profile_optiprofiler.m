@@ -207,6 +207,16 @@ function profile_optiprofiler(options)
                 solvers{i} = @rbds_test;
             case 'rbds-noisy'
                 solvers{i} = @(fun, x0) rbds_test_noisy(fun, x0, true);
+            case 'rbds-zero-delay'
+                solvers{i} = @rbds_zero_delay_test;
+            case 'rbds-one-delay'
+                solvers{i} = @rbds_one_delay_test;
+            case 'rbds-eighth-delay'
+                solvers{i} = @rbds_eighth_delay_test;
+            case 'rbds-quarter-delay'
+                solvers{i} = @rbds_quarter_delay_test;
+            case 'rbds-half-delay'
+                solvers{i} = @rbds_half_delay_test;
             case 'pads'
                 solvers{i} = @pads_test;
             case 'pads-noisy'
@@ -656,6 +666,56 @@ function x = rbds_test_noisy(fun, x0, is_noisy)
 
     option.Algorithm = 'rbds';
     option.is_noisy = is_noisy;
+    x = bds(fun, x0, option);
+    
+end
+
+function x = rbds_zero_delay_test(fun, x0)
+
+    option.Algorithm = 'rbds';
+    option.expand = 2;
+    option.shrink = 0.5;
+    option.replacement_delay = 0;
+    x = bds(fun, x0, option);
+    
+end
+
+function x = rbds_one_delay_test(fun, x0)
+
+    option.Algorithm = 'rbds';
+    option.expand = 2;
+    option.shrink = 0.5;
+    option.replacement_delay = 1;
+    x = bds(fun, x0, option);
+    
+end
+
+function x = rbds_eighth_delay_test(fun, x0)
+
+    option.Algorithm = 'rbds';
+    option.expand = 2;
+    option.shrink = 0.5;
+    option.replacement_delay = ceil(numel(x0)/8);
+    x = bds(fun, x0, option);
+    
+end
+
+function x = rbds_quarter_delay_test(fun, x0)
+
+    option.Algorithm = 'rbds';
+    option.expand = 2;
+    option.shrink = 0.5;
+    option.replacement_delay = ceil(numel(x0)/4);
+    x = bds(fun, x0, option);
+    
+end
+
+function x = rbds_half_delay_test(fun, x0)
+
+    option.Algorithm = 'rbds';
+    option.expand = 2;
+    option.shrink = 0.5;
+    option.replacement_delay = ceil(numel(x0)/2);
     x = bds(fun, x0, option);
     
 end
