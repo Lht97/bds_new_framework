@@ -525,10 +525,10 @@ for iter = 1:maxit
     % Use central difference to estimate the gradient of the function at xopt if the sufficient decrease
     % condition is not achieved in the previous iteration and the problem is not noisy.
     if iter > 1 && ~is_noisy && (strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds")) ...
-        && ~all(sufficient_decrease(:, iter-1))
+            && ~all(sufficient_decrease(:, iter-1))
         if verbose
             fprintf("The Algorithm is %s and failed to achieve sufficient decrease " ...
-        + "in the previous iteration.\n", options.Algorithm);
+                + "in the previous iteration.\n", options.Algorithm);
         end
         g = NaN(n, 1);
         for i = 1:n
@@ -536,23 +536,13 @@ for iter = 1:maxit
             g(i_real) = (fhist(nf - 2*(i_real - 1) - 1) - fhist(nf - 2*(i_real - 1))) / (2*alpha_hist(i_real, iter-1));
         end
         grad_hist = [grad_hist norm(g)];
-        if min(grad_hist) < grad_tol
-            if verbose
-                fprintf("The norm of the gradient is smaller than grad_tol.\n");
+        if min(grad_hist) < grad_tol || (length(grad_hist) > 1 && ...
+                (grad_hist(1) - grad_hist(end)) / grad_hist(1) > (1 - 1e-6))
+            if min(grad_hist) < grad_tol
+                exitflag = get_exitflag("SMALL_ESTIMATE_GRADIENT");
+            else
+                exitflag = get_exitflag("ESTIMATED_GRADIENT_FULLY_REDUCED");
             end
-            terminate = true;
-        end
-        if length(grad_hist) > 1
-            grad_reduction_rate = (grad_hist(1) - grad_hist(end)) / grad_hist(1);
-            if grad_reduction_rate > (1 - 1e-6)
-                if verbose
-                    fprintf("The relative reduction rate of the gradient is greater than 1 - 1e-6.\n");
-                end
-                terminate = true;
-            end
-        end
-        if terminate
-            exitflag = get_exitflag("GRADIENT_SMALL");
             break;
         end
     end
@@ -616,7 +606,7 @@ for iter = 1:maxit
 
         % Record the sufficient decrease value and the boolean value of whether the sufficient decrease
         % is achieved or not.
-        if strcmpi(options.Algorithm, "cbds") && strcmpi(options.Algorithm, "pbds")
+        if strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds")
             sufficient_decrease_value(i_real, iter) = sub_output.sufficient_decrease_value;
             sufficient_decrease(i_real, iter) = sub_output.sufficient_decrease;
         end
@@ -770,8 +760,10 @@ switch exitflag
         output.message = "The target of the objective function is reached.";
     case {get_exitflag("MAXIT_REACHED")}
         output.message = "The maximum number of iterations is reached.";
-    case {get_exitflag("GRADIENT_SMALL")}
+    case {get_exitflag("SMALL_ESTIMATE_GRADIENT")}
         output.message = "The estimated gradient tolerance is reached.";
+    case {get_exitflag("ESTIMATED_GRADIENT_FULLY_REDUCED")}
+        output.message = "The estimated gradient is fully reduced.";
     otherwise
         output.message = "Unknown exitflag";
 end
