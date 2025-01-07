@@ -72,11 +72,11 @@ function [xopt, fopt, exitflag, output] = bds(fun, x0, options)
 %                               permuting_period iterations. A positive integer. Default: 1.
 %   num_selected_blocks         It is only used for RBDS. Suppose that rbds_num_selected_blocks
 %                               is k. In each iteration, k blocks are randomly selected to visit.
-%                               A positive integer. Default: 1.
+%                               A positive integer less than or equal to num_blocks. Default: num_blocks.
 %   replacement_delay           It is only used for RBDS. Suppose that replacement_delay is r.
 %                               If block i is selected at iteration k, then it will not be
 %                               selected at iterations k+1, ..., k+r. An integer between 0
-%                               and ceil(num_blocks/rbds_num_selected_blocks)-1. 
+%                               and floor(num_blocks/rbds_num_selected_blocks)-1. 
 %                               Default: floor(num_blocks/rbds_num_selected_blocks)-1.
 %   seed                        The seed for permuting blocks in PBDS or randomly choosing
 %                               one block in RBDS.
@@ -308,16 +308,19 @@ if strcmpi(options.Algorithm, "pbds")
     end
 end
 
-% Set replacement_delay. This is done only when Algorithm is "rbds", which
-% randomly selects num_selected_blocks blocks in each iteration.
-% If replacement_delay is r, then the block that is selected in the current 
-% iteration will not be selected in the next r iterations. Note that 
-% replacement_delay cannot exceed floor(num_blocks/num_selected_blocks)-1.
+% Set replacement_delay and num_selected_blocks. This is done only when 
+% Algorithm is "rbds", which randomly selects num_selected_blocks blocks in each
+% iteration. If replacement_delay is r, then the block that is selected in the 
+% current iteration will not be selected in the next r iterations. 
+% Note that replacement_delay cannot exceed floor(num_blocks/num_selected_blocks)-1.
+% The reason we set the default value of replacement_delay to floor(num_blocks/num_selected_blocks)-1
+% and num_selected_blocks to num_blocks-1 is that the performance of RBDS will be
+% better when replacement_delay is larger.
 if strcmpi(options.Algorithm, "rbds")
     if isfield(options, "num_selected_blocks")
         num_selected_blocks = min(options.num_selected_blocks, num_blocks);
     else
-        num_selected_blocks = min(get_default_constant("num_selected_blocks"), num_blocks);
+        num_selected_blocks = num_blocks;
     end
 
     if isfield(options, "replacement_delay")
@@ -456,7 +459,8 @@ if isfield(options, "output_sufficient_decrease")
 else
     output_sufficient_decrease = get_default_constant("output_sufficient_decrease");
 end
-if strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds")
+
+if (strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds")) || (strcmpi(options.Algorithm, "rbds") && num_selected_blocks == num_blocks)
     try
         sufficient_decrease_value = NaN(num_blocks, MaxFunctionEvaluations);
     catch
@@ -535,8 +539,9 @@ for iter = 1:maxit
 
     % Use central difference to estimate the gradient of the function at xopt if the sufficient decrease
     % condition is not achieved in the previous iteration and the problem is not noisy.
-    if iter > 1 && ~is_noisy && (strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds")) ...
-            && ~any(sufficient_decrease(:, iter-1))
+    if iter > 1 && ~is_noisy && ~any(sufficient_decrease(:, iter-1)) ...
+            && ((strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds")) ...
+            || (strcmpi(options.Algorithm, "rbds") && num_selected_blocks == num_blocks))
         if verbose
             fprintf("The Algorithm is %s and failed to achieve sufficient decrease " ...
                 + "in the previous iteration.\n", options.Algorithm);

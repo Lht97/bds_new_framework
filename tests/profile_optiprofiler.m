@@ -203,6 +203,8 @@ function profile_optiprofiler(options)
                 solvers{i} = @pbds_test;
             case 'pbds-noisy'
                 solvers{i} = @(fun, x0) pbds_test_noisy(fun, x0, true);
+            case 'pbds-orig'
+                solvers{i} = @pbds_orig_test;
             case 'rbds'
                 solvers{i} = @rbds_test;
             case 'rbds-noisy'
@@ -219,6 +221,16 @@ function profile_optiprofiler(options)
                 solvers{i} = @rbds_half_delay_test;
             case 'rbds-n-minus-1-delay'
                 solvers{i} = @rbds_n_minus_1_delay_test;
+            case 'rbds-n-block'
+                solvers{i} = @rbds_num_selected_blocks_n_test;
+            case 'rbds-half-n-block'
+                solvers{i} = @rbds_num_selected_blocks_half_n_test;
+            case 'rbds-quarter-n-block'
+                solvers{i} = @rbds_num_selected_blocks_quarter_n_test;
+            case 'rbds-eighth-n-block'
+                solvers{i} = @rbds_num_selected_blocks_eighth_n_test;
+            case 'rbds-one-block'
+                solvers{i} = @rbds_num_selected_blocks_one_test;
             case 'pads'
                 solvers{i} = @pads_test;
             case 'pads-noisy'
@@ -269,8 +281,15 @@ function profile_optiprofiler(options)
                 error('Unknown solver');
         end
     end
-    options.benchmark_id =[strrep(options.solver_names{1}, '-', '_'), '_', strrep(options.solver_names{2}, '-', '_'),...
-        '_', num2str(options.mindim), '_', num2str(options.maxdim), '_', num2str(options.n_runs)];
+    options.benchmark_id = [];
+    for i = 1:length(solvers)
+        if i == 1
+            options.benchmark_id = strrep(options.solver_names{i}, '-', '_');
+        else
+            options.benchmark_id = [options.benchmark_id, '_', strrep(options.solver_names{i}, '-', '_')];
+        end
+    end
+    options.benchmark_id = [options.benchmark_id, '_', num2str(options.mindim), '_', num2str(options.maxdim), '_', num2str(options.n_runs)];
     switch options.feature_name
         case 'noisy'
             options.benchmark_id = [options.benchmark_id, '_', options.feature_name, '_', int2str(int32(-log10(options.noise_level))), '_no_rotation'];
@@ -540,6 +559,16 @@ function x = pbds_test_noisy(fun, x0, is_noisy)
 
 end
 
+function x = pbds_orig_test(fun, x0)
+
+    option.Algorithm = 'pbds';
+    option.expand = 2;
+    option.shrink = 0.5;
+    option.permuting_period = 0;
+    x = bds(fun, x0, option);
+    
+end
+
 function x = cbds_test(fun, x0)
 
     option.Algorithm = 'cbds';
@@ -732,11 +761,54 @@ function x = rbds_n_minus_1_delay_test(fun, x0)
     
 end
 
-function x = pads_test(fun, x0)
+function x = rbds_num_selected_blocks_n_test(fun, x0)
 
-    option.Algorithm = 'pads';
+    option.Algorithm = 'rbds';
+    option.expand = 2;
+    option.shrink = 0.5;
+    option.num_selected_blocks = numel(x0);
     x = bds(fun, x0, option);
     
+end
+
+function x = rbds_num_selected_blocks_half_n_test(fun, x0)
+
+    option.Algorithm = 'rbds';
+    option.expand = 2;
+    option.shrink = 0.5;
+    option.num_selected_blocks = ceil(numel(x0)/2);
+    x = bds(fun, x0, option);
+
+end
+
+function x = rbds_num_selected_blocks_quarter_n_test(fun, x0)
+
+    option.Algorithm = 'rbds';
+    option.expand = 2;
+    option.shrink = 0.5;
+    option.num_selected_blocks = ceil(numel(x0)/4);
+    x = bds(fun, x0, option);
+
+end
+
+function x = rbds_num_selected_blocks_eighth_n_test(fun, x0)
+
+    option.Algorithm = 'rbds';
+    option.expand = 2;
+    option.shrink = 0.5;
+    option.num_selected_blocks = ceil(numel(x0)/8);
+    x = bds(fun, x0, option);
+
+end
+
+function x = rbds_num_selected_blocks_one_test(fun, x0)
+
+    option.Algorithm = 'rbds';
+    option.expand = 2;
+    option.shrink = 0.5;
+    option.num_selected_blocks = 1;
+    x = bds(fun, x0, option);
+
 end
 
 function x = pads_test_noisy(fun, x0, is_noisy)
