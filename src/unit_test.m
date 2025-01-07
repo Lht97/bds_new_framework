@@ -199,10 +199,6 @@ constant_name = "permuting_period";
 constant_value = 1;
 verifyEqual(testCase, get_default_constant(constant_name), constant_value)
 
-constant_name = "replacement_delay";
-constant_value = 1;
-verifyEqual(testCase, get_default_constant(constant_name), constant_value)
-
 constant_name = "ftarget";
 constant_value = -inf;
 verifyEqual(testCase, get_default_constant(constant_name), constant_value)
