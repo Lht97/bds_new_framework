@@ -217,8 +217,8 @@ function profile_optiprofiler(options)
                 solvers{i} = @rbds_quarter_delay_test;
             case 'rbds-half-delay'
                 solvers{i} = @rbds_half_delay_test;
-            case 'rbds-n-delay'
-                solvers{i} = @rbds_n_delay_test;
+            case 'rbds-n-minus-1-delay'
+                solvers{i} = @rbds_n_minus_1_delay_test;
             case 'pads'
                 solvers{i} = @pads_test;
             case 'pads-noisy'
@@ -722,7 +722,7 @@ function x = rbds_half_delay_test(fun, x0)
     
 end
 
-function x = rbds_n_delay_test(fun, x0)
+function x = rbds_n_minus_1_delay_test(fun, x0)
 
     option.Algorithm = 'rbds';
     option.expand = 2;

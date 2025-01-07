@@ -76,7 +76,8 @@ function [xopt, fopt, exitflag, output] = bds(fun, x0, options)
 %   replacement_delay           It is only used for RBDS. Suppose that replacement_delay is r.
 %                               If block i is selected at iteration k, then it will not be
 %                               selected at iterations k+1, ..., k+r. An integer between 0
-%                               and ceil(num_blocks/rbds_num_selected_blocks)-1. Default: 0.
+%                               and ceil(num_blocks/rbds_num_selected_blocks)-1. 
+%                               Default: floor(num_blocks/rbds_num_selected_blocks)-1.
 %   seed                        The seed for permuting blocks in PBDS or randomly choosing
 %                               one block in RBDS.
 %                               It is only for reproducibility in experiments. A positive integer.
@@ -322,7 +323,7 @@ if strcmpi(options.Algorithm, "rbds")
     if isfield(options, "replacement_delay")
         replacement_delay = min(options.replacement_delay, floor(num_blocks/num_selected_blocks)-1);
     else
-        replacement_delay = min(get_default_constant("replacement_delay"), floor(num_blocks/num_selected_blocks)-1);
+        replacement_delay = floor(num_blocks/num_selected_blocks)-1;
     end
 end
 

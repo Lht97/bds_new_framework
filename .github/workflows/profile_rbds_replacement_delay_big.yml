@@ -24,6 +24,7 @@ jobs:
         competitor_2: [rbds-eighth-delay]
         competitor_3: [rbds-quarter-delay]
         competitor_4: [rbds-half-delay]
+        competitor_5: [rbds-n-minus-one-delay]
         run_plain: [false]
         summarize_log_ratio_profiles: [false]
         feature: [plain, noisy_1e-1, noisy_1e-2, noisy_1e-3, noisy_1e-4, linearly_transformed, rotation_noisy_1e-1, rotation_noisy_1e-2, rotation_noisy_1e-3, rotation_noisy_1e-4]
@@ -82,7 +83,7 @@ jobs:
               cd(fullfile(root_dir, 'tests'));
               options = struct();
               options.feature_name = '${{ matrix.feature }}';
-              options.solver_names = {'${{ matrix.solver }}', '${{ matrix.competitor_1 }}', '${{ matrix.competitor_2 }}', '${{ matrix.competitor_3 }}', '${{ matrix.competitor_4 }}'};
+              options.solver_names = {'${{ matrix.solver }}', '${{ matrix.competitor_1 }}', '${{ matrix.competitor_2 }}', '${{ matrix.competitor_3 }}', '${{ matrix.competitor_4 }}', '${{ matrix.competitor_5 }}'};
               options.dim = '${{ matrix.dim }}';
               options.n_runs = 1;
               options.run_plain = ${{ matrix.run_plain }};
@@ -127,7 +128,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3.1.2
         with:
-          name: profile_optiprofiler_${{ matrix.solver }}_${{ matrix.competitor_1 }}_${{ matrix.competitor_2 }}_${{ matrix.competitor_3 }}_${{ matrix.competitor_4 }}_${{ matrix.dim }}_${{ matrix.feature }}
+          name: profile_optiprofiler_${{ matrix.solver }}_${{ matrix.competitor_1 }}_${{ matrix.competitor_2 }}_${{ matrix.competitor_3 }}_${{ matrix.competitor_4 }}_${{ matrix.competitor_5 }}_${{ matrix.dim }}_${{ matrix.feature }}
           path: ./tests/out/**
 
   merge_artifacts:
