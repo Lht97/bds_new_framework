@@ -311,11 +311,11 @@ end
 % Set replacement_delay and num_selected_blocks. This is done only when 
 % Algorithm is "rbds", which randomly selects num_selected_blocks blocks in each
 % iteration. If replacement_delay is r, then the block that is selected in the 
-% current iteration will not be selected in the next r iterations. 
-% Note that replacement_delay cannot exceed floor(num_blocks/num_selected_blocks)-1.
-% The reason we set the default value of replacement_delay to floor(num_blocks/num_selected_blocks)-1
-% and num_selected_blocks to num_blocks-1 is that the performance of RBDS will be
-% better when replacement_delay is larger.
+% current iteration will not be selected in the next r iterations. Note that 
+% replacement_delay cannot exceed floor(num_blocks/num_selected_blocks)-1.
+% The reason we set the default value of replacement_delay to 
+% floor(num_blocks/num_selected_blocks)-1 and num_selected_blocks to 
+% num_blocks-1 is that the performance of RBDS will be better when replacement_delay is larger.
 if strcmpi(options.Algorithm, "rbds")
     if isfield(options, "num_selected_blocks")
         num_selected_blocks = min(options.num_selected_blocks, num_blocks);
@@ -459,8 +459,11 @@ if isfield(options, "output_sufficient_decrease")
 else
     output_sufficient_decrease = get_default_constant("output_sufficient_decrease");
 end
-
-if (strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds")) || (strcmpi(options.Algorithm, "rbds") && num_selected_blocks == num_blocks)
+% Initialize the history of sufficient decrease value and the boolean value of whether the sufficient decrease
+% is achieved or not when the problem is not noisy and each block will be visited once in each iteration,
+% i.e., the Algorithm is "cbds" or "pbds" or "rbds" and num_selected_blocks is equal to num_blocks.
+if ~is_noisy && ((strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds")) ...
+    || (strcmpi(options.Algorithm, "rbds") && num_selected_blocks == num_blocks))
     try
         sufficient_decrease_value = NaN(num_blocks, MaxFunctionEvaluations);
     catch
@@ -538,7 +541,9 @@ grad_hist = [];
 for iter = 1:maxit
 
     % Use central difference to estimate the gradient of the function at xopt if the sufficient decrease
-    % condition is not achieved in the previous iteration and the problem is not noisy.
+    % condition is not achieved in the previous iteration and the problem is not noisy and each block
+    % will be visited once in each iteration, i.e., the Algorithm is "cbds" or "pbds" or "rbds" and
+    % num_selected_blocks is equal to num_blocks.
     if iter > 1 && ~is_noisy && ((strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds")) ...
         || (strcmpi(options.Algorithm, "rbds") && num_selected_blocks == num_blocks)) && ~any(sufficient_decrease(:, iter-1))
         if verbose
@@ -546,6 +551,8 @@ for iter = 1:maxit
                 + "in the previous iteration.\n", options.Algorithm);
         end
         g = NaN(n, 1);
+        % The following loop is to estimate the gradient at xopt using central difference, with the
+        % function values stored in the previous iteration.
         for i = 1:n
             i_real = block_indices(i);
             g(i_real) = (fhist(nf - 2*(i_real - 1) - 1) - fhist(nf - 2*(i_real - 1))) / (2*alpha_hist(i_real, iter-1));
