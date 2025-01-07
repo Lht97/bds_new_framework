@@ -20,9 +20,9 @@ jobs:
         dim: [big]
         with_optim_toolbox: [yes]
         solver: [rbds-one-block]
-        competitor_1: [rbds-eighth-block]
-        competitor_2: [rbds-quarter-block]
-        competitor_3: [rbds-half-block]
+        competitor_1: [rbds-eighth-n-block]
+        competitor_2: [rbds-quarter-n-block]
+        competitor_3: [rbds-half-n-block]
         competitor_4: [rbds-n-block]
         run_plain: [false]
         summarize_log_ratio_profiles: [false]
@@ -177,7 +177,7 @@ jobs:
           cd summary
           ls
           bash ../merge_pdf.sh
-          mv merged.pdf "summary_rbds_replacement_delay_big.pdf"
+          mv merged.pdf "summary_rbds_num_selected_blocks_big.pdf"
           cd ..
           if [ -d "summary" ]; then
             mv summary "summary_${BASE_INFO}"
@@ -196,5 +196,5 @@ jobs:
         env:
           BASE_INFO: ${{ env.BASE_INFO }}
         with:
-          name: summary_files_rbds_replacement_delay_big
+          name: summary_files_rbds_num_selected_blocks_big
           path: tests/testdata/downloaded_artifacts/summary_${{ env.BASE_INFO }}/**

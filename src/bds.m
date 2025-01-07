@@ -462,7 +462,7 @@ end
 % Initialize the history of sufficient decrease value and the boolean value of whether the sufficient decrease
 % is achieved or not when the problem is not noisy and each block will be visited once in each iteration,
 % i.e., the Algorithm is "cbds" or "pbds" or "rbds" and num_selected_blocks is equal to num_blocks.
-if ~is_noisy && ((strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds")) ...
+if ~is_noisy && ((strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds") && num_blocks == n) ... 
     || (strcmpi(options.Algorithm, "rbds") && num_selected_blocks == num_blocks))
     try
         sufficient_decrease_value = NaN(num_blocks, MaxFunctionEvaluations);
@@ -544,7 +544,7 @@ for iter = 1:maxit
     % condition is not achieved in the previous iteration and the problem is not noisy and each block
     % will be visited once in each iteration, i.e., the Algorithm is "cbds" or "pbds" or "rbds" and
     % num_selected_blocks is equal to num_blocks.
-    if iter > 1 && ~is_noisy && ((strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds")) ...
+    if iter > 1 && ~is_noisy && ((strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds") && num_blocks == n) ...
         || (strcmpi(options.Algorithm, "rbds") && num_selected_blocks == num_blocks)) && ~any(sufficient_decrease(:, iter-1))
         if verbose
             fprintf("The Algorithm is %s and failed to achieve sufficient decrease " ...
