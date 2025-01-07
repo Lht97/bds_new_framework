@@ -181,6 +181,12 @@ if isfield(options, "shuffle_period")
     end
 end
 
+if isfield(options, "num_selected_blocks")
+    if ~(isintegerscalar(options.num_selected_blocks) && options.num_selected_blocks > 0)
+        error("options.num_selected_blocks should be a positive integer.");
+    end
+end
+
 if isfield(options, "replacement_delay")
     if ~(isintegerscalar(options.replacement_delay) && options.replacement_delay >= 0)
         error("options.replacement_delay should be a nonnegative integer.");

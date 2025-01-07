@@ -103,8 +103,8 @@ function [xopt, fopt, exitflag, output] = bds(fun, x0, options)
 %
 %   fhist        History of function values.
 %   xhist        History of points visited (if output_xhist is true).
-%   alpha_hist   History of step size for every iteration (if alpha_hist is true).
-%   blocks_hist  History of blocks visited (if block_hist is true).
+%   alpha_hist   History of step size for every iteration (if output_alpha_hist is true).
+%   blocks_hist  History of blocks visited (if output_block_hist is true).
 %   funcCount    The number of function evaluations.
 %   message      The information of EXITFLAG.
 %
@@ -311,7 +311,7 @@ end
 % randomly selects num_selected_blocks blocks in each iteration.
 % If replacement_delay is r, then the block that is selected in the current 
 % iteration will not be selected in the next r iterations. Note that 
-% replacement_delay cannot exceed ceil(num_blocks/num_selected_blocks)-1.
+% replacement_delay cannot exceed floor(num_blocks/num_selected_blocks)-1.
 if strcmpi(options.Algorithm, "rbds")
     if isfield(options, "num_selected_blocks")
         num_selected_blocks = min(options.num_selected_blocks, num_blocks);
@@ -320,9 +320,9 @@ if strcmpi(options.Algorithm, "rbds")
     end
 
     if isfield(options, "replacement_delay")
-        replacement_delay = min(options.replacement_delay, ceil(num_blocks/num_selected_blocks)-1);
+        replacement_delay = min(options.replacement_delay, floor(num_blocks/num_selected_blocks)-1);
     else
-        replacement_delay = min(get_default_constant("replacement_delay"), ceil(num_blocks/num_selected_blocks)-1);
+        replacement_delay = min(get_default_constant("replacement_delay"), floor(num_blocks/num_selected_blocks)-1);
     end
 end
 
@@ -535,7 +535,7 @@ for iter = 1:maxit
     % Use central difference to estimate the gradient of the function at xopt if the sufficient decrease
     % condition is not achieved in the previous iteration and the problem is not noisy.
     if iter > 1 && ~is_noisy && (strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds")) ...
-            && ~all(sufficient_decrease(:, iter-1))
+            && ~any(sufficient_decrease(:, iter-1))
         if verbose
             fprintf("The Algorithm is %s and failed to achieve sufficient decrease " ...
                 + "in the previous iteration.\n", options.Algorithm);
@@ -571,14 +571,13 @@ for iter = 1:maxit
         % when iter = 1.
         block_indices = random_stream.randperm(num_blocks);
     elseif strcmpi(options.Algorithm, "rbds")
-        % Get the block that is going to be visited in this iteration when the Algorithm is "rbds".
-        % This block should not have been visited in the previous replacement_delay iterations.
-        % Note that block_indices is a vector of length 1 in this case.
-        unavailable_block_indices = block_hist(max(1, iter-replacement_delay) : iter - 1);
+        % Get the blocks that are going to be visited in this iteration when the Algorithm is "rbds".
+        % These blocks should not have been visited in the previous replacement_delay iterations.
+        % Note that block_indices is a vector of length num_selected_blocks.
+        unavailable_block_indices = unique(block_hist(max(1, (iter-replacement_delay) * num_selected_blocks) : (iter-1) * num_selected_blocks), 'stable');
         available_block_indices = setdiff(all_block_indices, unavailable_block_indices);
-        % Select a block randomly from available_block_indices.
-        idx = random_stream.randi(length(available_block_indices));
-        block_indices = available_block_indices(idx);  % a vector of length 1
+        % Select num_selected_blocks blocks randomly from the available blocks.
+        block_indices = available_block_indices(random_stream.randperm(length(available_block_indices), num_selected_blocks));
     elseif strcmpi(options.Algorithm, "scbds")
         % Get the block that is going to be visited in this iteration when the Algorithm
         % is "scbds".
