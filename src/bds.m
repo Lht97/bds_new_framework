@@ -465,10 +465,10 @@ end
 % i.e., the Algorithm is "cbds" or "pbds" or "rbds" and num_selected_blocks is equal to num_blocks.
 % The use of sufficient_decrease_value and sufficient_decrease is to estimate the gradient of the function
 % at the best point encountered so far when the sufficient decrease condition is not achieved in the previous
-% iteration. It is an optional termination criterion.
+% iteration. It is an optional termination criterion unless use_estimated_gradient_stop is true.
 is_estimated_gradient_stop = use_estimated_gradient_stop && ~is_noisy && ...
 (((strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds")) && num_blocks == n) ... 
-    || (strcmpi(options.Algorithm, "rbds") && num_selected_blocks == num_blocks));
+    || (strcmpi(options.Algorithm, "rbds") && num_selected_blocks == n));
 if is_estimated_gradient_stop
     try
         sufficient_decrease_value = NaN(num_blocks, MaxFunctionEvaluations);
