@@ -7,7 +7,7 @@ clear all
 %     profile_optiprofiler(options);
 % end
 options.dim = 'small';
-options.solver_names = {'pbds-orig', 'rbds-n-block', 'cbds-orig'};
+options.solver_names = {'rbds-zero-delay', 'rbds-one-delay'};
 options.feature_name = 'plain';
 profile_optiprofiler(options);
 

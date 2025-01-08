@@ -150,23 +150,17 @@ if isfield(options, "Algorithm") && ~ismember(lower(options.Algorithm), Algorith
 end
 
 % Preprocess the number of blocks.
-if isfield(options, "Algorithm")
-    if isfield(options, "num_blocks")
-        warning("The num_blocks input is ignored since the Algorithm is specified.");
-        options = rmfield(options, "num_blocks");
+if isfield(options, "num_blocks")
+    if options.num_blocks > num_directions
+        error("The number of blocks should be less than or equal to the number of directions.\n");
     end
-else
-    if isfield(options, "num_blocks")
-        if options.num_blocks > num_directions
-            error("The number of blocks should be less than or equal to the number of directions.\n");
-        end
-        if options.num_blocks > n
-            warning("The number of blocks should be less than or equal to the dimension of the problem.\n");
-            warning("The number of blocks is set to be the minimum of the number of directions and the dimension of the problem.\n");
-            options.num_blocks = min(num_directions, n);
-        end
+    if options.num_blocks > n
+        warning("The number of blocks should be less than or equal to the dimension of the problem.\n");
+        warning("The number of blocks is set to be the minimum of the number of directions and the dimension of the problem.\n");
+        options.num_blocks = min(num_directions, n);
     end
 end
+
 
 % Set the default value of Algorithm if options do not contain Algorithm.
 if ~isfield(options, "Algorithm")
@@ -459,11 +453,23 @@ if isfield(options, "output_sufficient_decrease")
 else
     output_sufficient_decrease = get_default_constant("output_sufficient_decrease");
 end
+
+if isfield(options, "use_estimated_gradient_stop")
+    use_estimated_gradient_stop = options.use_estimated_gradient_stop;
+else
+    use_estimated_gradient_stop = true;
+end
+
 % Initialize the history of sufficient decrease value and the boolean value of whether the sufficient decrease
 % is achieved or not when the problem is not noisy and each block will be visited once in each iteration,
 % i.e., the Algorithm is "cbds" or "pbds" or "rbds" and num_selected_blocks is equal to num_blocks.
-if ~is_noisy && ((strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds") && num_blocks == n) ... 
-    || (strcmpi(options.Algorithm, "rbds") && num_selected_blocks == num_blocks))
+% The use of sufficient_decrease_value and sufficient_decrease is to estimate the gradient of the function
+% at the best point encountered so far when the sufficient decrease condition is not achieved in the previous
+% iteration. It is an optional termination criterion.
+is_estimated_gradient_stop = use_estimated_gradient_stop && ~is_noisy && ...
+(((strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds")) && num_blocks == n) ... 
+    || (strcmpi(options.Algorithm, "rbds") && num_selected_blocks == num_blocks));
+if is_estimated_gradient_stop
     try
         sufficient_decrease_value = NaN(num_blocks, MaxFunctionEvaluations);
     catch
@@ -539,13 +545,10 @@ num_visited_blocks = 0;
 grad_hist = [];
 
 for iter = 1:maxit
-
+    
     % Use central difference to estimate the gradient of the function at xopt if the sufficient decrease
-    % condition is not achieved in the previous iteration and the problem is not noisy and each block
-    % will be visited once in each iteration, i.e., the Algorithm is "cbds" or "pbds" or "rbds" and
-    % num_selected_blocks is equal to num_blocks.
-    if iter > 1 && ~is_noisy && ((strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds") && num_blocks == n) ...
-        || (strcmpi(options.Algorithm, "rbds") && num_selected_blocks == num_blocks)) && ~any(sufficient_decrease(:, iter-1))
+    % condition is not achieved in the previous iteration and the problem is not noisy.
+    if is_estimated_gradient_stop && iter > 1 && ~any(sufficient_decrease(:, iter-1))
         if verbose
             fprintf("The Algorithm is %s and failed to achieve sufficient decrease " ...
                 + "in the previous iteration.\n", options.Algorithm);
@@ -626,8 +629,8 @@ for iter = 1:maxit
             alpha_all(i_real), suboptions);
 
         % Record the sufficient decrease value and the boolean value of whether the sufficient decrease
-        % is achieved or not.
-        if strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds")
+        % is achieved or not if is_estimated_gradient_stop is true.
+        if is_estimated_gradient_stop
             sufficient_decrease_value(i_real, iter) = sub_output.sufficient_decrease_value;
             sufficient_decrease(i_real, iter) = sub_output.sufficient_decrease;
         end

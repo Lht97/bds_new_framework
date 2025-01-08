@@ -607,6 +607,7 @@ function x = cbds_half_block_test(fun, x0)
     option.num_blocks = ceil(numel(x0)/2);
     option.expand = 2;
     option.shrink = 0.5;
+    option.use_estimated_gradient_stop = false;
     x = bds(fun, x0, option);
     
 end
@@ -616,6 +617,7 @@ function x = cbds_quarter_block_test(fun, x0)
     option.num_blocks = ceil(numel(x0)/4);
     option.expand = 2;
     option.shrink = 0.5;
+    option.use_estimated_gradient_stop = false;
     x = bds(fun, x0, option);
     
 end
@@ -625,6 +627,7 @@ function x = cbds_eighth_block_test(fun, x0)
     option.num_blocks = ceil(numel(x0)/8);
     option.expand = 2;
     option.shrink = 0.5;
+    option.use_estimated_gradient_stop = false;
     x = bds(fun, x0, option);
     
 end
