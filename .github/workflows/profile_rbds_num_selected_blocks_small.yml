@@ -5,7 +5,7 @@ on:
   # push:
   # Trigger the workflow manually
   schedule:
-  - cron: '0 16 */1 * *'
+  - cron: '0 14 */1 * *'
   workflow_dispatch:
 
 jobs:
@@ -84,6 +84,7 @@ jobs:
               options.feature_name = '${{ matrix.feature }}';
               options.solver_names = {'${{ matrix.solver }}', '${{ matrix.competitor_1 }}', '${{ matrix.competitor_2 }}', '${{ matrix.competitor_3 }}', '${{ matrix.competitor_4 }}'};
               options.dim = '${{ matrix.dim }}';
+              options.n_runs = 1;
               options.run_plain = ${{ matrix.run_plain }};
               options.summarize_log_ratio_profiles = ${{ matrix.summarize_log_ratio_profiles }};
               options.test_blocks = true;
@@ -187,7 +188,7 @@ jobs:
         env:
           BASE_INFO: ${{ env.BASE_INFO }}
         with:
-          name: merged_profiles_rbds_replacement_delay_big
+          name: merged_profiles_rbds_num_selected_blocks_small
           path: tests/testdata/downloaded_artifacts/**
 
       - name: Upload summary files

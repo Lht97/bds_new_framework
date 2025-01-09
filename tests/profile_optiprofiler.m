@@ -278,6 +278,7 @@ function profile_optiprofiler(options)
             case 'nomad-6'
                 solvers{i} = @nomad_6_test;
             otherwise
+                keyboard
                 error('Unknown solver');
         end
     end
