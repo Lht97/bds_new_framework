@@ -104,8 +104,6 @@ The following tests are implemented by [Optiprofiler](https://github.com/optipro
     - [![Profile cbds with randomized gaussian matrix input, small](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_randomized_gaussian_small.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_randomized_gaussian_small.yml)
     - [![Profile cbds with rbds using optiprofiler, big](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_rbds_big.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_rbds_big.yml)
     - [![Profile cbds with rbds using optiprofiler, small](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_rbds_small.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_rbds_small.yml)
-    - [![Profile rbds with different replacement_delay, big](https://github.com/opt-lab/bds/actions/workflows/profile_rbds_replacement_delay_big.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_rbds_replacement_delay_big.yml)
-    - [![Profile rbds with different replacement_delay, small](https://github.com/opt-lab/bds/actions/workflows/profile_rbds_replacement_delay_small.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_rbds_replacement_delay_small.yml)
 
 
 - [Tests](https://github.com/optimlib/bds/actions) at [optimlib/bds](https://github.com/optimlib/bds)
