@@ -209,27 +209,38 @@ function profile_optiprofiler(options)
                 solvers{i} = @rbds_test;
             case 'rbds-noisy'
                 solvers{i} = @(fun, x0) rbds_test_noisy(fun, x0, true);
-            case 'rbds-zero-delay'
+            % r0d means the replacement delay is zero.
+            case 'r0d'
                 solvers{i} = @rbds_zero_delay_test;
-            case 'rbds-one-delay'
+            % r1d means the replacement delay is one.
+            case 'r1d'
                 solvers{i} = @rbds_one_delay_test;
-            case 'rbds-eighth-delay'
+            % rend means the replacement delay is equal to the eighth of the dimension of the problem.
+            case 'rend'
                 solvers{i} = @rbds_eighth_delay_test;
-            case 'rbds-quarter-delay'
+            % rqnd means the replacement delay is equal to the quarter of the dimension of the problem.
+            case 'rqnd'
                 solvers{i} = @rbds_quarter_delay_test;
-            case 'rbds-half-delay'
+            % rhnd means the replacement delay is equal to the half of the dimension of the problem.
+            case 'rhnd'
                 solvers{i} = @rbds_half_delay_test;
-            case 'rbds-n-minus-1-delay'
+            % rnm1d means the replacement delay is equal to the dimension of the problem minus one.
+            case 'rnm1d'
                 solvers{i} = @rbds_n_minus_1_delay_test;
-            case 'rbds-n-block'
+            % rnb means the number of selected blocks is equal to the dimension of the problem.
+            case 'rnb'
                 solvers{i} = @rbds_num_selected_blocks_n_test;
-            case 'rbds-half-n-block'
+            % rhnb means the number of selected blocks is equal to the half of the dimension of the problem.
+            case 'rhnb'
                 solvers{i} = @rbds_num_selected_blocks_half_n_test;
-            case 'rbds-quarter-n-block'
+            % rqnb means the number of selected blocks is equal to the quarter of the dimension of the problem.
+            case 'rqnb'
                 solvers{i} = @rbds_num_selected_blocks_quarter_n_test;
-            case 'rbds-eighth-n-block'
+            % renb means the number of selected blocks is equal to the eighth of the dimension of the problem.
+            case 'renb'
                 solvers{i} = @rbds_num_selected_blocks_eighth_n_test;
-            case 'rbds-one-block'
+            % r1b means the number of selected blocks is equal to 1.
+            case 'r1b'
                 solvers{i} = @rbds_num_selected_blocks_one_test;
             case 'pads'
                 solvers{i} = @pads_test;
@@ -278,7 +289,6 @@ function profile_optiprofiler(options)
             case 'nomad-6'
                 solvers{i} = @nomad_6_test;
             otherwise
-                keyboard
                 error('Unknown solver');
         end
     end
@@ -708,6 +718,7 @@ end
 function x = rbds_zero_delay_test(fun, x0)
 
     option.Algorithm = 'rbds';
+    option.num_selected_blocks = 1;
     option.expand = 2;
     option.shrink = 0.5;
     option.replacement_delay = 0;
@@ -718,6 +729,7 @@ end
 function x = rbds_one_delay_test(fun, x0)
 
     option.Algorithm = 'rbds';
+    option.num_selected_blocks = 1;
     option.expand = 2;
     option.shrink = 0.5;
     option.replacement_delay = 1;
@@ -728,6 +740,7 @@ end
 function x = rbds_eighth_delay_test(fun, x0)
 
     option.Algorithm = 'rbds';
+    option.num_selected_blocks = 1;
     option.expand = 2;
     option.shrink = 0.5;
     option.replacement_delay = ceil(numel(x0)/8);
@@ -738,6 +751,7 @@ end
 function x = rbds_quarter_delay_test(fun, x0)
 
     option.Algorithm = 'rbds';
+    option.num_selected_blocks = 1;
     option.expand = 2;
     option.shrink = 0.5;
     option.replacement_delay = ceil(numel(x0)/4);
@@ -748,6 +762,7 @@ end
 function x = rbds_half_delay_test(fun, x0)
 
     option.Algorithm = 'rbds';
+    option.num_selected_blocks = 1;
     option.expand = 2;
     option.shrink = 0.5;
     option.replacement_delay = ceil(numel(x0)/2);
@@ -758,6 +773,7 @@ end
 function x = rbds_n_minus_1_delay_test(fun, x0)
 
     option.Algorithm = 'rbds';
+    option.num_selected_blocks = 1;
     option.expand = 2;
     option.shrink = 0.5;
     option.replacement_delay = numel(x0) - 1;
