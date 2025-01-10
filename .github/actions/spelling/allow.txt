@@ -1491,6 +1491,7 @@ relcomp
 Reliab
 relsize
 Renaut
+renb
 renewcommand 
 renewenvironment
 Reorthogonalization
@@ -1509,6 +1510,8 @@ rgisser
 rgroup
 rhd
 Rheinboldt
+rhnb
+rhnd
 rhobeg
 rhoend
 rhosq
@@ -1535,7 +1538,9 @@ rmfamily
 rmfield
 rmoustache
 rmpath
+rnb
 rng
+rnm
 rnoend
 Rocha
 Rockafellar
@@ -1547,6 +1552,8 @@ rosenbrock
 ROSSIMP
 Rothe
 Royer
+rqnb
+rqnd
 rref
 rseed
 rsh
