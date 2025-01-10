@@ -68,6 +68,8 @@ The following tests are implemented by [Optiprofiler](https://github.com/optipro
     - [![Profile cbds and lam using optiprofiler, small](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_cbds_lam_small.yml/badge.svg)](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_cbds_lam_small.yml)
     - [![Profile original cbds and lam using optiprofiler, big](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_orig_cbds_lam_big.yml/badge.svg)](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_orig_cbds_lam_big.yml)
     - [![Profile original cbds and lam using optiprofiler, small](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_orig_cbds_lam_small.yml/badge.svg)](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_orig_cbds_lam_small.yml)
+    - [![Profile rbds with different number of num_selected_blocks, big](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_rbds_num_selected_blocks_big.yml/badge.svg)](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_rbds_num_selected_blocks_big.yml)
+    - [![Profile rbds with different number of num_selected_blocks, small](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_rbds_num_selected_blocks_small.yml/badge.svg)](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_rbds_num_selected_blocks_small.yml)
   
 - [Tests](https://github.com/dfopt/bds/actions) at [dfopt/bds](https://github.com/dfopt/bds)
 
@@ -75,6 +77,8 @@ The following tests are implemented by [Optiprofiler](https://github.com/optipro
     - [![Profile cbds and newuoa using optiprofiler, small](https://github.com/dfopt/bds/actions/workflows/profile_cbds_newuoa_small.yml/badge.svg)](https://github.com/dfopt/bds/actions/workflows/profile_cbds_newuoa_small.yml)
     - [![Profile original cbds and newuoa using optiprofiler, big](https://github.com/dfopt/bds/actions/workflows/profile_orig_cbds_newuoa_big.yml/badge.svg)](https://github.com/dfopt/bds/actions/workflows/profile_orig_cbds_newuoa_big.yml)
     - [![Profile original cbds and newuoa using optiprofiler, small](https://github.com/dfopt/bds/actions/workflows/profile_orig_cbds_newuoa_small.yml/badge.svg)](https://github.com/dfopt/bds/actions/workflows/profile_orig_cbds_newuoa_small.yml)
+    - [![Profile rbds with different replacement_delay, big](https://github.com/dfopt/bds/actions/workflows/profile_rbds_replacement_delay_big.yml/badge.svg)](https://github.com/dfopt/bds/actions/workflows/profile_rbds_replacement_delay_big.yml)
+    - [![Profile rbds with different replacement_delay, small](https://github.com/dfopt/bds/actions/workflows/profile_rbds_replacement_delay_small.yml/badge.svg)](https://github.com/dfopt/bds/actions/workflows/profile_rbds_replacement_delay_small.yml)
 
 - [Tests](https://github.com/gradient-free-opt/bds/actions) at [gradient-free-opt/bds](https://github.com/gradient-free-opt/bds)
 
@@ -102,8 +106,7 @@ The following tests are implemented by [Optiprofiler](https://github.com/optipro
     - [![Profile cbds with rbds using optiprofiler, small](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_rbds_small.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_rbds_small.yml)
     - [![Profile rbds with different replacement_delay, big](https://github.com/opt-lab/bds/actions/workflows/profile_rbds_replacement_delay_big.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_rbds_replacement_delay_big.yml)
     - [![Profile rbds with different replacement_delay, small](https://github.com/opt-lab/bds/actions/workflows/profile_rbds_replacement_delay_small.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_rbds_replacement_delay_small.yml)
-    - [![Profile rbds with different number of num_selected_blocks, big](https://github.com/opt-lab/bds/actions/workflows/profile_rbds_num_selected_blocks_big.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_rbds_num_selected_blocks_big.yml)
-    - [![Profile rbds with different number of num_selected_blocks, small](https://github.com/opt-lab/bds/actions/workflows/profile_rbds_num_selected_blocks_small.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_rbds_num_selected_blocks_small.yml)
+
 
 - [Tests](https://github.com/optimlib/bds/actions) at [optimlib/bds](https://github.com/optimlib/bds)
 
