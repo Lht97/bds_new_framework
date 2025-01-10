@@ -80,6 +80,13 @@ function [xopt, fopt, exitflag, output] = bds(fun, x0, options)
 %                               Default: floor(num_blocks/rbds_num_selected_blocks)-1.
 %   seed                        The seed for permuting blocks in PBDS or randomly choosing
 %                               one block in RBDS.
+%   use_estimated_gradient_stop Whether to use the estimated gradient to stop the algorithm.
+%                               If it is true and the problem is not noisy and each block
+%                               will be visited once in each iteration, then the algorithm
+%                               will estimate the gradient of the function at the best point
+%                               encountered so far when the sufficient decrease condition is
+%                               not achieved in the previous iteration. It is an optional
+%                               termination criterion. Default: true.
 %                               It is only for reproducibility in experiments. A positive integer.
 %   output_xhist                Whether to output the history of points visited. Default: false.
 %   output_alpha_hist           Whether to output the history of step sizes. Default: false.

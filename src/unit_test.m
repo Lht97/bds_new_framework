@@ -453,21 +453,54 @@ options.Algorithm = "pbds";
 if abs(fopt) > 1e-8
     error('The function value is not close to 0.');
 end
+
 options.Algorithm = "rbds";
 [~, fopt, ~, ~] = bds(@chrosen, x0, options);
 if abs(fopt) > 1e-8
     error('The function value is not close to 0.');
 end
+options.num_selected_blocks = 1;
+[~, fopt, ~, ~] = bds(@chrosen, x0, options);
+if abs(fopt) > 1e-8
+    error('The function value is not close to 0.');
+end
+options.num_selected_blocks = 2;
+[~, fopt, ~, ~] = bds(@chrosen, x0, options);
+if abs(fopt) > 1e-8
+    error('The function value is not close to 0.');
+end
+options.num_selected_blocks = 3;
+[~, fopt, ~, ~] = bds(@chrosen, x0, options);
+if abs(fopt) > 1e-8
+    error('The function value is not close to 0.');
+end
+options.replacement_delay = 0;
+if abs(fopt) > 1e-8
+    error('The function value is not close to 0.');
+end
+options.replacement_delay = 1;
+if abs(fopt) > 1e-8
+    error('The function value is not close to 0.');
+end
+options.replacement_delay = 2;
+if abs(fopt) > 1e-8
+    error('The function value is not close to 0.');
+end
+options = rmfield(options, 'replacement_delay');
+options = rmfield(options, 'num_selected_blocks');
+
 options.Algorithm = "pads";
 [~, fopt, ~, ~] = bds(@chrosen, x0, options);
 if abs(fopt) > 1e-6
     error('The function value is not close to 0.');
 end
+
 options.Algorithm = "scbds";
 [~, fopt, ~, ~] = bds(@chrosen, x0, options);
 if abs(fopt) > 1e-10
     error('The function value is not close to 0.');
 end
+
 options.Algorithm = "ds";
 [~, fopt, ~, ~] = bds(@chrosen, x0, options);
 if abs(fopt) > 1e-6
