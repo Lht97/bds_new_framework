@@ -787,6 +787,7 @@ function x = rbds_num_selected_blocks_n_test(fun, x0)
     option.expand = 2;
     option.shrink = 0.5;
     option.num_selected_blocks = numel(x0);
+    option.replacement_delay = 0;
     x = bds(fun, x0, option);
     
 end
@@ -797,6 +798,7 @@ function x = rbds_num_selected_blocks_half_n_test(fun, x0)
     option.expand = 2;
     option.shrink = 0.5;
     option.num_selected_blocks = ceil(numel(x0)/2);
+    option.replacement_delay = 0;
     x = bds(fun, x0, option);
 
 end
@@ -807,6 +809,7 @@ function x = rbds_num_selected_blocks_quarter_n_test(fun, x0)
     option.expand = 2;
     option.shrink = 0.5;
     option.num_selected_blocks = ceil(numel(x0)/4);
+    option.replacement_delay = 0;
     x = bds(fun, x0, option);
 
 end
@@ -817,6 +820,7 @@ function x = rbds_num_selected_blocks_eighth_n_test(fun, x0)
     option.expand = 2;
     option.shrink = 0.5;
     option.num_selected_blocks = ceil(numel(x0)/8);
+    option.replacement_delay = 0;
     x = bds(fun, x0, option);
 
 end
@@ -827,6 +831,7 @@ function x = rbds_num_selected_blocks_one_test(fun, x0)
     option.expand = 2;
     option.shrink = 0.5;
     option.num_selected_blocks = 1;
+    option.replacement_delay = 0;
     x = bds(fun, x0, option);
 
 end
