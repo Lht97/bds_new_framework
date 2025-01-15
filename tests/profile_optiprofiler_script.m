@@ -7,8 +7,9 @@ clear all
 %     profile_optiprofiler(options);
 % end
 options.dim = 'small';
-options.solver_names = {'rbds-zero-delay', 'rbds-one-delay', 'rbds-eighth-delay', 'rbds-quarter-delay', 'rbds-half-delay', 'rbds-n-minus-one-delay'};
-options.feature_name = 'plain';
+%options.solver_names = {'rbds-zero-delay', 'rbds-one-delay', 'rbds-eighth-delay', 'rbds-quarter-delay', 'rbds-half-delay', 'rbds-n-minus-one-delay'};
+options.solver_names = {'cbds', 'pbds'};
+options.feature_name = 'linearly_transformed';
 profile_optiprofiler(options);
 
 % options.feature_name = 'perturbed_x0_1';
