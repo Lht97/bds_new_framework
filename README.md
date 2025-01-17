@@ -102,22 +102,27 @@ The following tests are implemented by [Optiprofiler](https://github.com/optipro
     - [![Profile cbds with randomized orthogonal matrix input, small](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_randomized_orthogonal_small.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_randomized_orthogonal_small.yml)
     - [![Profile cbds with randomized gaussian matrix input, big](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_randomized_gaussian_big.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_randomized_gaussian_big.yml)
     - [![Profile cbds with randomized gaussian matrix input, small](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_randomized_gaussian_small.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_randomized_gaussian_small.yml)
-    - [![Profile cbds with rbds using optiprofiler, big](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_rbds_big.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_rbds_big.yml)
-    - [![Profile cbds with rbds using optiprofiler, small](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_rbds_small.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_rbds_small.yml)
+    - [![Profile cbds with permuted matrix input, big](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_permuted_big.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_permuted_big.yml)
+    - [![Profile cbds with permuted matrix input, small](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_permuted_small.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_permuted_small.yml) 
 
 
 - [Tests](https://github.com/optimlib/bds/actions) at [optimlib/bds](https://github.com/optimlib/bds)
-
-    - [![Profile cbds with permuted matrix input, big](https://github.com/optimlib/bds/actions/workflows/profile_cbds_permuted_big.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_cbds_permuted_big.yml)
-    - [![Profile cbds with permuted matrix input, small](https://github.com/optimlib/bds/actions/workflows/profile_cbds_permuted_small.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_cbds_permuted_small.yml)  
-    - [![Profile cbds and pbds using optiprofiler, big](https://github.com/optimlib/bds/actions/workflows/profile_cbds_pbds_big.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_cbds_pbds_big.yml)
-    - [![Profile cbds and pbds using optiprofiler, small](https://github.com/optimlib/bds/actions/workflows/profile_cbds_pbds_small.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_cbds_pbds_small.yml)    
+ 
+    - [![Profile cbds with different number of blocks, big](https://github.com/optimlib/bds/actions/workflows/profile_cbds_block_number_big.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_cbds_block_number_big.yml)
+    - [![Profile cbds with different number of blocks, small](https://github.com/optimlib/bds/actions/workflows/profile_cbds_block_number_small.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_cbds_block_number_small.yml)
+    - [![Profile pbds and rbds with nsb n, big](https://github.com/optimlib/bds/actions/workflows/profile_pbds_rbds_nsb_n_big.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_pbds_rbds_nsb_n_big.yml) 
+    - [![Profile pbds and rbds with nsb n, small](https://github.com/optimlib/bds/actions/workflows/profile_pbds_rbds_nsb_n_small.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_pbds_rbds_nsb_n_small.yml) 
+    - [![Profile pbds and rbds with nsb 1 and delay n-1, big](https://github.com/optimlib/bds/actions/workflows/profile_pbds_rbds_nsb_1_delay_n-1_big.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_pbds_rbds_nsb_1_delay_n-1_big.yml)
+    - [![Profile pbds and rbds with nsb 1 and delay n-1, small](https://github.com/optimlib/bds/actions/workflows/profile_pbds_rbds_nsb_1_delay_n-1_small.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_pbds_rbds_nsb_1_delay_n-1_small.yml)  
+   
 
 - [Tests](https://github.com/gradient-free-optimization/bds/actions) at [gradient-free-optimization/bds](https://github.com/gradient-free-optimization/bds)
 
-    - [![Profile cbds with different number of blocks, big](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_block_number_big.yml/badge.svg)](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_block_number_big.yml)
-    - [![Profile cbds with different number of blocks, small](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_block_number_small.yml/badge.svg)](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_block_number_small.yml) 
     - [![Profile cbds and pads using optiprofiler, big](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_pads_big.yml/badge.svg)](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_pads_big.yml)
     - [![Profile cbds and pads using optiprofiler, small](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_pads_small.yml/badge.svg)](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_pads_small.yml) 
     - [![Profile cbds and scbds using optiprofiler, big](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_scbds_big.yml/badge.svg)](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_scbds_big.yml)
     - [![Profile cbds and scbds using optiprofiler, small](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_scbds_small.yml/badge.svg)](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_scbds_small.yml) 
+    - [![Profile cbds and pbds using optiprofiler, big](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_pbds_big.yml/badge.svg)](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_pbds_big.yml)
+    - [![Profile cbds and pbds using optiprofiler, small](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_pbds_small.yml/badge.svg)](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_pbds_small.yml)  
+    - [![Profile cbds and rbds using optiprofiler, big](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_rbds_big.yml/badge.svg)](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_rbds_big.yml)
+    - [![Profile cbds and rbds using optiprofiler, small](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_rbds_small.yml/badge.svg)](https://github.com/gradient-free-optimization/bds/actions/workflows/profile_cbds_rbds_small.yml)   
