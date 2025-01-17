@@ -1468,6 +1468,7 @@ randi
 Randles
 randomx
 randperm
+randsample
 Raphson
 Rassias
 Raumfahrt
