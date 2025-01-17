@@ -1254,6 +1254,7 @@ npt
 nquist
 nrlq
 nrun
+nsb
 nshortmid
 nshortparallel
 nsim
