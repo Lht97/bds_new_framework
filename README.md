@@ -75,8 +75,6 @@ The following tests are implemented by [Optiprofiler](https://github.com/optipro
     - [![Profile cbds and newuoa using optiprofiler, small](https://github.com/dfopt/bds/actions/workflows/profile_cbds_newuoa_small.yml/badge.svg)](https://github.com/dfopt/bds/actions/workflows/profile_cbds_newuoa_small.yml)
     - [![Profile original cbds and newuoa using optiprofiler, big](https://github.com/dfopt/bds/actions/workflows/profile_orig_cbds_newuoa_big.yml/badge.svg)](https://github.com/dfopt/bds/actions/workflows/profile_orig_cbds_newuoa_big.yml)
     - [![Profile original cbds and newuoa using optiprofiler, small](https://github.com/dfopt/bds/actions/workflows/profile_orig_cbds_newuoa_small.yml/badge.svg)](https://github.com/dfopt/bds/actions/workflows/profile_orig_cbds_newuoa_small.yml)
-    - [![Profile rbds with different replacement_delay, big](https://github.com/dfopt/bds/actions/workflows/profile_rbds_replacement_delay_big.yml/badge.svg)](https://github.com/dfopt/bds/actions/workflows/profile_rbds_replacement_delay_big.yml)
-    - [![Profile rbds with different replacement_delay, small](https://github.com/dfopt/bds/actions/workflows/profile_rbds_replacement_delay_small.yml/badge.svg)](https://github.com/dfopt/bds/actions/workflows/profile_rbds_replacement_delay_small.yml)
 
 - [Tests](https://github.com/gradient-free-opt/bds/actions) at [gradient-free-opt/bds](https://github.com/gradient-free-opt/bds)
 
@@ -110,6 +108,8 @@ The following tests are implemented by [Optiprofiler](https://github.com/optipro
     - [![Profile cbds with different number of blocks, small](https://github.com/optimlib/bds/actions/workflows/profile_cbds_block_number_small.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_cbds_block_number_small.yml)
     - [![Profile rbds with different number of num_selected_blocks, big](https://github.com/optimlib/bds/actions/workflows/profile_rbds_num_selected_blocks_big.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_rbds_num_selected_blocks_big.yml)
     - [![Profile rbds with different number of num_selected_blocks, small](https://github.com/optimlib/bds/actions/workflows/profile_rbds_num_selected_blocks_small.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_rbds_num_selected_blocks_small.yml)
+    - [![Profile rbds with different replacement_delay, big](https://github.com/optimlib/bds/actions/workflows/profile_rbds_replacement_delay_big.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_rbds_replacement_delay_big.yml)
+    - [![Profile rbds with different replacement_delay, small](https://github.com/optimlib/bds/actions/workflows/profile_rbds_replacement_delay_small.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_rbds_replacement_delay_small.yml)
     - [![Profile pbds and rbds with nsb n, big](https://github.com/optimlib/bds/actions/workflows/profile_pbds_rbds_nsb_n_big.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_pbds_rbds_nsb_n_big.yml) 
     - [![Profile pbds and rbds with nsb n, small](https://github.com/optimlib/bds/actions/workflows/profile_pbds_rbds_nsb_n_small.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_pbds_rbds_nsb_n_small.yml) 
     - [![Profile pbds and rbds with nsb 1 and delay n-1, big](https://github.com/optimlib/bds/actions/workflows/profile_pbds_rbds_nsb_1_delay_n-1_big.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_pbds_rbds_nsb_1_delay_n-1_big.yml)
