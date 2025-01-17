@@ -4,97 +4,118 @@ function [xopt, fopt, exitflag, output] = bds(fun, x0, options)
 %
 %   BDS supports in MATLAB R2017b or later.
 %
-%   XOPT = BDS(FUN, X0) returns an approximate minimizer XOPT of the function FUN, starting the
-%   calculations at X0. FUN must accept a vector input X and return a scalar.
+%   XOPT = BDS(FUN, X0) returns an approximate minimizer XOPT of the function 
+%   FUN, starting the calculations at X0. FUN must accept a vector input X and 
+%   return a scalar.
 %
-%   XOPT = BDS(FUN, X0, OPTIONS) performs the computations with the options in OPTIONS.
-%   OPTIONS should be a structure with the following fields.
+%   XOPT = BDS(FUN, X0, OPTIONS) performs the computations with the options in 
+%   OPTIONS. OPTIONS should be a structure with the following fields.
 %
-%   Algorithm                   Algorithm to use. It can be "cbds" (cyclic blockwise direct
-%                               search) "pbds" (randomly permuted blockwise direct search),
-%                               "rbds" (randomized blockwise direct search), "ds"
-%                               (the classical direct search), "pads" (parallel blockwise
-%                               direct search). "scbds" (symmetric blockwise direct
-%                               search). Default: "cbds".
-%   num_blocks                  Number of blocks. A positive integer. Default: n if Algorithm
-%                               is "cbds", "pbds", or "rbds", 1 if Algorithm is "ds".
+%   Algorithm                   Algorithm to use. It can be "cbds" (cyclic 
+%                               blockwise direct search) "pbds" (randomly 
+%                               permuted blockwise direct search), "rbds" 
+%                               (randomized blockwise direct search), "ds"
+%                               (the classical direct search), "pads" (parallel 
+%                               blockwise direct search). "scbds" (symmetric
+%                               blockwise direct search). Default: "cbds".
+%   num_blocks                  Number of blocks. A positive integer. Default
+%                               value is n when Algorithm is "cbds", "pbds",
+%                               "rbds", or "pads", "scbds", 1 if Algorithm is "ds".
 %   MaxFunctionEvaluations      Maximum of function evaluations. A positive integer.
-%   direction_set               A matrix whose columns will be used to define the polling
-%                               directions. If options does not contain direction_set, then
-%                               the polling directions will be {e_1, -e_1, ..., e_n, -e_n}.
+%   direction_set               A matrix whose columns will be used to define 
+%                               the polling directions. If options does not 
+%                               contain direction_set, then the polling 
+%                               directions will be {e_1, -e_1, ..., e_n, -e_n}.
 %                               Otherwise, it should be a nonsingular n-by-n matrix.
-%                               Then the polling directions will be {d_1, -d_1, ..., d_n, -d_n},
-%                               where d_i is the i-th column of direction_set.
-%                               If direction_set is not singular, then we will revise the direction_set
-%                               to make it linear independent. See get_direction_set.m for details.
-%                               Default: eye(n).
-%   is_noisy                    A flag deciding whether the problem is noisy or not. Default: false.
-%   expand                      Expanding factor of step size. A real number no less than 1.
-%                               It depends on the dimension of the problem and whether the problem
-%                               is noisy or not and the Algorithm.
-%   shrink                      Shrinking factor of step size. A positive number less than 1.
-%                               It depends on the dimension of the problem and whether the problem
-%                               is noisy or not and the Algorithm.
-%   alpha_threshold             The threshold of the step size. When the step size shrinks,
-%                               the step size will be updated to be the maximum of alpha_threshold
-%                               and shrink*alpha. It should be strictly less than StepTolerance.
+%                               Then the polling directions will be 
+%                               {d_1, -d_1, ..., d_n, -d_n}, where d_i is the 
+%                               i-th column of direction_set. If direction_set 
+%                               is not singular, then we will revise the 
+%                               direction_set to make it linear independent. 
+%                               See get_direction_set.m for details. Default: eye(n).
+%   is_noisy                    A flag deciding whether the problem is noisy or 
+%                               not. Default: false.
+%   expand                      Expanding factor of step size. A real number 
+%                               no less than 1. It depends on the dimension of 
+%                               the problem and whether the problem is noisy or 
+%                               not and the Algorithm. Default: 2.
+%   shrink                      Shrinking factor of step size. A positive number
+%                               less than 1. It depends on the dimension of the
+%                               problem and whether the problem is noisy or not
+%                               and the Algorithm. Default: 0.5.
+%   alpha_threshold             The threshold of the step size. When the step 
+%                               size shrinks, the step size will be updated to 
+%                               be the maximum of alpha_threshold and shrink*alpha. 
+%                               It should be strictly less than StepTolerance.
 %                               A positive number. Default: 1e-3*StepTolerance.
-%   forcing_function            The forcing function used for deciding whether the step achieves
-%                               a sufficient decrease. A function handle.
+%   forcing_function            The forcing function used for deciding whether 
+%                               the step achieves a sufficient decrease. A 
+%                               function handle.
 %                               Default: @(alpha) alpha^2. See also reduction_factor.
-%   reduction_factor            Factors multiplied to the forcing function when deciding
-%                               whether the step achieves a sufficient decrease.
+%   reduction_factor            Factors multiplied to the forcing function when 
+%                               deciding whether the step achieves a sufficient decrease.
 %                               A 3-dimentional vector such that
 %                               reduction_factor(1) <= reduction_factor(2) <= reduction_factor(3),
 %                               reduction_factor(1) >= 0, and reduction_factor(2) > 0.
-%                               reduction_factor(0) is used for deciding whether to update
+%                               reduction_factor(0) is used for deciding whether
+%                               to update
 %                               the base point;
-%                               reduction_factor(1) is used for deciding whether to shrink
-%                               the step size;
-%                               reduction_factor(2) is used for deciding whether to expand
-%                               the step size.
+%                               reduction_factor(1) is used for deciding whether 
+%                               to shrink the step size;
+%                               reduction_factor(2) is used for deciding whether 
+%                               to expand the step size.
 %                               Default: [0, eps, eps]. See also forcing_function.
-%   StepTolerance               Lower bound of the step size. If the step size is smaller
-%                               than StepTolerance, then the algorithm terminates.
-%                               A (small) positive number. Default: 1e-10.
-%   ftarget                     Target of the function value. If the function value is
-%                               smaller than or equal to ftarget, then the algorithm terminates.
-%                               A real number. Default: -Inf.
+%   StepTolerance               Lower bound of the step size. If the step size is 
+%                               smaller than StepTolerance, then the algorithm 
+%                               terminates.A (small) positive number. Default: 1e-10.
+%   ftarget                     Target of the function value. If the function value 
+%                               is smaller than or equal to ftarget, then the 
+%                               algorithm terminates. A real number. Default: -Inf.
 %   polling_inner               Polling strategy in each block. It can be "complete" or
 %                               "opportunistic". Default: "opportunistic".
-%   cycling_inner               Cycling strategy employed within each block. It is used only
-%                               when polling_inner is "opportunistic". It can be 0, 1, 2, 3, 4.
-%                               See cycling.m for details. Default: 3.
+%   cycling_inner               Cycling strategy employed within each block. It 
+%                               is used only when polling_inner is "opportunistic". 
+%                               It can be 0, 1, 2, 3, 4. See cycling.m for details. 
+%                               Default: 3.
 %   with_cycling_memory         Whether the cycling strategy within each block memorizes
 %                               the history or not. It is used only when polling_inner
 %                               is "opportunistic". Default: true.
-%   permuting_period            It is only used in PBDS, which shuffles the blocks every
-%                               permuting_period iterations. A positive integer. Default: 1.
-%   num_selected_blocks         It is only used for RBDS. Suppose that rbds_num_selected_blocks
-%                               is k. In each iteration, k blocks are randomly selected to visit.
-%                               A positive integer less than or equal to num_blocks. Default: num_blocks.
-%   replacement_delay           It is only used for RBDS. Suppose that replacement_delay is r.
-%                               If block i is selected at iteration k, then it will not be
-%                               selected at iterations k+1, ..., k+r. An integer between 0
-%                               and floor(num_blocks/rbds_num_selected_blocks)-1. 
+%   permuting_period            It is only used in PBDS, which shuffles the blocks 
+%                               every permuting_period iterations. 
+%                               A positive integer. Default: 1.
+%   num_selected_blocks         It is only used for RBDS. Suppose that 
+%                               num_selected_blocks is k. In each iteration, 
+%                               k blocks are randomly selected to visit. A positive 
+%                               integer less than or equal to num_blocks. 
+%                               Default: num_blocks.
+%   replacement_delay           It is only used for RBDS. Suppose that replacement_delay 
+%                               is r. If block i is selected at iteration k, then it 
+%                               will not be selected at iterations k+1, ..., k+r. 
+%                               replacement_delay should be an integer between 0 and
+%                               floor(num_blocks/rbds_num_selected_blocks)-1. 
 %                               Default: floor(num_blocks/rbds_num_selected_blocks)-1.
-%   seed                        The seed for permuting blocks in PBDS or randomly choosing
-%                               one block in RBDS.
-%   use_estimated_gradient_stop Whether to use the estimated gradient to stop the algorithm.
-%                               If it is true and the problem is not noisy and each block
-%                               will be visited once in each iteration, then the algorithm
-%                               will estimate the gradient of the function at the best point
-%                               encountered so far when the sufficient decrease condition is
-%                               not achieved in the previous iteration. It is an optional
-%                               termination criterion. Default: true.
-%                               It is only for reproducibility in experiments. A positive integer.
-%   output_xhist                Whether to output the history of points visited. Default: false.
-%   output_alpha_hist           Whether to output the history of step sizes. Default: false.
-%   output_block_hist           Whether to output the history of blocks visited. Default: false.
+%   seed                        The seed for permuting blocks in PBDS or randomly 
+%                               choosing some blocks in RBDS.
+%   use_estimated_gradient_stop Whether to use the estimated gradient to stop 
+%                               the algorithm. If it is true and the problem is 
+%                               not noisy and each block will be visited once in
+%                               each iteration, then the algorithm will estimate
+%                               the gradient of the function at the best point
+%                               encountered so far when the sufficient decrease 
+%                               condition is not achieved in the previous iteration.
+%                               It is an optional termination criterion. 
+%                               Default: false.
+%   output_xhist                Whether to output the history of points visited. 
+%                               Default: false.
+%   output_alpha_hist           Whether to output the history of step sizes.    
+%                               Default: false.
+%   output_block_hist           Whether to output the history of blocks visited. 
+%                               Default: false.
 %   verbose                     a flag deciding whether to print during the computation.
-%                               Default: false, which means no printing. If verbose is true, then
-%                               the function values, the corresponding point, and the step
-%                               size will be printed in each function evaluation.
+%                               Default: false, which means no printing. If verbose
+%                               is true, then the function values, the corresponding
+%                               point, and the step size will be printed in each
+%                               function evaluation.
 %
 %   [XOPT, FOPT] = BDS(...) returns an approximate minimizer XOPT and its function value FOPT.
 %
@@ -464,7 +485,7 @@ end
 if isfield(options, "use_estimated_gradient_stop")
     use_estimated_gradient_stop = options.use_estimated_gradient_stop;
 else
-    use_estimated_gradient_stop = true;
+    use_estimated_gradient_stop = false;
 end
 
 % Initialize the history of sufficient decrease value and the boolean value of whether the sufficient decrease
