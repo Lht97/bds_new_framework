@@ -619,7 +619,10 @@ for iter = 1:maxit
         % Note that block_indices is a vector of length num_selected_blocks.
         unavailable_block_indices = unique(block_hist(max(1, (iter-replacement_delay) * num_selected_blocks) : (iter-1) * num_selected_blocks), 'stable');
         available_block_indices = setdiff(all_block_indices, unavailable_block_indices);
-        % Select num_selected_blocks blocks randomly from the available blocks.
+        % Select num_selected_blocks blocks randomly from the available blocks. randsample
+        % may be more efficient than randperm when num_selected_blocks is much smaller
+        % than num_blocks. However, randsample is only available in Statistics and Machine
+        % Learning Toolbox.
         block_indices = available_block_indices(random_stream.randperm(length(available_block_indices), num_selected_blocks));
     elseif strcmpi(options.Algorithm, "scbds")
         % Get the block that is going to be visited in this iteration when the Algorithm
