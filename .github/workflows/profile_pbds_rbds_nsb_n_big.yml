@@ -1,4 +1,4 @@
-name: Profile pbds and rbds (nsb=n, big)
+name: Profile pbds and rbds (nsb=n), big
 
 on:
   # Trigger the workflow on # push or pull request
@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    name: Profile pbds and rbds (nsb=n, big)
+    name: Profile pbds and rbds (nsb=n), big
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
