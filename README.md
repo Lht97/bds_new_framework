@@ -47,6 +47,8 @@ The following tests are implemented by [Optiprofiler](https://github.com/optipro
     - [![Profile cbds and ds using optiprofiler, small](https://github.com/zeroth-order-optimization/bds/actions/workflows/profile_cbds_ds_small.yml/badge.svg)](https://github.com/zeroth-order-optimization/bds/actions/workflows/profile_cbds_ds_small.yml)
     - [![Profile original cbds and ds using optiprofiler, big](https://github.com/zeroth-order-optimization/bds/actions/workflows/profile_orig_cbds_ds_big.yml/badge.svg)](https://github.com/zeroth-order-optimization/bds/actions/workflows/profile_orig_cbds_ds_big.yml)
     - [![Profile original cbds and ds using optiprofiler, small](https://github.com/zeroth-order-optimization/bds/actions/workflows/profile_cbds_ds_small.yml/badge.svg)](https://github.com/zeroth-order-optimization/bds/actions/workflows/profile_cbds_ds_small.yml)
+    - [![Profile cbds using different stopping criteria, big](https://github.com/zeroth-order-optimization/bds/actions/workflows/profile_cbds_stopping_criteria_big.yml/badge.svg)](https://github.com/zeroth-order-optimization/bds/actions/workflows/profile_cbds_stopping_criteria_big.yml)
+    - [![Profile cbds using different stopping criteria, small](https://github.com/zeroth-order-optimization/bds/actions/workflows/profile_cbds_stopping_criteria_small.yml/badge.svg)](https://github.com/zeroth-order-optimization/bds/actions/workflows/profile_cbds_stopping_criteria_small.yml)
 
 - [Tests](https://github.com/0thopt/bds/actions) at [0thopt/bds](https://github.com/0thopt/bds)
 
