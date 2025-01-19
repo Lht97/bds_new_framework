@@ -592,6 +592,8 @@ end
 function x = cbds_development_test(fun, x0)
 
     option.Algorithm = 'cbds';
+    option.expand = 2;
+    option.shrink = 0.5;
     x = bds_development(fun, x0, option);
     
 end

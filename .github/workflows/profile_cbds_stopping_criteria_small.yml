@@ -19,7 +19,7 @@ jobs:
         matlab: [latest]
         dim: [small]
         with_optim_toolbox: [yes]
-        solver: [cbds]
+        solver: [cbds-orig]
         competitor: [cbds-development]
         run_plain: [false]
         summarize_log_ratio_profiles: [false]
