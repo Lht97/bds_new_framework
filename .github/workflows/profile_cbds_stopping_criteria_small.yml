@@ -83,7 +83,8 @@ jobs:
 
               % Set up the path for the development branch
               cd(fullfile(root_dir, 'development', 'src'));
-              movefile('bds,m', 'bds_development.m');
+              ls
+              movefile('bds.m', 'bds_development.m');
               addpath(pwd);
   
               % profile
