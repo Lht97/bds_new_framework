@@ -26,6 +26,8 @@ switch information
         exitflag = 4;
     case "ESTIMATED_GRADIENT_FULLY_REDUCED"
         exitflag = 5;
+    case "CONSECUTIVE_ITERATIONS_FAILED"
+        exitflag = 6;
     otherwise
         exitflag = -1;
 end
