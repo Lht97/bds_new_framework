@@ -115,7 +115,11 @@ The following tests are implemented by [Optiprofiler](https://github.com/optipro
     - [![Profile pbds and rbds with nsb n, big](https://github.com/optimlib/bds/actions/workflows/profile_pbds_rbds_nsb_n_big.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_pbds_rbds_nsb_n_big.yml) 
     - [![Profile pbds and rbds with nsb n, small](https://github.com/optimlib/bds/actions/workflows/profile_pbds_rbds_nsb_n_small.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_pbds_rbds_nsb_n_small.yml) 
     - [![Profile pbds and rbds with nsb 1 and delay n-1, big](https://github.com/optimlib/bds/actions/workflows/profile_pbds_rbds_nsb_1_delay_n-1_big.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_pbds_rbds_nsb_1_delay_n-1_big.yml)
-    - [![Profile pbds and rbds with nsb 1 and delay n-1, small](https://github.com/optimlib/bds/actions/workflows/profile_pbds_rbds_nsb_1_delay_n-1_small.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_pbds_rbds_nsb_1_delay_n-1_small.yml)  
+    - [![Profile pbds and rbds with nsb 1 and delay n-1, small](https://github.com/optimlib/bds/actions/workflows/profile_pbds_rbds_nsb_1_delay_n-1_small.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_pbds_rbds_nsb_1_delay_n-1_small.yml)
+    - [![Profile cbds and rbds with nsb n, big](https://github.com/optimlib/bds/actions/workflows/profile_cbds_rbds_nsb_n_big.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_cbds_rbds_nsb_n_big.yml) 
+    - [![Profile cbds and rbds with nsb n, small](https://github.com/optimlib/bds/actions/workflows/profile_cbds_rbds_nsb_n_small.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_cbds_rbds_nsb_n_small.yml) 
+    - [![Profile cbds and rbds with nsb 1 and delay n-1, big](https://github.com/optimlib/bds/actions/workflows/profile_cbds_rbds_nsb_1_delay_n-1_big.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_cbds_rbds_nsb_1_delay_n-1_big.yml)
+    - [![Profile cbds and rbds with nsb 1 and delay n-1, small](https://github.com/optimlib/bds/actions/workflows/profile_cbds_rbds_nsb_1_delay_n-1_small.yml/badge.svg)](https://github.com/optimlib/bds/actions/workflows/profile_cbds_rbds_nsb_1_delay_n-1_small.yml)  
    
 
 - [Tests](https://github.com/gradient-free-optimization/bds/actions) at [gradient-free-optimization/bds](https://github.com/gradient-free-optimization/bds)
