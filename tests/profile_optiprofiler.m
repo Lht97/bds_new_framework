@@ -100,7 +100,7 @@ function profile_optiprofiler(options)
     end
     if startsWith(options.feature_name, 'quantized')
         if sum(options.feature_name == '_') > 0
-            options.mesh_size = 10.^(str2double(options.feature_name(end)));
+            options.mesh_size = 10.^(-str2double(options.feature_name(end)));
         else
             options.mesh_size = 1e-3;
         end
@@ -409,7 +409,6 @@ function profile_optiprofiler(options)
             options = rmfield(options, 'noise_level');
 
     end
-
     benchmark(solvers, options)
 
 end

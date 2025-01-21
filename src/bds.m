@@ -631,7 +631,7 @@ for iter = 1:maxit
         % in the cycle in order. For example, if num_blocks = 3, then the cycle
         % is [1 2 3 2 1 2 3 2 1 ...]. For implementation, block_indices is a vector of
         % length 2n-2, where the order of the first n elements is [1 2 3 ... n n-1 ... 2].
-        block_indices = [all_block_indices (num_blocks-1):-1:2];
+        block_indices = [all_block_indices (length(all_block_indices)-1):-1:2];
     end
 
     for i = 1:length(block_indices)
