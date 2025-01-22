@@ -2,7 +2,7 @@ name: Profile pbds and rbds (n, 0), big
 
 on:
   # Trigger the workflow on # push or pull request
-  push:
+  # push:
   # Trigger the workflow manually
   schedule:
   - cron: '0 0 */1 * *'
