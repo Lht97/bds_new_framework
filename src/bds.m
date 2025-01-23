@@ -4,55 +4,51 @@ function [xopt, fopt, exitflag, output] = bds(fun, x0, options)
 %
 %   BDS supports in MATLAB R2017b or later.
 %
-%   XOPT = BDS(FUN, X0) returns an approximate minimizer XOPT of the function 
-%   FUN, starting the calculations at X0. FUN must accept a vector input X and 
+%   XOPT = BDS(FUN, X0) returns an approximate minimizer XOPT of the function
+%   FUN, starting the calculations at X0. FUN must accept a vector input X and
 %   return a scalar.
 %
-%   XOPT = BDS(FUN, X0, OPTIONS) performs the computations with the options in 
+%   XOPT = BDS(FUN, X0, OPTIONS) performs the computations with the options in
 %   OPTIONS. OPTIONS should be a structure with the following fields.
 %
-%   Algorithm                   Algorithm to use. It can be "cbds" (cyclic 
-%                               blockwise direct search) "pbds" (randomly 
-%                               permuted blockwise direct search), "rbds" 
-%                               (randomized blockwise direct search), "ds"
-%                               (the classical direct search), "pads" (parallel 
-%                               blockwise direct search). "scbds" (symmetric
-%                               blockwise direct search). Default: "cbds".
-%   num_blocks                  Number of blocks. A positive integer. Default
-%                               value is n when Algorithm is "cbds", "pbds",
-%                               "rbds", or "pads", "scbds", 1 if Algorithm is "ds".
+%   Algorithm                   Algorithm to use. It can be "cyclic", "random", "parallel",
+%                               Default: "cyclic".
+%   num_blocks                  Number of blocks. A positive integer. 
+%                               Default: ceil(num_directions/2), where num_directions
+%                               is the number of directions used to define the polling
+%                               directions.
 %   MaxFunctionEvaluations      Maximum of function evaluations. A positive integer.
-%   direction_set               A matrix whose columns will be used to define 
-%                               the polling directions. If options does not 
-%                               contain direction_set, then the polling 
+%   direction_set               A matrix whose columns will be used to define
+%                               the polling directions. If options does not
+%                               contain direction_set, then the polling
 %                               directions will be {e_1, -e_1, ..., e_n, -e_n}.
 %                               Otherwise, it should be a nonsingular n-by-n matrix.
-%                               Then the polling directions will be 
-%                               {d_1, -d_1, ..., d_n, -d_n}, where d_i is the 
-%                               i-th column of direction_set. If direction_set 
-%                               is not singular, then we will revise the 
-%                               direction_set to make it linear independent. 
+%                               Then the polling directions will be
+%                               {d_1, -d_1, ..., d_n, -d_n}, where d_i is the
+%                               i-th column of direction_set. If direction_set
+%                               is not singular, then we will revise the
+%                               direction_set to make it linear independent.
 %                               See get_direction_set.m for details. Default: eye(n).
-%   is_noisy                    A flag deciding whether the problem is noisy or 
+%   is_noisy                    A flag deciding whether the problem is noisy or
 %                               not. Default: false.
-%   expand                      Expanding factor of step size. A real number 
-%                               no less than 1. It depends on the dimension of 
-%                               the problem and whether the problem is noisy or 
+%   expand                      Expanding factor of step size. A real number
+%                               no less than 1. It depends on the dimension of
+%                               the problem and whether the problem is noisy or
 %                               not and the Algorithm. Default: 2.
 %   shrink                      Shrinking factor of step size. A positive number
 %                               less than 1. It depends on the dimension of the
 %                               problem and whether the problem is noisy or not
 %                               and the Algorithm. Default: 0.5.
-%   alpha_threshold             The threshold of the step size. When the step 
-%                               size shrinks, the step size will be updated to 
-%                               be the maximum of alpha_threshold and shrink*alpha. 
+%   alpha_threshold             The threshold of the step size. When the step
+%                               size shrinks, the step size will be updated to
+%                               be the maximum of alpha_threshold and shrink*alpha.
 %                               It should be strictly less than StepTolerance.
 %                               A positive number. Default: 1e-3*StepTolerance.
-%   forcing_function            The forcing function used for deciding whether 
-%                               the step achieves a sufficient decrease. A 
+%   forcing_function            The forcing function used for deciding whether
+%                               the step achieves a sufficient decrease. A
 %                               function handle.
 %                               Default: @(alpha) alpha^2. See also reduction_factor.
-%   reduction_factor            Factors multiplied to the forcing function when 
+%   reduction_factor            Factors multiplied to the forcing function when
 %                               deciding whether the step achieves a sufficient decrease.
 %                               A 3-dimentional vector such that
 %                               reduction_factor(1) <= reduction_factor(2) <= reduction_factor(3),
@@ -60,56 +56,54 @@ function [xopt, fopt, exitflag, output] = bds(fun, x0, options)
 %                               reduction_factor(0) is used for deciding whether
 %                               to update
 %                               the base point;
-%                               reduction_factor(1) is used for deciding whether 
+%                               reduction_factor(1) is used for deciding whether
 %                               to shrink the step size;
-%                               reduction_factor(2) is used for deciding whether 
+%                               reduction_factor(2) is used for deciding whether
 %                               to expand the step size.
 %                               Default: [0, eps, eps]. See also forcing_function.
-%   StepTolerance               Lower bound of the step size. If the step size is 
-%                               smaller than StepTolerance, then the algorithm 
+%   StepTolerance               Lower bound of the step size. If the step size is
+%                               smaller than StepTolerance, then the algorithm
 %                               terminates.A (small) positive number. Default: 1e-10.
-%   ftarget                     Target of the function value. If the function value 
-%                               is smaller than or equal to ftarget, then the 
+%   ftarget                     Target of the function value. If the function value
+%                               is smaller than or equal to ftarget, then the
 %                               algorithm terminates. A real number. Default: -Inf.
 %   polling_inner               Polling strategy in each block. It can be "complete" or
 %                               "opportunistic". Default: "opportunistic".
-%   cycling_inner               Cycling strategy employed within each block. It 
-%                               is used only when polling_inner is "opportunistic". 
-%                               It can be 0, 1, 2, 3, 4. See cycling.m for details. 
+%   cycling_inner               Cycling strategy employed within each block. It
+%                               is used only when polling_inner is "opportunistic".
+%                               It can be 0, 1, 2, 3, 4. See cycling.m for details.
 %                               Default: 3.
 %   with_cycling_memory         Whether the cycling strategy within each block memorizes
 %                               the history or not. It is used only when polling_inner
 %                               is "opportunistic". Default: true.
-%   permuting_period            It is only used in PBDS, which shuffles the blocks 
-%                               every permuting_period iterations. 
 %                               A positive integer. Default: 1.
-%   num_selected_blocks         It is only used for RBDS. Suppose that 
-%                               num_selected_blocks is k. In each iteration, 
-%                               k blocks are randomly selected to visit. A positive 
-%                               integer less than or equal to num_blocks. 
+%   batch_size                  Suppose that batch_size is k. In each iteration,
+%                               k blocks are randomly selected to visit. A positive
+%                               integer less than or equal to num_blocks.
 %                               Default: num_blocks.
-%   replacement_delay           It is only used for RBDS. Suppose that replacement_delay 
-%                               is r. If block i is selected at iteration k, then it 
-%                               will not be selected at iterations k+1, ..., k+r. 
-%                               replacement_delay should be an integer between 0 and
-%                               floor(num_blocks/rbds_num_selected_blocks)-1. 
-%                               Default: floor(num_blocks/rbds_num_selected_blocks)-1.
-%   seed                        The seed for permuting blocks in PBDS or randomly 
-%                               choosing some blocks in RBDS.
-%   use_estimated_gradient_stop Whether to use the estimated gradient to stop 
-%                               the algorithm. If it is true and the problem is 
+%   replacement_delay           Suppose that replacement_delay is r. If replacement_delay > 0 
+%                               and block i is selected at iteration k, then it will not 
+%                               be selected at iterations k+1, ..., k+r. The value of 
+%                               replacement_delay should be an nonnegative integer less than or 
+%                               equal to floor(num_blocks/batch_size)-1.                               
+%                               Default: floor(num_blocks/batch_size)-1.
+%   restart_period              Get available blocks every restart_period iterations.
+%                               Default: 1.
+%   seed                        The seed for random number generator. Default: "shuffle".
+%   use_estimated_gradient_stop Whether to use the estimated gradient to stop
+%                               the algorithm. If it is true and the problem is
 %                               not noisy and each block will be visited once in
 %                               each iteration, then the algorithm will estimate
 %                               the gradient of the function at the best point
-%                               encountered so far when the sufficient decrease 
+%                               encountered so far when the sufficient decrease
 %                               condition is not achieved in the previous iteration.
-%                               It is an optional termination criterion. 
+%                               It is an optional termination criterion.
 %                               Default: false.
-%   output_xhist                Whether to output the history of points visited. 
+%   output_xhist                Whether to output the history of points visited.
 %                               Default: false.
-%   output_alpha_hist           Whether to output the history of step sizes.    
+%   output_alpha_hist           Whether to output the history of step sizes.
 %                               Default: false.
-%   output_block_hist           Whether to output the history of blocks visited. 
+%   output_block_hist           Whether to output the history of blocks visited.
 %                               Default: false.
 %   verbose                     a flag deciding whether to print during the computation.
 %                               Default: false, which means no printing. If verbose
@@ -171,10 +165,17 @@ D = get_direction_set(n, options);
 % Get the number of blocks.
 num_directions = size(D, 2);
 
-% % Set the default Algorithm of BDS, which is "cbds".
-Algorithm_list = ["ds", "cbds", "pbds", "rbds", "pads", "scbds"];
-if isfield(options, "Algorithm") && ~ismember(lower(options.Algorithm), Algorithm_list)
-    error("The Algorithm input is invalid");
+% % Set the default value of
+scheme_list = ["cyclic", "random", "parallel"];
+if isfield(options, "scheme") && ~ismember(lower(options.scheme), scheme_list)
+    error("The scheme should be one of the following: cyclic, random, parallel.\n");
+end
+
+% Set the default value of num_blocks and batch_size.
+if isfield(options, "num_blocks")
+    num_blocks = options.num_blocks;
+else
+    num_blocks = ceil(num_directions / 2);
 end
 
 % Preprocess the number of blocks.
@@ -189,21 +190,22 @@ if isfield(options, "num_blocks")
     end
 end
 
-
-% Set the default value of Algorithm if options do not contain Algorithm.
-if ~isfield(options, "Algorithm")
-    options.Algorithm = get_default_constant("Algorithm");
+if isfield(options, "batch_size")
+    batch_size = options.batch_size;
+else
+    batch_size = num_blocks;
 end
 
-% Set the default value of num_blocks.
-if ~isfield(options, "num_blocks")
-    if strcmpi(options.Algorithm, "ds")
-        num_blocks = 1;
-    else
-        num_blocks = ceil(num_directions/2);
-    end
-else
-    num_blocks = options.num_blocks;
+% Ensure batch_size does not exceed num_blocks.
+if batch_size > num_blocks
+    warning("The number of batch_size should be less than or equal to the number of blocks.\n");
+    warning("The number of batch_size is set to be the number of blocks.\n");
+    batch_size = num_blocks;
+end
+
+% Set the default value of scheme if it is not provided.
+if ~isfield(options, "scheme")
+    options.scheme = get_default_constant("scheme");
 end
 
 % Determine the indices of directions in each block.
@@ -242,7 +244,7 @@ end
 % selected based on the S2MPJ problems (see https://github.com/GrattonToint/S2MPJ).
 % If options contain expand or shrink, then expand or shrink is set to the corresponding value.
 if ~isfield(options, "expand")
-    if strcmpi(options.Algorithm, "ds")
+    if batch_size == 1
         if numel(x0) <= 5
             expand = get_default_constant("ds_expand_small");
         else
@@ -269,7 +271,7 @@ else
 end
 
 if ~isfield(options, "shrink")
-    if strcmpi(options.Algorithm, "ds")
+    if batch_size == 1
         if numel(x0) <= 5
             shrink = get_default_constant("ds_shrink_small");
         else
@@ -320,35 +322,24 @@ else
     cycling_inner = get_default_constant("cycling_inner");
 end
 
-% Set permuting_period. This is done only when Algorithm is "pbds", which
-% permutes the blocks every permuting_period iterations.
-if strcmpi(options.Algorithm, "pbds")
-    if isfield(options, "permuting_period")
-        permuting_period = options.permuting_period;
-    else
-        permuting_period = get_default_constant("permuting_period");
-    end
+if isfield(options, "restart_period")
+    restart_period = options.restart_period;
+else
+    restart_period = 1;
 end
 
-% Set replacement_delay and num_selected_blocks. This is done only when 
-% Algorithm is "rbds", which randomly selects num_selected_blocks blocks in each
-% iteration. If replacement_delay is r, then the block that is selected in the 
-% current iteration will not be selected in the next r iterations. Note that 
-% replacement_delay cannot exceed floor(num_blocks/num_selected_blocks)-1.
-% The reason we set the default value of replacement_delay to 
-% floor(num_blocks/num_selected_blocks)-1 and num_selected_blocks to 
-% num_blocks-1 is that the performance of RBDS will be better when replacement_delay is larger.
-if strcmpi(options.Algorithm, "rbds")
-    if isfield(options, "num_selected_blocks")
-        num_selected_blocks = min(options.num_selected_blocks, num_blocks);
-    else
-        num_selected_blocks = num_blocks;
-    end
-
+% Set replacement_delay if restart_period is 1, otherwise, set it to 0.
+% If replacement_delay is r, then the block that is selected in the current
+% iteration will not be selected in the next r iterations. Note that replacement_delay cannot exceed
+% floor(num_blocks/batch_size)-1. The reason we set the default value of replacement_delay to
+% floor(num_blocks/batch_size)-1 is that the performance will be better when replacement_delay is larger.
+if restart_period > 1
+    replacement_delay = 0;
+else
     if isfield(options, "replacement_delay")
-        replacement_delay = min(options.replacement_delay, floor(num_blocks/num_selected_blocks)-1);
+        replacement_delay = min(options.replacement_delay, floor(num_blocks/batch_size)-1);
     else
-        replacement_delay = floor(num_blocks/num_selected_blocks)-1;
+        replacement_delay = floor(num_blocks/batch_size)-1;
     end
 end
 
@@ -489,26 +480,27 @@ else
 end
 
 % Initialize the history of sufficient decrease value and the boolean value of whether the sufficient decrease
+% is achieved or not.
+try
+    decrease_value = zeros(num_blocks, MaxFunctionEvaluations);
+catch
+    warning("decrease_value will be not included in the output due to the limit of memory.");
+end
+try
+    sufficient_decrease = true(num_blocks, MaxFunctionEvaluations);
+catch
+    warning("sufficient_decrease will be not included in the output due to the limit of memory.");
+end
+
+% Initialize the history of sufficient decrease value and the boolean value of whether the sufficient decrease
 % is achieved or not when the problem is not noisy and each block will be visited once in each iteration,
-% i.e., the Algorithm is "cbds" or "pbds" or "rbds" and num_selected_blocks is equal to num_blocks.
+% i.e., the Algorithm is "cbds" or "pbds" or "rbds" and batch_size is equal to num_blocks.
 % The use of sufficient_decrease_value and sufficient_decrease is to estimate the gradient of the function
 % at the best point encountered so far when the sufficient decrease condition is not achieved in the previous
 % iteration. It is an optional termination criterion unless use_estimated_gradient_stop is true.
 is_estimated_gradient_stop = use_estimated_gradient_stop && ~is_noisy && ...
-(((strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds")) && num_blocks == n) ... 
-    || (strcmpi(options.Algorithm, "rbds") && num_selected_blocks == n));
-if is_estimated_gradient_stop
-    try
-        sufficient_decrease_value = NaN(num_blocks, MaxFunctionEvaluations);
-    catch
-        warning("sufficient_decrease_value will be not included in the output due to the limit of memory.");
-    end
-    try
-        sufficient_decrease = true(num_blocks, MaxFunctionEvaluations);
-    catch
-        warning("sufficient_decrease will be not included in the output due to the limit of memory.");
-    end
-end
+    (((strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds")) && num_blocks == n) ...
+    || (strcmpi(options.Algorithm, "rbds") && batch_size == n));
 
 % Decide whether to print during the computation.
 if isfield(options, "verbose")
@@ -573,7 +565,7 @@ num_visited_blocks = 0;
 grad_hist = [];
 
 for iter = 1:maxit
-    
+
     % Use central difference to estimate the gradient of the function at xopt if the sufficient decrease
     % condition is not achieved in the previous iteration and the problem is not noisy.
     if is_estimated_gradient_stop && iter > 1 && ~any(sufficient_decrease(:, iter-1))
@@ -600,39 +592,39 @@ for iter = 1:maxit
         end
     end
 
-    % Define block_indices, which is a vector containing the indices of blocks that we
-    % are going to visit in this iteration.
-    if strcmpi(options.Algorithm, "ds") || strcmpi(options.Algorithm, "cbds") ...
-            || strcmpi(options.Algorithm, "pads")
-        % If the Algorithm is "ds", "cbds" or "pads", then we will visit all blocks in order.
-        % When the Algorithm is "ds", note that num_blocks = 1 and block_indices = [1],
-        % a vector of length 1.
-        block_indices = all_block_indices;
-    elseif strcmpi(options.Algorithm, "pbds") && mod(iter - 1, permuting_period) == 0
-        % Starting from the very first iteration, permute the blocks every permuting_period
-        % iterations if the Algorithm is "pbds". Note that block_indices gets initialized
-        % when iter = 1.
-        block_indices = random_stream.randperm(num_blocks);
-    elseif strcmpi(options.Algorithm, "rbds")
-        % Get the blocks that are going to be visited in this iteration when the Algorithm is "rbds".
-        % These blocks should not have been visited in the previous replacement_delay iterations.
-        % Note that block_indices is a vector of length num_selected_blocks.
-        unavailable_block_indices = unique(block_hist(max(1, (iter-replacement_delay) * num_selected_blocks) : (iter-1) * num_selected_blocks), 'stable');
-        available_block_indices = setdiff(all_block_indices, unavailable_block_indices);
-        % Select num_selected_blocks blocks randomly from the available blocks. randsample
-        % may be more efficient than randperm when num_selected_blocks is much smaller
-        % than num_blocks. However, randsample is only available in Statistics and Machine
-        % Learning Toolbox.
-        block_indices = available_block_indices(random_stream.randperm(length(available_block_indices), num_selected_blocks));
-    elseif strcmpi(options.Algorithm, "scbds")
-        % Get the block that is going to be visited in this iteration when the Algorithm
-        % is "scbds".
-        % In this case, we regard the indices of blocks as a cycle, and we will visit the blocks
-        % in the cycle in order. For example, if num_blocks = 3, then the cycle
-        % is [1 2 3 2 1 2 3 2 1 ...]. For implementation, block_indices is a vector of
-        % length 2n-2, where the order of the first n elements is [1 2 3 ... n n-1 ... 2].
-        block_indices = [all_block_indices (length(all_block_indices)-1):-1:2];
+    % Define block_indices, a vector that specifies both the indices of the blocks
+    % and the order in which they will be visited during the current iteration.
+    % The length of block_indices is equal to batch_size.
+    if replacement_delay > 0 || mod(iter-1, restart_period) == 0
+
+        if replacement_delay > 0
+            % Get the blocks that are going to be visited in this iteration.
+            % These blocks should not have been visited in the previous replacement_delay
+            % iterations when the replacement_delay is nonnegative.
+            unavailable_block_indices = unique(block_hist(max(1, (iter-replacement_delay) * batch_size) : (iter-1) * batch_size), 'stable');
+            available_block_indices = setdiff(all_block_indices, unavailable_block_indices);
+        else
+            available_block_indices = all_block_indices;
+        end
+
+        % Select batch_size blocks randomly from the available blocks. The selected blocks
+        % will be visited in this iteration.
+        block_indices = available_block_indices(random_stream.randperm(length(available_block_indices), batch_size));
+        
+        % Choose the block visiting scheme based on options.scheme.
+        switch lower(options.scheme)
+            case "cyclic"
+                block_indices = sort(block_indices);
+            case "random"
+                block_indices = block_indices(random_stream.randperm(length(block_indices)));
+            case "parallel"
+                block_indices = all_block_indices;
+            otherwise
+                error('Invalid scheme specified in options.scheme.');
+        end
+
     end
+
 
     for i = 1:length(block_indices)
 
@@ -661,10 +653,8 @@ for iter = 1:maxit
 
         % Record the sufficient decrease value and the boolean value of whether the sufficient decrease
         % is achieved or not if is_estimated_gradient_stop is true.
-        if is_estimated_gradient_stop
-            sufficient_decrease_value(i_real, iter) = sub_output.sufficient_decrease_value;
-            sufficient_decrease(i_real, iter) = sub_output.sufficient_decrease;
-        end
+        decrease_value(i_real, iter) = sub_output.decrease_value;
+        sufficient_decrease(i_real, iter) = sub_output.sufficient_decrease;
 
         if verbose
             fprintf("The number of the block visited is: %d\n", i_real);
@@ -676,11 +666,6 @@ for iter = 1:maxit
         % Record the index of the block visited.
         num_visited_blocks = num_visited_blocks + 1;
         block_hist(num_visited_blocks) = i_real;
-
-        % Record the step size used by inner_direct_search above.
-        % if output_alpha_hist
-        %     alpha_hist(:, iter) = alpha_all;
-        % end
 
         % Record the points visited by inner_direct_search if output_xhist is true.
         if output_xhist
@@ -712,10 +697,10 @@ for iter = 1:maxit
         fopt_all(i_real) = sub_fopt;
         xopt_all(:, i_real) = sub_xopt;
 
-        % If the Algorithm is not "pads", then we will update xbase and fbase after finishing the
-        % direct search in the i_real-th block. For "pads", we will update xbase and fbase after
+        % If the scheme is not "parallel", then we will update xbase and fbase after finishing the
+        % direct search in the i_real-th block. For "parallel", we will update xbase and fbase after
         % one iteration of the outer loop.
-        if ~strcmpi(options.Algorithm, "pads")
+        if ~strcmpi(options.scheme, "parallel")
             % Update xbase and fbase. xbase serves as the "base point" for the computation in the next block,
             % meaning that reduction will be calculated with respect to xbase, as shown above.
             % Note that their update requires a sufficient decrease if reduction_factor(1) > 0.
@@ -765,9 +750,9 @@ for iter = 1:maxit
     % See eval_fun.m for details.
     % assert(fopt == min(fhist));
 
-    % For "pads", we will update xbase and fbase only after one iteration of the outer loop.
+    % For "parallel", we will update xbase and fbase only after one iteration of the outer loop.
     % During the inner loop, every block will share the same xbase and fbase.
-    if strcmpi(options.Algorithm, "pads")
+    if strcmpi(options.scheme, "parallel")
         % Update xbase and fbase. xbase serves as the "base point" for the computation in the
         % next block, meaning that reduction will be calculated with respect to xbase, as shown above.
         % Note that their update requires a sufficient decrease if reduction_factor(1) > 0.
@@ -797,7 +782,7 @@ if output_alpha_hist
 end
 if output_sufficient_decrease
     output.sufficient_decrease = sufficient_decrease(:, 1:min(iter, maxit));
-    output.sufficient_decrease_value = sufficient_decrease_value(:, 1:min(iter, maxit));
+    output.decrease_value = decrease_value(:, 1:min(iter, maxit));
     output.grad_hist = grad_hist;
 end
 if output_xhist

@@ -34,10 +34,10 @@ if isfield(options, "num_blocks")
     end
 end
 
-BDS_list = ["DS", "CBDS", "PBDS", "RBDS", "PADS", "sCBDS"];
-if isfield(options, "Algorithm")
-    if ~(ischarstr(options.Algorithm) && any(ismember(lower(options.Algorithm), lower(BDS_list))))
-        error("options.Algorithm should be a string in the BDS_list");
+scheme_list = ["cyclic", "random", "parallel"];
+if isfield(options, "scheme")
+    if ~(ischarstr(options.scheme) && any(ismember(lower(options.scheme), lower(scheme_list))))
+        error("options.scheme should be a string in the scheme_list");
     end
 end
 
@@ -175,21 +175,15 @@ if isfield(options, "alpha_all")
     end
 end
 
-if isfield(options, "shuffle_period")
-    if ~(isintegerscalar(options.shuffle_period) && options.shuffle_period > 0)
-        error("options.shuffle_period should be a positive integer.");
-    end
-end
-
-if isfield(options, "num_selected_blocks")
-    if ~(isintegerscalar(options.num_selected_blocks) && options.num_selected_blocks > 0)
-        error("options.num_selected_blocks should be a positive integer.");
+if isfield(options, "batch_size")
+    if ~(isintegerscalar(options.batch_size) && options.batch_size > 0)
+        error("options.batch_size should be a positive integer.");
     end
 end
 
 if isfield(options, "replacement_delay")
-    if ~(isintegerscalar(options.replacement_delay) && options.replacement_delay >= 0)
-        error("options.replacement_delay should be a nonnegative integer.");
+    if ~isintegerscalar(options.replacement_delay)
+        error("options.replacement_delay should be an integer.");
     end
 end
 

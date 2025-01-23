@@ -125,8 +125,8 @@ constant_name = "MaxFunctionEvaluations_dim_factor";
 constant_value = 500;
 verifyEqual(testCase, get_default_constant(constant_name), constant_value)
 
-constant_name = "Algorithm";
-constant_value = "cbds";
+constant_name = "scheme";
+constant_value = "cyclic";
 verifyEqual(testCase, get_default_constant(constant_name), constant_value)
 
 constant_name = "ds_expand_small";
@@ -193,10 +193,6 @@ verifyEqual(testCase, get_default_constant(constant_name), constant_value)
 
 constant_name = "StepTolerance";
 constant_value = 1e-6;
-verifyEqual(testCase, get_default_constant(constant_name), constant_value)
-
-constant_name = "permuting_period";
-constant_value = 1;
 verifyEqual(testCase, get_default_constant(constant_name), constant_value)
 
 constant_name = "ftarget";
@@ -448,28 +444,30 @@ options.output_xhist = true;
 options.debug_flag = true;
 [~, fopt, ~, ~] = bds(@chrosen, x0, options);
 verifyEqual(testCase, fopt, 0)
-options.Algorithm = "pbds";
+options.scheme = "parallel";
+options.replacement_delay = -1;
 [~, fopt, ~, ~] = bds(@chrosen, x0, options);
-if abs(fopt) > 1e-8
+if abs(fopt) > 1e-7
     error('The function value is not close to 0.');
 end
 
-options.Algorithm = "rbds";
+options.scheme = "random";
+options = rmfield(options, "replacement_delay");
 [~, fopt, ~, ~] = bds(@chrosen, x0, options);
 if abs(fopt) > 1e-8
     error('The function value is not close to 0.');
 end
-options.num_selected_blocks = 1;
+options.batch_size = 1;
 [~, fopt, ~, ~] = bds(@chrosen, x0, options);
 if abs(fopt) > 1e-8
     error('The function value is not close to 0.');
 end
-options.num_selected_blocks = 2;
+options.batch_size = 2;
 [~, fopt, ~, ~] = bds(@chrosen, x0, options);
 if abs(fopt) > 1e-8
     error('The function value is not close to 0.');
 end
-options.num_selected_blocks = 3;
+options.batch_size = 3;
 [~, fopt, ~, ~] = bds(@chrosen, x0, options);
 if abs(fopt) > 1e-8
     error('The function value is not close to 0.');
@@ -487,21 +485,27 @@ if abs(fopt) > 1e-8
     error('The function value is not close to 0.');
 end
 options = rmfield(options, 'replacement_delay');
-options = rmfield(options, 'num_selected_blocks');
+options = rmfield(options, 'batch_size');
 
-options.Algorithm = "pads";
+options.scheme = "parallel";
+options.batch_size = numel(x0);
 [~, fopt, ~, ~] = bds(@chrosen, x0, options);
 if abs(fopt) > 1e-6
     error('The function value is not close to 0.');
 end
 
-options.Algorithm = "scbds";
+options.batch_size = 1;
+options.num_blocks = 1;
 [~, fopt, ~, ~] = bds(@chrosen, x0, options);
-if abs(fopt) > 1e-10
+if abs(fopt) > 1e-6
     error('The function value is not close to 0.');
 end
-
-options.Algorithm = "ds";
+options.scheme = "random";
+[~, fopt, ~, ~] = bds(@chrosen, x0, options);
+if abs(fopt) > 1e-6
+    error('The function value is not close to 0.');
+end
+options.scheme = "cyclic";
 [~, fopt, ~, ~] = bds(@chrosen, x0, options);
 if abs(fopt) > 1e-6
     error('The function value is not close to 0.');

@@ -5,8 +5,8 @@ function constant_value = get_default_constant(constant_name)
 switch constant_name
     case {"MaxFunctionEvaluations_dim_factor"}
         constant_value = 500;
-    case {"Algorithm"}
-        constant_value = "cbds";
+    case {"scheme"}
+        constant_value = "cyclic";
     case {"is_noisy"}
         constant_value = false;
     case {"ds_expand_small"}
@@ -49,8 +49,6 @@ switch constant_name
         constant_value = 1e-6;
     case {"grad_tol"}
         constant_value = 1e-4;
-    case {"permuting_period"}
-        constant_value = 1;
     case {"seed"}
         constant_value = "shuffle";
     case {"ftarget"}
