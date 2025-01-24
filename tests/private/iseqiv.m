@@ -126,6 +126,7 @@ rng(orig_rng_state);
 equiv = iseq(x1(:), fx1, exitflag1, output1, x2(:), fx2, exitflag2, output2, prec);
 
 if ~equiv
+    keyboard
     format long;
     fprintf('\nnf: nf1 = %d, nf2 = %d', output1.funcCount, output2.funcCount)
     fprintf('\nx:')

@@ -37,11 +37,12 @@ jobs:
           repository: blockwise-direct-search/bds_development
           path: bds_development
 
-      - name: Clone MatCUTEst
+      - name: Checkout OptiProfiler
         uses: actions/checkout@v4
         with:
-          repository: matcutest/matcutest_compiled
-          path: matcutest
+          repository: optiprofiler/optiprofiler
+          path: optiprofiler
+          submodules: recursive
 
       - name: Link gfortran for MATLAB on Linux
         if: startsWith(matrix.os, 'ubuntu')
@@ -78,9 +79,10 @@ jobs:
             root_dir = pwd()
             ls
 
-            % Install MatCUTEst
-            cd(fullfile(root_dir, 'matcutest'));
-            install(); cd(root_dir);
+            % Setup optiprofiler
+            cd(fullfile(root_dir, 'optiprofiler'));
+            setup
+            cd(root_dir);
 
             % Setup bds_development
             cd(fullfile(root_dir, 'bds_development'));
@@ -88,6 +90,7 @@ jobs:
             setup
 
             % Setup bds
+            cd root_dir
             setup
             
             % Run test

@@ -1,12 +1,12 @@
 function verify_bds(parameters)
-%This function tests the modernized version of Powell's solver against Powell's version, verifying
-% whether they produce the same results on CUTEst problems.
+% This function tests the latest version of the BDS solver against its development version,
+% verifying whether they produce consistent results on CUTEst problems.
 %
 % where
-% - `Algorithm` is the name of the Algorithm to test, including "cbds", "pbds", "ds", "rbds", "pads" and "scbds".
+% - `Algorithm` is the name of the Algorithm to test, including "cbds", "ds", "rbds".
 %   If it is not provided, then the default Algorithm is "cbds", which is the default Algorithm of BDS.
 % - `problem_names` are the names of the problems to test.
-% - `i_run_init` is the index of the first random run in iseqiv.m. Default is 1.
+% - `n_runs` is the index of the first random run in iseqiv.m. Default is 1.
 % - `num_random` is the number of random runs in iseqiv.m. Default is 20.
 % - `parallel` is either true or false, which means whether to test the problems parallelly.
 % - `problem_type` can only be "u" now, indicating the problem type to test.
@@ -18,10 +18,10 @@ function verify_bds(parameters)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% Record the current path.
-oldpath = path();
-% Restore the "right out of the box" path of MATLAB.
-restoredefaultpath;
+% % Record the current path.
+% oldpath = path();
+% % Restore the "right out of the box" path of MATLAB.
+% restoredefaultpath;
 % Record the current directory.
 old_dir = pwd();
 
@@ -49,49 +49,76 @@ try
 
     solvers = {"bds", "bds_norma"};
 
-    % Tell MATLAB where to find MatCUTEst.
-    locate_matcutest();
+    % Get list of problems
+    if isfield(parameters, "problem_type")
+        options_s2mpj.p_type = parameters.problem_type;
+    else
+        options_s2mpj.p_type = "u";
+    end
+
+    if isfield(parameters, "problem_mindim")
+        options_s2mpj.mindim = parameters.problem_mindim;
+    else
+        options_s2mpj.mindim = 1;
+    end
+
+    if isfield(parameters, "problem_maxdim")
+        options_s2mpj.maxdim = parameters.problem_maxdim;
+    else
+        options_s2mpj.maxdim = 10;
+    end
+
+    blacklist = ["DIAMON2DLS",...
+        "DIAMON2D",...
+        "DIAMON3DLS",...
+        "DIAMON3D",...
+        "DMN15102LS",...
+        "DMN15102",...
+        "DMN15103LS",...
+        "DMN15103",...
+        "DMN15332LS",...
+        "DMN15332",...
+        "DMN15333LS",...
+        "DMN15333",...
+        "DMN37142LS",...
+        "DMN37142",...
+        "DMN37143LS",...
+        "DMN37143",...
+        "ROSSIMP3_mp"];
+    blacklist_time_consuming = ["BAmL1SPLS",...
+        "FBRAIN3LS",...
+        "GAUSS1LS",...
+        "GAUSS2LS",...
+        "GAUSS3LS",...
+        "HYDC20LS",...
+        "HYDCAR6LS",...
+        "LUKSAN11LS",...
+        "LUKSAN12LS",...
+        "LUKSAN13LS",...
+        "LUKSAN14LS",...
+        "LUKSAN17LS",...
+        "LUKSAN21LS",...
+        "LUKSAN22LS",...
+        "METHANB8LS",...
+        "METHANL8LS",...
+        "SPINLS",...
+        "VESUVIALS",...
+        "VESUVIOLS",...
+        "VESUVIOULS",...
+        "YATP1CLS"];
+    keyboard
+    problem_names_orig = s_select(options_s2mpj);
+    problem_names = [];
+    for i = 1:length(problem_names_orig)
+        if ~ismember(problem_names_orig(i), blacklist) && ...
+                ~ismember(problem_names_orig(i), blacklist_time_consuming)
+            problem_names = [problem_names, problem_names_orig(i)];
+        end
+    end
 
     % Record `olddir` in `options` so that we can come back to `olddir` during `isequiv` if
     % necessary (for example, when a single test fails).
     parameters.olddir = old_dir;
-
-    % Get list of problems
-    if isfield(parameters, "problem_type")
-        s.type = parameters.problem_type;
-    else
-        s.type = get_default_profile_options("problem_type");
-    end
-
-    if isfield(parameters, "problem_mindim")
-        s.mindim = parameters.problem_mindim;
-    else
-        s.mindim = get_default_profile_options("problem_mindim");
-    end
-
-    if isfield(parameters, "problem_maxdim")
-        s.maxdim = parameters.problem_maxdim;
-    else
-        s.maxdim = 20;
-    end
-    
-    s.blacklist = [];
-
-    if s.mindim >= 6
-        s.blacklist = [parameters.blacklist, { 'ARGTRIGLS', 'BROWNAL', ...
-            'COATING', 'DIAMON2DLS', 'DIAMON3DLS', 'DMN15102LS', ...
-            'DMN15103LS', 'DMN15332LS', 'DMN15333LS', 'DMN37142LS', ...
-            'DMN37143LS', 'ERRINRSM', 'HYDC20LS', 'LRA9A', ...
-            'LRCOVTYPE', 'LUKSAN12LS', 'LUKSAN14LS', 'LUKSAN17LS', 'LUKSAN21LS', ...
-            'LUKSAN22LS', 'MANCINO', 'PENALTY2', 'PENALTY3', 'VARDIM',
-            }];
-    end
-
-    if ~isfield(parameters, "problem_names")
-        problem_names = secup(s);
-    else
-        problem_names = parameters.problem_names;
-    end
     
     fprintf("We will load %d problems\n\n", length(problem_names))
 
@@ -111,10 +138,10 @@ try
     end
     parameters.sequential = ~parallel;
 
-    if ~isfield(parameters, "i_run_init")
-        i_run_init = 1;
+    if ~isfield(parameters, "n_runs")
+        n_runs = 1;
     else
-        i_run_init = parameters.i_run_init;
+        n_runs = parameters.n_runs;
     end
 
     if ~isfield(parameters, "num_random")
@@ -131,16 +158,18 @@ try
     
     if parallel
         parfor i_problem = 1:num_problems
-            p = macup(problem_names(1, i_problem));
-            for i_run = i_run_init:i_run_init+num_random-1
+            problem_info = s_load(char(problem_names(i_problem)));
+            p = s2mpj_wrapper(problem_info);
+            for i_run = n_runs:n_runs+num_random-1
                 fprintf("%d(%d). %s\n", i_problem, i_run, p.name);
                 iseqiv(solvers, p, i_run, single_test, prec, parameters);
             end
         end
     else
         for i_problem = 1:num_problems
-            p = macup(problem_names(1, i_problem));
-            for i_run = i_run_init:i_run_init+num_random-1
+            problem_info = s_load(char(problem_names(i_problem)));
+            p = s2mpj_wrapper(problem_info);
+            for i_run = n_runs:n_runs+num_random-1
                 fprintf("%d(%d). %s\n", i_problem, i_run, p.name);
                 iseqiv(solvers, p, i_run, single_test, prec, parameters);
             end
@@ -153,8 +182,6 @@ catch exception
 
 end
 
-% Restore the path to oldpath.
-setpath(oldpath);
 % Go back to the original directory.
 cd(old_dir);
 

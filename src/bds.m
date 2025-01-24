@@ -11,7 +11,14 @@ function [xopt, fopt, exitflag, output] = bds(fun, x0, options)
 %   XOPT = BDS(FUN, X0, OPTIONS) performs the computations with the options in
 %   OPTIONS. OPTIONS should be a structure with the following fields.
 %
-%   Algorithm                   Algorithm to use. It can be "cyclic", "random", "parallel",
+%   Algorithm                   Algorithm to use. It can be "cbds" (cyclic 
+%                               blockwise direct search) "pbds" (randomly 
+%                               permuted blockwise direct search), "rbds" 
+%                               (randomized blockwise direct search), "ds"
+%                               (the classical direct search), "pads" (parallel 
+%                               blockwise direct search). "scbds" (symmetric
+%                               blockwise direct search). Default: "cbds".
+%   Scheme                      Scheme to use. It can be "cyclic", "random", "parallel",
 %                               Default: "cyclic".
 %   num_blocks                  Number of blocks. A positive integer. 
 %                               Default: ceil(num_directions/2), where num_directions
@@ -87,8 +94,6 @@ function [xopt, fopt, exitflag, output] = bds(fun, x0, options)
 %                               replacement_delay should be an nonnegative integer less than or 
 %                               equal to floor(num_blocks/batch_size)-1.                               
 %                               Default: floor(num_blocks/batch_size)-1.
-%   restart_period              Get available blocks every restart_period iterations.
-%                               Default: 1.
 %   seed                        The seed for random number generator. Default: "shuffle".
 %   use_estimated_gradient_stop Whether to use the estimated gradient to stop
 %                               the algorithm. If it is true and the problem is
@@ -165,7 +170,41 @@ D = get_direction_set(n, options);
 % Get the number of blocks.
 num_directions = size(D, 2);
 
-% % Set the default value of
+% Set the default Algorithm of BDS, which is "cbds".
+Algorithm_list = ["ds", "cbds", "pbds", "rbds", "pads"];
+if isfield(options, "Algorithm") && ~ismember(lower(options.Algorithm), Algorithm_list)
+    error("The Algorithm input is invalid");
+end
+if ~isfield(options, "Algorithm")
+    options.Algorithm = "cbds";
+end
+switch lower(options.Algorithm)
+    case "ds"
+        options.num_blocks = 1;
+        options.batch_size = 1;
+    case "cbds"
+        options.num_blocks = n;
+        options.batch_size = n;
+        options.scheme = "cyclic";
+    case "pbds"
+        options.num_blocks = n;
+        options.batch_size = n;
+        options.scheme = "random";
+    case "rbds"
+        options.num_blocks = n;
+        options.batch_size = 1;
+        options.replacement_delay = n - 1;
+        options.scheme = "random";
+    case "pads"
+        options.num_blocks = n;
+        options.batch_size = n;
+        options.scheme = "parallel";
+    otherwise
+        error("The Algorithm input is invalid");
+end
+
+
+% Set the default value of scheme.
 scheme_list = ["cyclic", "random", "parallel"];
 if isfield(options, "scheme") && ~ismember(lower(options.scheme), scheme_list)
     error("The scheme should be one of the following: cyclic, random, parallel.\n");
@@ -244,6 +283,7 @@ end
 % selected based on the S2MPJ problems (see https://github.com/GrattonToint/S2MPJ).
 % If options contain expand or shrink, then expand or shrink is set to the corresponding value.
 if ~isfield(options, "expand")
+    % n == 1 is treated as a special case, and we can treat the Algorithm as "ds".
     if batch_size == 1
         if numel(x0) <= 5
             expand = get_default_constant("ds_expand_small");
@@ -322,25 +362,14 @@ else
     cycling_inner = get_default_constant("cycling_inner");
 end
 
-if isfield(options, "restart_period")
-    restart_period = options.restart_period;
-else
-    restart_period = 1;
-end
-
-% Set replacement_delay if restart_period is 1, otherwise, set it to 0.
 % If replacement_delay is r, then the block that is selected in the current
 % iteration will not be selected in the next r iterations. Note that replacement_delay cannot exceed
 % floor(num_blocks/batch_size)-1. The reason we set the default value of replacement_delay to
 % floor(num_blocks/batch_size)-1 is that the performance will be better when replacement_delay is larger.
-if restart_period > 1
-    replacement_delay = 0;
+if isfield(options, "replacement_delay")
+    replacement_delay = min(options.replacement_delay, floor(num_blocks/batch_size)-1);
 else
-    if isfield(options, "replacement_delay")
-        replacement_delay = min(options.replacement_delay, floor(num_blocks/batch_size)-1);
-    else
-        replacement_delay = floor(num_blocks/batch_size)-1;
-    end
+    replacement_delay = floor(num_blocks/batch_size)-1;
 end
 
 % Set the boolean value of with_cycling_memory, which will be used in cycling.m.
@@ -434,10 +463,10 @@ else
 end
 alpha_hist(:, 1) = alpha_all(:);
 
-% fopt_all(i) records the best function values encountered in the i-th block after one iteration,
-% and xopt_all(:, i) is the corresponding value of x.
-fopt_all = NaN(1, num_blocks);
-xopt_all = NaN(n, num_blocks);
+% % fopt_all(i) records the best function values encountered in the i-th block after one iteration,
+% % and xopt_all(:, i) is the corresponding value of x.
+% fopt_all = NaN(1, num_blocks);
+% xopt_all = NaN(n, num_blocks);
 
 % Initialize the history of function values.
 fhist = NaN(1, MaxFunctionEvaluations);
@@ -595,36 +624,31 @@ for iter = 1:maxit
     % Define block_indices, a vector that specifies both the indices of the blocks
     % and the order in which they will be visited during the current iteration.
     % The length of block_indices is equal to batch_size.
-    if replacement_delay > 0 || mod(iter-1, restart_period) == 0
+    % These blocks should not have been visited in the previous replacement_delay
+    % iterations when the replacement_delay is nonnegative.
+    unavailable_block_indices = unique(block_hist(max(1, (iter-replacement_delay) * batch_size) : (iter-1) * batch_size), 'stable');
+    available_block_indices = setdiff(all_block_indices, unavailable_block_indices);
 
-        if replacement_delay > 0
-            % Get the blocks that are going to be visited in this iteration.
-            % These blocks should not have been visited in the previous replacement_delay
-            % iterations when the replacement_delay is nonnegative.
-            unavailable_block_indices = unique(block_hist(max(1, (iter-replacement_delay) * batch_size) : (iter-1) * batch_size), 'stable');
-            available_block_indices = setdiff(all_block_indices, unavailable_block_indices);
-        else
-            available_block_indices = all_block_indices;
-        end
-
-        % Select batch_size blocks randomly from the available blocks. The selected blocks
-        % will be visited in this iteration.
-        block_indices = available_block_indices(random_stream.randperm(length(available_block_indices), batch_size));
-        
-        % Choose the block visiting scheme based on options.scheme.
-        switch lower(options.scheme)
-            case "cyclic"
-                block_indices = sort(block_indices);
-            case "random"
-                block_indices = block_indices(random_stream.randperm(length(block_indices)));
-            case "parallel"
-                block_indices = all_block_indices;
-            otherwise
-                error('Invalid scheme specified in options.scheme.');
-        end
-
+    % Select batch_size blocks randomly from the available blocks. The selected blocks
+    % will be visited in this iteration.
+    block_indices = available_block_indices(random_stream.randperm(length(available_block_indices), batch_size));
+    
+    % Choose the block visiting scheme based on options.scheme.
+    switch lower(options.scheme)
+        case "cyclic"
+            block_indices = sort(block_indices);
+        case "random"
+            block_indices = block_indices(random_stream.randperm(length(block_indices)));
+        case "parallel"
+            block_indices = all_block_indices;
+        otherwise
+            error('Invalid scheme specified in options.scheme.');
     end
 
+    % fopt_all(i) records the best function values encountered in the i-th block after one iteration,
+    % and xopt_all(:, i) is the corresponding value of x.
+    fopt_all = NaN(1, length(block_indices));
+    xopt_all = NaN(n, length(block_indices));
 
     for i = 1:length(block_indices)
 
@@ -692,7 +716,7 @@ for iter = 1:maxit
             alpha_all(i_real) = max(shrink * alpha_all(i_real), alpha_threshold);
             %alpha_all(i_real) = shrink * alpha_all(i_real);
         end
-
+        
         % Record the best function value and point encountered in the i_real-th block.
         fopt_all(i_real) = sub_fopt;
         xopt_all(:, i_real) = sub_xopt;
@@ -735,16 +759,6 @@ for iter = 1:maxit
     % Why iter+1? Because we record the step size for the next iteration.
     alpha_hist(:, iter+1) = alpha_all;
 
-    % Update xopt and fopt. Note that we do this only if the iteration encounters a strictly better point.
-    % Make sure that fopt is always the minimum of fhist after the moment we update fopt.
-    % The determination between fopt_all and fopt is to avoid the case that fopt_all is
-    % bigger than fopt due to the update of xbase and fbase.
-    [~, index] = min(fopt_all, [], "omitnan");
-    if fopt_all(index) < fopt
-        fopt = fopt_all(index);
-        xopt = xopt_all(:, index);
-    end
-
     % Actually, fopt is not always the minimum of fhist after the moment we update fopt
     % since the value we used to iterate is not always equal to the value returned by the function.
     % See eval_fun.m for details.
@@ -760,6 +774,18 @@ for iter = 1:maxit
             xbase = xopt;
             fbase = fopt;
         end
+    end
+
+    % Update xopt and fopt. Note that we do this only if the iteration encounters a strictly better point.
+    % Make sure that fopt is always the minimum of fhist after the moment we update fopt.
+    % The determination between fopt_all and fopt is to avoid the case that fopt_all is
+    % bigger than fopt due to the update of xbase and fbase.
+    % NOTE: If the function values are complex, the min function will return the value with the smallest 
+    % norm (magnitude).
+    [~, index] = min(fopt_all, [], "omitnan");
+    if fopt_all(index) < fopt
+        fopt = fopt_all(index);
+        xopt = xopt_all(:, index);
     end
 
     % Terminate the computations if terminate is true.

@@ -127,6 +127,5 @@ else
     output.sufficient_decrease = false;
 end
 output.decrease_value = fbase - min(fhist(1:nf));
-
 end
 
