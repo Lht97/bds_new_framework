@@ -90,7 +90,7 @@ jobs:
             setup
 
             % Setup bds
-            cd root_dir
+            cd (root_dir);
             setup
             
             % Run test
