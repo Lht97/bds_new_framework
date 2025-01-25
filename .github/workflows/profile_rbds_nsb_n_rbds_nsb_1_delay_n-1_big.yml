@@ -1,4 +1,4 @@
-name: Profile cbds and rbds (n, 0), big
+name: Profile rbds(n, 0) and rbds (1, n-1), big
 
 on:
   # Trigger the workflow on # push or pull request
@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    name: Profile cbds and rbds (n, 0), big
+    name: Profile rbds(n, 0) and rbds (1, n-1), big
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -19,8 +19,8 @@ jobs:
         matlab: [latest]
         dim: [big]
         with_optim_toolbox: [yes]
-        solver: [cbds-orig]
-        competitor: [rnb]
+        solver: [rnb]
+        competitor: [rnm1d]
         run_plain: [false]
         summarize_log_ratio_profiles: [false]
         feature: [plain, noisy_1e-1, noisy_1e-2, noisy_1e-3, noisy_1e-4, linearly_transformed, rotation_noisy_1e-1, rotation_noisy_1e-2, rotation_noisy_1e-3, rotation_noisy_1e-4, permuted, permuted_noisy_1e-1, permuted_noisy_1e-2, permuted_noisy_1e-3, permuted_noisy_1e-4]
@@ -173,7 +173,7 @@ jobs:
           cd summary
           ls
           bash ../merge_pdf.sh
-          mv merged.pdf "summary_cbds_rbds_num_selected_blocks_n_big.pdf"
+          mv merged.pdf "summary_rbds_nsb_n_rbds_nsb_1_delay_n_minus_1_big.pdf"
           cd ..
           if [ -d "summary" ]; then
             mv summary "summary_${BASE_INFO}"
@@ -184,7 +184,7 @@ jobs:
         env:
           BASE_INFO: ${{ env.BASE_INFO }}
         with:
-          name: merged_profiles_cbds_rbds_num_selected_blocks_n_big
+          name: merged_profiles_rbds_nsb_n_rbds_nsb_1_delay_n_minus_1_big
           path: tests/testdata/downloaded_artifacts/**
 
       - name: Upload summary files
@@ -192,5 +192,5 @@ jobs:
         env:
           BASE_INFO: ${{ env.BASE_INFO }}
         with:
-          name: summary_files_cbds_rbds_num_selected_blocks_n_big
+          name: summary_files_rbds_nsb_n_rbds_nsb_1_delay_n_minus_1_big
           path: tests/testdata/downloaded_artifacts/summary_${{ env.BASE_INFO }}/**

@@ -106,7 +106,6 @@ try
         "VESUVIOLS",...
         "VESUVIOULS",...
         "YATP1CLS"];
-    keyboard
     problem_names_orig = s_select(options_s2mpj);
     problem_names = [];
     for i = 1:length(problem_names_orig)

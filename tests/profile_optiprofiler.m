@@ -625,7 +625,7 @@ end
 
 function x = cbds_half_block_test(fun, x0)
 
-    option.num_blocks = ceil(numel(x0)/2);
+    option.batch_size = ceil(numel(x0)/2);
     option.expand = 2;
     option.shrink = 0.5;
     option.use_estimated_gradient_stop = false;
@@ -635,7 +635,7 @@ end
 
 function x = cbds_quarter_block_test(fun, x0)
 
-    option.num_blocks = ceil(numel(x0)/4);
+    option.batch_size = ceil(numel(x0)/4);
     option.expand = 2;
     option.shrink = 0.5;
     option.use_estimated_gradient_stop = false;
@@ -645,7 +645,7 @@ end
 
 function x = cbds_eighth_block_test(fun, x0)
 
-    option.num_blocks = ceil(numel(x0)/8);
+    option.batch_size = ceil(numel(x0)/8);
     option.expand = 2;
     option.shrink = 0.5;
     option.use_estimated_gradient_stop = false;
@@ -728,7 +728,7 @@ end
 function x = rbds_zero_delay_test(fun, x0)
 
     option.Algorithm = 'rbds';
-    option.num_selected_blocks = 1;
+    option.batch_size = 1;
     option.expand = 2;
     option.shrink = 0.5;
     option.replacement_delay = 0;
@@ -739,7 +739,7 @@ end
 function x = rbds_one_delay_test(fun, x0)
 
     option.Algorithm = 'rbds';
-    option.num_selected_blocks = 1;
+    option.batch_size = 1;
     option.expand = 2;
     option.shrink = 0.5;
     option.replacement_delay = 1;
@@ -750,7 +750,7 @@ end
 function x = rbds_eighth_delay_test(fun, x0)
 
     option.Algorithm = 'rbds';
-    option.num_selected_blocks = 1;
+    option.batch_size = 1;
     option.expand = 2;
     option.shrink = 0.5;
     option.replacement_delay = ceil(numel(x0)/8);
@@ -761,7 +761,7 @@ end
 function x = rbds_quarter_delay_test(fun, x0)
 
     option.Algorithm = 'rbds';
-    option.num_selected_blocks = 1;
+    option.batch_size = 1;
     option.expand = 2;
     option.shrink = 0.5;
     option.replacement_delay = ceil(numel(x0)/4);
@@ -772,7 +772,7 @@ end
 function x = rbds_half_delay_test(fun, x0)
 
     option.Algorithm = 'rbds';
-    option.num_selected_blocks = 1;
+    option.batch_size = 1;
     option.expand = 2;
     option.shrink = 0.5;
     option.replacement_delay = ceil(numel(x0)/2);
@@ -783,7 +783,7 @@ end
 function x = rbds_n_minus_1_delay_test(fun, x0)
 
     option.Algorithm = 'rbds';
-    option.num_selected_blocks = 1;
+    option.batch_size = 1;
     option.expand = 2;
     option.shrink = 0.5;
     option.replacement_delay = numel(x0) - 1;
@@ -796,7 +796,7 @@ function x = rbds_num_selected_blocks_n_test(fun, x0)
     option.Algorithm = 'rbds';
     option.expand = 2;
     option.shrink = 0.5;
-    option.num_selected_blocks = numel(x0);
+    option.batch_size = numel(x0);
     option.replacement_delay = 0;
     x = bds(fun, x0, option);
     
@@ -807,7 +807,7 @@ function x = rbds_num_selected_blocks_half_n_test(fun, x0)
     option.Algorithm = 'rbds';
     option.expand = 2;
     option.shrink = 0.5;
-    option.num_selected_blocks = ceil(numel(x0)/2);
+    option.batch_size = ceil(numel(x0)/2);
     option.replacement_delay = 0;
     x = bds(fun, x0, option);
 
@@ -818,7 +818,7 @@ function x = rbds_num_selected_blocks_quarter_n_test(fun, x0)
     option.Algorithm = 'rbds';
     option.expand = 2;
     option.shrink = 0.5;
-    option.num_selected_blocks = ceil(numel(x0)/4);
+    option.batch_size = ceil(numel(x0)/4);
     option.replacement_delay = 0;
     x = bds(fun, x0, option);
 
@@ -829,7 +829,7 @@ function x = rbds_num_selected_blocks_eighth_n_test(fun, x0)
     option.Algorithm = 'rbds';
     option.expand = 2;
     option.shrink = 0.5;
-    option.num_selected_blocks = ceil(numel(x0)/8);
+    option.batch_size = ceil(numel(x0)/8);
     option.replacement_delay = 0;
     x = bds(fun, x0, option);
 
@@ -840,7 +840,7 @@ function x = rbds_num_selected_blocks_one_test(fun, x0)
     option.Algorithm = 'rbds';
     option.expand = 2;
     option.shrink = 0.5;
-    option.num_selected_blocks = 1;
+    option.batch_size = 1;
     option.replacement_delay = 0;
     x = bds(fun, x0, option);
 
