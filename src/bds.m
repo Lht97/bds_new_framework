@@ -172,7 +172,7 @@ D = get_direction_set(n, options);
 num_directions = size(D, 2);
 
 % % Set the default Algorithm of BDS, which is "cbds".
-Algorithm_list = ["ds", "cbds", "pbds", "rbds", "pads", "scbds"];
+Algorithm_list = ["ds", "cbds", "pbds", "rbds", "pads", "scbds", "cycle_all", "cycle_single_1", "cycle_single_2", "cycle_single_3", "cycle_single_4"];
 if isfield(options, "Algorithm") && ~ismember(lower(options.Algorithm), Algorithm_list)
     error("The Algorithm input is invalid");
 end
@@ -242,7 +242,7 @@ end
 % selected based on the S2MPJ problems (see https://github.com/GrattonToint/S2MPJ).
 % If options contain expand or shrink, then expand or shrink is set to the corresponding value.
 if ~isfield(options, "expand")
-    if strcmpi(options.Algorithm, "ds")
+    if (isfield(options, "Algorithm") && strcmpi(options.Algorithm, "ds")) || n == 1
         if numel(x0) <= 5
             expand = get_default_constant("ds_expand_small");
         else
@@ -269,7 +269,7 @@ else
 end
 
 if ~isfield(options, "shrink")
-    if strcmpi(options.Algorithm, "ds")
+    if (isfield(options, "Algorithm") && strcmpi(options.Algorithm, "ds")) || n == 1
         if numel(x0) <= 5
             shrink = get_default_constant("ds_shrink_small");
         else
@@ -482,25 +482,21 @@ else
     output_sufficient_decrease = get_default_constant("output_sufficient_decrease");
 end
 
-if isfield(options, "use_estimated_gradient_stop")
-    use_estimated_gradient_stop = options.use_estimated_gradient_stop;
-else
-    use_estimated_gradient_stop = false;
-end
+use_estimated_gradient_stop = false;
 
 if isfield(options, "is_sufficient_decrease_stop")
     is_sufficient_decrease_stop = options.is_sufficient_decrease_stop;
 else
-    is_sufficient_decrease_stop = true;
+    is_sufficient_decrease_stop = false;
 end
 
 % Initialize the history of sufficient decrease value and the boolean value of whether the sufficient decrease
 % is achieved or not. If output_sufficient_decrease is true and sufficient_decrease_value exceeds the maximum
 % memory size allowed, then we will not output sufficient_decrease_value and sufficient_decrease.
 try
-    sufficient_decrease_value = NaN(num_blocks, MaxFunctionEvaluations);
+    decrease_value = NaN(num_blocks, MaxFunctionEvaluations);
 catch
-    warning("sufficient_decrease_value will be not included in the output due to the limit of memory.");
+    warning("decrease_value will be not included in the output due to the limit of memory.");
 end
 try
     sufficient_decrease = true(num_blocks, MaxFunctionEvaluations);
@@ -645,6 +641,41 @@ for iter = 1:maxit
         % is [1 2 3 2 1 2 3 2 1 ...]. For implementation, block_indices is a vector of
         % length 2n-2, where the order of the first n elements is [1 2 3 ... n n-1 ... 2].
         block_indices = [all_block_indices (num_blocks-1):-1:2];
+    elseif strcmpi(options.Algorithm, "cycle_all")
+        if iter == 1
+            block_indices = all_block_indices;
+        else
+            [~, idx] = sort(decrease_value(:, iter-1), 'descend');
+            block_indices = block_indices(idx);
+        end
+    elseif strcmpi(options.Algorithm, "cycle_single_1")
+        if iter == 1
+            block_indices = all_block_indices;
+        else
+            [~, max_idx] = max(decrease_value(:, iter-1));
+            block_indices = cycling(block_indices, max_idx, 1, true);
+        end
+    elseif strcmpi(options.Algorithm, "cycle_single_2")
+        if iter == 1
+            block_indices = all_block_indices;
+        else
+            [~, max_idx] = max(decrease_value(:, iter-1));
+            block_indices = cycling(block_indices, max_idx, 2, true);
+        end
+    elseif strcmpi(options.Algorithm, "cycle_single_3")
+        if iter == 1
+            block_indices = all_block_indices;
+        else
+            [~, max_idx] = max(decrease_value(:, iter-1));
+            block_indices = cycling(block_indices, max_idx, 3, true);
+        end
+    elseif strcmpi(options.Algorithm, "cycle_single_4")
+        if iter == 1
+            block_indices = all_block_indices;
+        else
+            [~, max_idx] = max(decrease_value(:, iter-1));
+            block_indices = cycling(block_indices, max_idx, 4, true);
+        end
     end
 
     for i = 1:length(block_indices)
@@ -674,7 +705,7 @@ for iter = 1:maxit
 
         % Record the sufficient decrease value and the boolean value of whether the sufficient decrease
         % is achieved or not.
-        sufficient_decrease_value(i_real, iter) = sub_output.sufficient_decrease_value;
+        decrease_value(i_real, iter) = sub_output.decrease_value;
         sufficient_decrease(i_real, iter) = sub_output.sufficient_decrease;
 
         if verbose
@@ -808,7 +839,7 @@ if output_alpha_hist
 end
 if output_sufficient_decrease
     output.sufficient_decrease = sufficient_decrease(:, 1:min(iter, maxit));
-    output.sufficient_decrease_value = sufficient_decrease_value(:, 1:min(iter, maxit));
+    output.decrease_value = decrease_value(:, 1:min(iter, maxit));
     output.grad_hist = grad_hist;
 end
 if output_xhist
