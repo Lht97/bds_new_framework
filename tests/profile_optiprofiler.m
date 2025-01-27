@@ -254,6 +254,16 @@ function profile_optiprofiler(options)
                 solvers{i} = @cbds_test;
             case 'cbds-development'
                 solvers{i} = @cbds_development_test;
+            case 'cbds-cycle-all'
+                solvers{i} = @cbds_cycle_all_test;
+            case 'cbds-cycle-1'
+                solvers{i} = @cbds_cycle_single_1_test;
+            case 'cbds-cycle-2'
+                solvers{i} = @cbds_cycle_single_2_test;
+            case 'cbds-cycle-3'
+                solvers{i} = @cbds_cycle_single_3_test;
+            case 'cbds-cycle-4'
+                solvers{i} = @cbds_cycle_single_4_test;
             case 'cbds-block'
                 solvers{i} = @cbds_block_test;
             case 'cbds-orig'
@@ -591,6 +601,51 @@ end
 function x = cbds_development_test(fun, x0)
 
     option.Algorithm = 'cbds';
+    option.expand = 2;
+    option.shrink = 0.5;
+    x = bds_development(fun, x0, option);
+    
+end
+
+function x = cbds_cycle_all_test(fun, x0)
+
+    option.Algorithm = 'cycle_all';
+    option.expand = 2;
+    option.shrink = 0.5;
+    x = bds_development(fun, x0, option);
+    
+end
+
+function x = cbds_cycle_single_1_test(fun, x0)
+
+    option.Algorithm = 'cycle_single_1';
+    option.expand = 2;
+    option.shrink = 0.5;
+    x = bds_development(fun, x0, option);
+    
+end
+
+function x = cbds_cycle_single_2_test(fun, x0)
+
+    option.Algorithm = 'cycle_single_2';
+    option.expand = 2;
+    option.shrink = 0.5;
+    x = bds_development(fun, x0, option);
+    
+end
+
+function x = cbds_cycle_single_3_test(fun, x0)
+
+    option.Algorithm = 'cycle_single_3';
+    option.expand = 2;
+    option.shrink = 0.5;
+    x = bds_development(fun, x0, option);
+    
+end
+
+function x = cbds_cycle_single_4_test(fun, x0)
+
+    option.Algorithm = 'cycle_single_4';
     option.expand = 2;
     option.shrink = 0.5;
     x = bds_development(fun, x0, option);

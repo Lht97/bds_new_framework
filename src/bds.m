@@ -210,7 +210,9 @@ end
 
 % Set the default value of scheme if it is not provided.
 if ~isfield(options, "scheme")
-    options.scheme = get_default_constant("scheme");
+    scheme = get_default_constant("scheme");
+else
+    scheme = lower(options.scheme);
 end
 
 % Set the default Algorithm of BDS, which is "cbds".
@@ -227,20 +229,20 @@ if isfield(options, "Algorithm")
         case "cbds"
             num_blocks = n;
             batch_size = n;
-            options.scheme = "cyclic";
+            scheme = "cyclic";
         case "pbds"
             num_blocks = n;
             batch_size = n;
-            options.scheme = "random";
+            scheme = "random";
         case "rbds"
             num_blocks = n;
             batch_size = 1;
             options.replacement_delay = floor(num_blocks/batch_size)-1;
-            options.scheme = "random";
+            scheme = "random";
         case "pads"
             num_blocks = n;
             batch_size = n;
-            options.scheme = "parallel";
+            scheme = "parallel";
         otherwise
             error("The Algorithm input is invalid");
     end
@@ -283,7 +285,7 @@ end
 % If options contain expand or shrink, then expand or shrink is set to the corresponding value.
 if ~isfield(options, "expand")
     % n == 1 is treated as a special case, and we can treat the Algorithm as "ds".
-    if (batch_size == 1 && isfield(options, "Algorithm") && strcmpi(options.Algorithm, "ds")) || n == 1
+    if (isfield(options, "Algorithm") && strcmpi(options.Algorithm, "ds")) || n == 1 || (num_blocks == 1 && batch_size == 1)
         if numel(x0) <= 5
             expand = get_default_constant("ds_expand_small");
         else
@@ -310,7 +312,7 @@ else
 end
 
 if ~isfield(options, "shrink")
-    if (batch_size == 1 && isfield(options, "Algorithm") && strcmpi(options.Algorithm, "ds")) || n == 1
+    if (isfield(options, "Algorithm") && strcmpi(options.Algorithm, "ds")) || n == 1 || (num_blocks == 1 && batch_size == 1)
         if numel(x0) <= 5
             shrink = get_default_constant("ds_shrink_small");
         else
@@ -462,11 +464,6 @@ else
 end
 alpha_hist(:, 1) = alpha_all(:);
 
-% % fopt_all(i) records the best function values encountered in the i-th block after one iteration,
-% % and xopt_all(:, i) is the corresponding value of x.
-% fopt_all = NaN(1, num_blocks);
-% xopt_all = NaN(n, num_blocks);
-
 % Initialize the history of function values.
 fhist = NaN(1, MaxFunctionEvaluations);
 
@@ -589,6 +586,13 @@ end
 all_block_indices = (1:num_blocks);
 num_visited_blocks = 0;
 grad_hist = [];
+% fopt_all(i) stores the best function value found in the i-th block after one iteration, 
+% while xopt_all(:, i) holds the corresponding x. If a block is not visited during the iteration, 
+% fopt_all(i) is set to NaN. Both fopt_all and xopt_all have a length of num_blocks, not batch_size, 
+% as not all blocks might not be visited in each iteration, but the best function value across all 
+% blocks must still be recorded.
+fopt_all = NaN(1, num_blocks);
+xopt_all = NaN(n, num_blocks);
 
 for iter = 1:maxit
 
@@ -617,7 +621,7 @@ for iter = 1:maxit
             break;
         end
     end
-
+    
     % Define block_indices, a vector that specifies both the indices of the blocks
     % and the order in which they will be visited during the current iteration.
     % The length of block_indices is equal to batch_size.
@@ -631,7 +635,7 @@ for iter = 1:maxit
     block_indices = available_block_indices(random_stream.randperm(length(available_block_indices), batch_size));
     
     % Choose the block visiting scheme based on options.scheme.
-    switch lower(options.scheme)
+    switch scheme
         case "cyclic"
             block_indices = sort(block_indices);
         case "random"
@@ -639,13 +643,8 @@ for iter = 1:maxit
         case "parallel"
             block_indices = all_block_indices;
         otherwise
-            error('Invalid scheme specified in options.scheme.');
+            error('Invalid scheme input. The scheme should be one of the following: cyclic, random, parallel.\n');
     end
-
-    % fopt_all(i) records the best function values encountered in the i-th block after one iteration,
-    % and xopt_all(:, i) is the corresponding value of x.
-    fopt_all = NaN(1, length(block_indices));
-    xopt_all = NaN(n, length(block_indices));
 
     for i = 1:length(block_indices)
 
@@ -721,7 +720,7 @@ for iter = 1:maxit
         % If the scheme is not "parallel", then we will update xbase and fbase after finishing the
         % direct search in the i_real-th block. For "parallel", we will update xbase and fbase after
         % one iteration of the outer loop.
-        if ~strcmpi(options.scheme, "parallel")
+        if ~strcmpi(scheme, "parallel")
             % Update xbase and fbase. xbase serves as the "base point" for the computation in the next block,
             % meaning that reduction will be calculated with respect to xbase, as shown above.
             % Note that their update requires a sufficient decrease if reduction_factor(1) > 0.
@@ -763,7 +762,7 @@ for iter = 1:maxit
 
     % For "parallel", we will update xbase and fbase only after one iteration of the outer loop.
     % During the inner loop, every block will share the same xbase and fbase.
-    if strcmpi(options.scheme, "parallel")
+    if strcmpi(scheme, "parallel")
         % Update xbase and fbase. xbase serves as the "base point" for the computation in the
         % next block, meaning that reduction will be calculated with respect to xbase, as shown above.
         % Note that their update requires a sufficient decrease if reduction_factor(1) > 0.

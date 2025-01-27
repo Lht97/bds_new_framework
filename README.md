@@ -101,7 +101,9 @@ The following tests are implemented by [Optiprofiler](https://github.com/optipro
     - [![Profile cbds with randomized gaussian matrix input, big](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_randomized_gaussian_big.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_randomized_gaussian_big.yml)
     - [![Profile cbds with randomized gaussian matrix input, small](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_randomized_gaussian_small.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_randomized_gaussian_small.yml)
     - [![Profile cbds with permuted matrix input, big](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_permuted_big.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_permuted_big.yml)
-    - [![Profile cbds with permuted matrix input, small](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_permuted_small.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_permuted_small.yml) 
+    - [![Profile cbds with permuted matrix input, small](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_permuted_small.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_permuted_small.yml)
+    - [![Profile cbds with cycling all blocks, big](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_cycle_blocks_big.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_cycle_blocks_big.yml)
+    - [![Profile cbds with cycling all blocks, small](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_cycle_blocks_small.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_cycle_blocks_small.yml)  
 
 
 - [Tests](https://github.com/optimlib/bds/actions) at [optimlib/bds](https://github.com/optimlib/bds)
