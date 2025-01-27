@@ -170,40 +170,6 @@ D = get_direction_set(n, options);
 % Get the number of blocks.
 num_directions = size(D, 2);
 
-% Set the default Algorithm of BDS, which is "cbds".
-Algorithm_list = ["ds", "cbds", "pbds", "rbds", "pads"];
-if isfield(options, "Algorithm") && ~ismember(lower(options.Algorithm), Algorithm_list)
-    error("The Algorithm input is invalid");
-end
-if ~isfield(options, "Algorithm")
-    options.Algorithm = "cbds";
-end
-switch lower(options.Algorithm)
-    case "ds"
-        options.num_blocks = 1;
-        options.batch_size = 1;
-    case "cbds"
-        options.num_blocks = n;
-        options.batch_size = n;
-        options.scheme = "cyclic";
-    case "pbds"
-        options.num_blocks = n;
-        options.batch_size = n;
-        options.scheme = "random";
-    case "rbds"
-        options.num_blocks = n;
-        options.batch_size = 1;
-        options.replacement_delay = n - 1;
-        options.scheme = "random";
-    case "pads"
-        options.num_blocks = n;
-        options.batch_size = n;
-        options.scheme = "parallel";
-    otherwise
-        error("The Algorithm input is invalid");
-end
-
-
 % Set the default value of scheme.
 scheme_list = ["cyclic", "random", "parallel"];
 if isfield(options, "scheme") && ~ismember(lower(options.scheme), scheme_list)
@@ -237,14 +203,47 @@ end
 
 % Ensure batch_size does not exceed num_blocks.
 if batch_size > num_blocks
-    warning("The number of batch_size should be less than or equal to the number of blocks.\n");
-    warning("The number of batch_size is set to be the number of blocks.\n");
+    warning("The number of batch_size should be less than or equal to the number of blocks.");
+    fprintf("\n!!! THE NUMBER OF BATCH_SIZE IS SET TO BE THE NUMBER OF BLOCKS !!!\n");
     batch_size = num_blocks;
 end
 
 % Set the default value of scheme if it is not provided.
 if ~isfield(options, "scheme")
     options.scheme = get_default_constant("scheme");
+end
+
+% Set the default Algorithm of BDS, which is "cbds".
+Algorithm_list = ["ds", "cbds", "pbds", "rbds", "pads"];
+if isfield(options, "Algorithm") && ~ismember(lower(options.Algorithm), Algorithm_list)
+    error("The Algorithm input is invalid");
+end
+if isfield(options, "Algorithm")
+    options.Algorithm = lower(options.Algorithm);
+    switch lower(options.Algorithm)
+        case "ds"
+            num_blocks = 1;
+            batch_size = 1;
+        case "cbds"
+            num_blocks = n;
+            batch_size = n;
+            options.scheme = "cyclic";
+        case "pbds"
+            num_blocks = n;
+            batch_size = n;
+            options.scheme = "random";
+        case "rbds"
+            num_blocks = n;
+            batch_size = 1;
+            options.replacement_delay = floor(num_blocks/batch_size)-1;
+            options.scheme = "random";
+        case "pads"
+            num_blocks = n;
+            batch_size = n;
+            options.scheme = "parallel";
+        otherwise
+            error("The Algorithm input is invalid");
+    end
 end
 
 % Determine the indices of directions in each block.
@@ -284,7 +283,7 @@ end
 % If options contain expand or shrink, then expand or shrink is set to the corresponding value.
 if ~isfield(options, "expand")
     % n == 1 is treated as a special case, and we can treat the Algorithm as "ds".
-    if batch_size == 1
+    if (batch_size == 1 && isfield(options, "Algorithm") && strcmpi(options.Algorithm, "ds")) || n == 1
         if numel(x0) <= 5
             expand = get_default_constant("ds_expand_small");
         else
@@ -311,7 +310,7 @@ else
 end
 
 if ~isfield(options, "shrink")
-    if batch_size == 1
+    if (batch_size == 1 && isfield(options, "Algorithm") && strcmpi(options.Algorithm, "ds")) || n == 1
         if numel(x0) <= 5
             shrink = get_default_constant("ds_shrink_small");
         else
@@ -493,7 +492,6 @@ if isfield(options, "output_block_hist")
 else
     output_block_hist = get_default_constant("output_block_hist");
 end
-
 % Initialize the history of sufficient decrease value and the boolean value of whether the sufficient decrease
 % is achieved or not.
 if isfield(options, "output_sufficient_decrease")
@@ -537,7 +535,6 @@ if isfield(options, "verbose")
 else
     verbose = get_default_constant("verbose");
 end
-
 % Initialize the history of blocks visited.
 block_hist = NaN(1, MaxFunctionEvaluations);
 
@@ -638,7 +635,7 @@ for iter = 1:maxit
         case "cyclic"
             block_indices = sort(block_indices);
         case "random"
-            block_indices = block_indices(random_stream.randperm(length(block_indices)));
+            % block_indices = block_indices(random_stream.randperm(length(block_indices)));
         case "parallel"
             block_indices = all_block_indices;
         otherwise
