@@ -373,6 +373,8 @@ else
     replacement_delay = floor(num_blocks/batch_size)-1;
 end
 
+% fprintf("bds.m: expand = %f, shrink = %f, replacement_delay = %d\n", expand, shrink, replacement_delay);
+
 % Set the boolean value of with_cycling_memory, which will be used in cycling.m.
 % cycling.m decides the order of the directions in each block when we perform direct search
 % in this block. This order is represented by direction_indices. If with_cycling_memory is true,
