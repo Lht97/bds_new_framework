@@ -1,11 +1,11 @@
-name: Profile cbds and scbds using optiprofiler, small
+name: Profile CBDS and SCBDS using OptiProfiler, small
 
 on:
   # Trigger the workflow on # push or pull request
   # push:
   # Trigger the workflow manually
   schedule:
-  - cron: '0 21 */1 * *'
+  - cron: '0 15 */1 * *'
   workflow_dispatch:
 
 jobs:
@@ -30,6 +30,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+
+      # Check out the development branch into a subdirectory
+      - name: Check out development branch into subdirectory
+        uses: actions/checkout@v4
+        with:
+          ref: development        
+          path: development
 
       - name: Checkout OptiProfiler
         uses: actions/checkout@v4
@@ -73,6 +80,11 @@ jobs:
               % Setup bds
               setup
               cd(fullfile(root_dir, 'tests', 'competitors'));
+              addpath(pwd);
+
+              % Set up the path for the development branch
+              cd(fullfile(root_dir, 'development', 'src'));
+              movefile('bds.m', 'bds_development.m');
               addpath(pwd);
   
               % profile

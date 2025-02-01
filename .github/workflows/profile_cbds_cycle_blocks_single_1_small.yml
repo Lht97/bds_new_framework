@@ -1,4 +1,4 @@
-name: Profile CBDS and SCBDS using OptiProfiler, big
+name: Profile cbds with cycling blocks based on single feature, small
 
 on:
   # Trigger the workflow on # push or pull request
@@ -10,26 +10,27 @@ on:
 
 jobs:
   test:
-    name: Profile CBDS and SCBDS, big
+    name: Profile CBDS with cycling blocks based on single feature, big
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
         matlab: [latest]
-        dim: [big]
+        dim: [small]
         with_optim_toolbox: [yes]
         solver: [cbds-orig]
-        competitor: [scbds]
+        competitor: [cbds-cycle-1]
         run_plain: [false]
         summarize_log_ratio_profiles: [false]
-        feature: [plain, perturbed_x0_0.001, perturbed_x0_1, perturbed_x0_10, perturbed_x0_100, noisy_1e-1, noisy_1e-2, noisy_1e-3, noisy_1e-4, truncated_1, truncated_2, truncated_3, truncated_4, permuted, linearly_transformed, random_nan_5, random_nan_10, random_nan_20, quantized_1, quantized_2, quantized_3, quantized_4, rotation_noisy_1e-1, rotation_noisy_1e-2, rotation_noisy_1e-3, rotation_noisy_1e-4]
+        feature: [plain, noisy_1e-1, noisy_1e-2, noisy_1e-3, noisy_1e-4, permuted, permuted_noisy_1e-1, permuted_noisy_1e-2, permuted_noisy_1e-3, permuted_noisy_1e-4, linearly_transformed, rotation_noisy_1e-1, rotation_noisy_1e-2, rotation_noisy_1e-3, rotation_noisy_1e-4]
 
     steps:
-      - name: Check out repository
+      # Check out the main branch
+      - name: Check out main branch
         uses: actions/checkout@v4
         with:
-          submodules: recursive
+          ref: main
 
       # Check out the development branch into a subdirectory
       - name: Check out development branch into subdirectory
@@ -37,7 +38,7 @@ jobs:
         with:
           ref: development        
           path: development
-
+      
       - name: Checkout OptiProfiler
         uses: actions/checkout@v4
         with:
@@ -79,8 +80,6 @@ jobs:
   
               % Setup bds
               setup
-              cd(fullfile(root_dir, 'tests', 'competitors'));
-              addpath(pwd);
 
               % Set up the path for the development branch
               cd(fullfile(root_dir, 'development', 'src'));

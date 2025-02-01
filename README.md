@@ -56,6 +56,10 @@ The following tests are implemented by [Optiprofiler](https://github.com/optipro
     - [![Profile cbds and bfo using optiprofiler, small](https://github.com/0thopt/bds/actions/workflows/profile_cbds_bfo_small.yml/badge.svg)](https://github.com/0thopt/bds/actions/workflows/profile_cbds_bfo_small.yml)
     - [![Profile original cbds and bfo using optiprofiler, big](https://github.com/0thopt/bds/actions/workflows/profile_orig_cbds_bfo_big.yml/badge.svg)](https://github.com/0thopt/bds/actions/workflows/profile_orig_cbds_bfo_big.yml)   
     - [![Profile original cbds and bfo using optiprofiler, small](https://github.com/0thopt/bds/actions/workflows/profile_orig_cbds_bfo_small.yml/badge.svg)](https://github.com/0thopt/bds/actions/workflows/profile_orig_cbds_bfo_small.yml) 
+    - [![Profile cbds and lam using optiprofiler, big](https://github.com/0thopt/bds/actions/workflows/profile_cbds_lam_big.yml/badge.svg)](https://github.com/0thopt/bds/actions/workflows/profile_cbds_lam_big.yml)
+    - [![Profile cbds and lam using optiprofiler, small](https://github.com/0thopt/bds/actions/workflows/profile_cbds_lam_small.yml/badge.svg)](https://github.com/0thopt/bds/actions/workflows/profile_cbds_lam_small.yml)
+    - [![Profile original cbds and lam using optiprofiler, big](https://github.com/0thopt/bds/actions/workflows/profile_orig_cbds_lam_big.yml/badge.svg)](https://github.com/0thopt/bds/actions/workflows/profile_orig_cbds_lam_big.yml)
+    - [![Profile original cbds and lam using optiprofiler, small](https://github.com/0thopt/bds/actions/workflows/profile_orig_cbds_lam_small.yml/badge.svg)](https://github.com/0thopt/bds/actions/workflows/profile_orig_cbds_lam_small.yml)
 
 - [Tests](https://github.com/bladesopt/bds/actions) at [bladesopt/bds](https://github.com/bladesopt/bds)
 
@@ -63,20 +67,27 @@ The following tests are implemented by [Optiprofiler](https://github.com/optipro
     - [![Profile cbds and bfgs using optiprofiler, small](https://github.com/bladesopt/bds/actions/workflows/profile_cbds_bfgs_small.yml/badge.svg)](https://github.com/bladesopt/bds/actions/workflows/profile_cbds_bfgs_small.yml)
     - [![Profile original cbds and bfgs using optiprofiler, big](https://github.com/bladesopt/bds/actions/workflows/profile_orig_cbds_bfgs_big.yml/badge.svg)](https://github.com/bladesopt/bds/actions/workflows/profile_orig_cbds_bfgs_big.yml)
     - [![Profile original cbds and bfgs using optiprofiler, small](https://github.com/bladesopt/bds/actions/workflows/profile_orig_cbds_bfgs_small.yml/badge.svg)](https://github.com/bladesopt/bds/actions/workflows/profile_orig_cbds_bfgs_small.yml)
+    - [![Profile cbds and newuoa using optiprofiler, big](https://github.com/bladesopt/bds/actions/workflows/profile_cbds_newuoa_big.yml/badge.svg)](https://github.com/bladesopt/bds/actions/workflows/profile_cbds_newuoa_big.yml)
+    - [![Profile cbds and newuoa using optiprofiler, small](https://github.com/bladesopt/bds/actions/workflows/profile_cbds_newuoa_small.yml/badge.svg)](https://github.com/bladesopt/bds/actions/workflows/profile_cbds_newuoa_small.yml)
+    - [![Profile original cbds and newuoa using optiprofiler, big](https://github.com/bladesopt/bds/actions/workflows/profile_orig_cbds_newuoa_big.yml/badge.svg)](https://github.com/bladesopt/bds/actions/workflows/profile_orig_cbds_newuoa_big.yml)
+    - [![Profile original cbds and newuoa using optiprofiler, small](https://github.com/bladesopt/bds/actions/workflows/profile_orig_cbds_newuoa_small.yml/badge.svg)](https://github.com/bladesopt/bds/actions/workflows/profile_orig_cbds_newuoa_small.yml)
 
 - [Tests](https://github.com/derivative-free-optimization/bds/actions) at [derivative-free-optimization/bds](https://github.com/derivative-free-optimization/bds)
 
-    - [![Profile cbds and lam using optiprofiler, big](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_cbds_lam_big.yml/badge.svg)](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_cbds_lam_big.yml)
-    - [![Profile cbds and lam using optiprofiler, small](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_cbds_lam_small.yml/badge.svg)](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_cbds_lam_small.yml)
-    - [![Profile original cbds and lam using optiprofiler, big](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_orig_cbds_lam_big.yml/badge.svg)](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_orig_cbds_lam_big.yml)
-    - [![Profile original cbds and lam using optiprofiler, small](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_orig_cbds_lam_small.yml/badge.svg)](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_orig_cbds_lam_small.yml)
+
   
 - [Tests](https://github.com/dfopt/bds/actions) at [dfopt/bds](https://github.com/dfopt/bds)
 
-    - [![Profile cbds and newuoa using optiprofiler, big](https://github.com/dfopt/bds/actions/workflows/profile_cbds_newuoa_big.yml/badge.svg)](https://github.com/dfopt/bds/actions/workflows/profile_cbds_newuoa_big.yml)
-    - [![Profile cbds and newuoa using optiprofiler, small](https://github.com/dfopt/bds/actions/workflows/profile_cbds_newuoa_small.yml/badge.svg)](https://github.com/dfopt/bds/actions/workflows/profile_cbds_newuoa_small.yml)
-    - [![Profile original cbds and newuoa using optiprofiler, big](https://github.com/dfopt/bds/actions/workflows/profile_orig_cbds_newuoa_big.yml/badge.svg)](https://github.com/dfopt/bds/actions/workflows/profile_orig_cbds_newuoa_big.yml)
-    - [![Profile original cbds and newuoa using optiprofiler, small](https://github.com/dfopt/bds/actions/workflows/profile_orig_cbds_newuoa_small.yml/badge.svg)](https://github.com/dfopt/bds/actions/workflows/profile_orig_cbds_newuoa_small.yml)
+    - [![Profile cbds with cycling all blocks, big](https://github.com/dfopt/bds/actions/workflows/profile_cbds_cycle_blocks_all_big.yml/badge.svg)](https://github.com/dfopt/bds/actions/workflows/profile_cbds_cycle_blocks_all_big.yml)
+    - [![Profile cbds with cycling all blocks, small](https://github.com/dfopt/bds/actions/workflows/profile_cbds_cycle_blocks_all_small.yml/badge.svg)](https://github.com/dfopt/bds/actions/workflows/profile_cbds_cycle_blocks_all_small.yml) 
+    - [![Profile cbds with cycling all blocks using strategy 1, big](https://github.com/dfopt/bds/actions/workflows/profile_cbds_cycle_blocks_single_1_big.yml/badge.svg)](https://github.com/dfopt/bds/actions/workflows/profile_cbds_cycle_blocks_single_1_big.yml)
+    - [![Profile cbds with cycling all blocks using strategy 1, small](https://github.com/dfopt/bds/actions/workflows/profile_cbds_cycle_blocks_single_1_small.yml/badge.svg)](https://github.com/dfopt/bds/actions/workflows/profile_cbds_cycle_blocks_single_1_small.yml)  
+    - [![Profile cbds with cycling all blocks using strategy 2, big](https://github.com/dfopt/bds/actions/workflows/profile_cbds_cycle_blocks_single_2_big.yml/badge.svg)](https://github.com/dfopt/bds/actions/workflows/profile_cbds_cycle_blocks_single_2_big.yml)
+    - [![Profile cbds with cycling all blocks using strategy 2, small](https://github.com/dfopt/bds/actions/workflows/profile_cbds_cycle_blocks_single_2_small.yml/badge.svg)](https://github.com/dfopt/bds/actions/workflows/profile_cbds_cycle_blocks_single_2_small.yml)   
+    - [![Profile cbds with cycling all blocks using strategy 3, big](https://github.com/dfopt/bds/actions/workflows/profile_cbds_cycle_blocks_single_3_big.yml/badge.svg)](https://github.com/dfopt/bds/actions/workflows/profile_cbds_cycle_blocks_single_3_big.yml)
+    - [![Profile cbds with cycling all blocks using strategy 3, small](https://github.com/dfopt/bds/actions/workflows/profile_cbds_cycle_blocks_single_3_small.yml/badge.svg)](https://github.com/dfopt/bds/actions/workflows/profile_cbds_cycle_blocks_single_3_small.yml)    
+    - [![Profile cbds with cycling all blocks using strategy 4, big](https://github.com/dfopt/bds/actions/workflows/profile_cbds_cycle_blocks_single_4_big.yml/badge.svg)](https://github.com/dfopt/bds/actions/workflows/profile_cbds_cycle_blocks_single_4_big.yml)
+    - [![Profile cbds with cycling all blocks using strategy 4, small](https://github.com/dfopt/bds/actions/workflows/profile_cbds_cycle_blocks_single_4_small.yml/badge.svg)](https://github.com/dfopt/bds/actions/workflows/profile_cbds_cycle_blocks_single_4_small.yml)   
 
 - [Tests](https://github.com/gradient-free-opt/bds/actions) at [gradient-free-opt/bds](https://github.com/gradient-free-opt/bds)
 
@@ -102,8 +113,6 @@ The following tests are implemented by [Optiprofiler](https://github.com/optipro
     - [![Profile cbds with randomized gaussian matrix input, small](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_randomized_gaussian_small.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_randomized_gaussian_small.yml)
     - [![Profile cbds with permuted matrix input, big](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_permuted_big.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_permuted_big.yml)
     - [![Profile cbds with permuted matrix input, small](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_permuted_small.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_permuted_small.yml)
-    - [![Profile cbds with cycling all blocks, big](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_cycle_blocks_big.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_cycle_blocks_big.yml)
-    - [![Profile cbds with cycling all blocks, small](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_cycle_blocks_small.yml/badge.svg)](https://github.com/opt-lab/bds/actions/workflows/profile_cbds_cycle_blocks_small.yml)  
 
 
 - [Tests](https://github.com/optimlib/bds/actions) at [optimlib/bds](https://github.com/optimlib/bds)

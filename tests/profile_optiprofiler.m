@@ -912,7 +912,7 @@ end
 function x = scbds_test(fun, x0)
 
     option.Algorithm = 'scbds';
-    x = bds(fun, x0, option);
+    x = bds_development(fun, x0, option);
     
 end
 
@@ -920,7 +920,7 @@ function x = scbds_test_noisy(fun, x0, is_noisy)
 
     option.Algorithm = 'scbds';
     option.is_noisy = is_noisy;
-    x = bds(fun, x0, option);
+    x = bds_development(fun, x0, option);
     
 end
 
