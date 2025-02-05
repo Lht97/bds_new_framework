@@ -180,7 +180,10 @@ end
 if isfield(options, "num_blocks")
     num_blocks = options.num_blocks;
 else
-    num_blocks = ceil(num_directions / 2);
+    % num_blocks = ceil(num_directions / 2);
+    % Avoid using division to get num_blocks to avoid numerical issues.
+    % In our case, num_directions is 2*n, so num_blocks is n.
+    num_blocks = n;
 end
 
 % Preprocess the number of blocks.
@@ -451,15 +454,15 @@ end
 % of the i-th block is set to alpha_init(i). If alpha_init is "auto", then the initial step size is
 % set according to the coordinates of x0 with respect to the directions in D(:, 1 : 2 : 2*n-1).
 if isfield(options, "alpha_init")
-    if length(options.alpha_init) == 1
+    if isscalar(options.alpha_init)
         alpha_all = options.alpha_init*ones(num_blocks, 1);
     elseif length(options.alpha_init) == num_blocks
         alpha_all = options.alpha_init;
-    elseif strcmpi(options.alpha_init,"auto")
-        % x0_coordinates is the coordinates of x0 with respect to the directions in
-        % D(:, 1 : 2 : 2*n-1), where D(:, 1 : 2 : 2*n-1) is a basis of R^n.
-        x0_coordinates = D(:, 1 : 2 : 2*n-1) \ x0;
-        alpha_all = 0.5 * max(1, abs(x0_coordinates));
+    % elseif strcmpi(options.alpha_init,"auto")
+    %     % x0_coordinates is the coordinates of x0 with respect to the directions in
+    %     % D(:, 1 : 2 : 2*n-1), where D(:, 1 : 2 : 2*n-1) is a basis of R^n.
+    %     x0_coordinates = D(:, 1 : 2 : 2*n-1) \ x0;
+    %     alpha_all = 0.5 * max(1, abs(x0_coordinates));
     end
 else
     alpha_all = ones(num_blocks, 1);
