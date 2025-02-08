@@ -774,48 +774,38 @@ function x = cbds_rotated_initial_point_test(fun, x0)
 
     option.Algorithm = 'cbds';
 
-    % Normalize the target direction
-    x0 = x0(:); % Ensure x0 is a column vector
+    % Ensure x0 is a column vector
+    x0 = x0(:);
     n = length(x0);
-    x0_hat = x0 / norm(x0); % First column of R
 
-    % Initialize the rotation matrix
-    R = zeros(n, n);
-    % The first column is the normalized target direction and make sure
-    % R * e1 = x0 / norm(x0)
-    R(:, 1) = x0_hat;
+    % Normalize the input vector
+    x0_hat = x0 / norm(x0);
 
-    % Generate the remaining orthogonal vectors
-    % We create a basis for the subspace orthogonal to x0
-    for i = 2:n
-        % Initialize a unit vector
-        v = zeros(n, 1);
-        v(i) = 1;
+    % Construct the first standard basis vector
+    e1 = zeros(n, 1);
+    e1(1) = 1;
 
-        % Remove the projection on the existing columns
-        for j = 1:i-1
-            v = v - (R(:, j)' * v) * R(:, j); % Remove projection on R(:, j)
+    % Check if x0 is already aligned with e1
+    if norm(x0_hat - e1) < 1e-10
+        R = eye(n); % If x0 is already aligned with e1, return identity matrix
+    else
+        % Compute the Householder vector
+        u = x0_hat - e1;
+
+        % Avoid numerical instability when u is close to zero
+        if norm(u) < 1e-10
+            % Use a fallback: set u to a simple direction
+            u = zeros(n, 1);
+            u(2) = 1; % Choose a valid direction orthogonal to e1
+        else
+            u = u / norm(u); % Normalize u
         end
 
-        % If the vector is close to zero, replace with a random vector
-        if norm(v) < 1e-10
-            v = rand(n, 1); % Generate a random vector
-            for j = 1:i-1
-                v = v - (R(:, j)' * v) * R(:, j); % Re-orthogonalize
-            end
-        end
-
-        % Normalize the vector
-        R(:, i) = v / norm(v);
+        % Compute the Householder reflection matrix implicitly
+        % H = I - 2 * (u * u'), but we avoid forming H explicitly
+        % Instead, we compute R directly
+        R = eye(n) - 2 * (u * u'); % Compute the full rotation matrix
     end
-
-    % % Verify orthogonality (Optional)
-    % fprintf('Orthogonality check: R'' * R (should be identity matrix):\n');
-    % disp(R' * R);
-
-    % % Verify the first column matches x0_hat
-    % fprintf('Does R * e1 match x0 / norm(x0)?\n');
-    % disp(norm(R(:, 1) - x0_hat)); % Should be close to 0
 
     option.direction_set = R;
 
@@ -827,51 +817,40 @@ function x = cbds_rotated_initial_point_test_noisy(fun, x0, is_noisy)
 
     option.Algorithm = 'cbds';
 
-    % Normalize the target direction
-    x0 = x0(:); % Ensure x0 is a column vector
+    % Ensure x0 is a column vector
+    x0 = x0(:);
     n = length(x0);
-    x0_hat = x0 / norm(x0); % First column of R
 
-    % Initialize the rotation matrix
-    R = zeros(n, n);
-    % The first column is the normalized target direction and make sure
-    % R * e1 = x0 / norm(x0)
-    R(:, 1) = x0_hat;
+    % Normalize the input vector
+    x0_hat = x0 / norm(x0);
 
-    % Generate the remaining orthogonal vectors
-    % We create a basis for the subspace orthogonal to x0
-    for i = 2:n
-        % Initialize a unit vector
-        v = zeros(n, 1);
-        v(i) = 1;
+    % Construct the first standard basis vector
+    e1 = zeros(n, 1);
+    e1(1) = 1;
 
-        % Remove the projection on the existing columns
-        for j = 1:i-1
-            v = v - (R(:, j)' * v) * R(:, j); % Remove projection on R(:, j)
+    % Check if x0 is already aligned with e1
+    if norm(x0_hat - e1) < 1e-10
+        R = eye(n); % If x0 is already aligned with e1, return identity matrix
+    else
+        % Compute the Householder vector
+        u = x0_hat - e1;
+
+        % Avoid numerical instability when u is close to zero
+        if norm(u) < 1e-10
+            % Use a fallback: set u to a simple direction
+            u = zeros(n, 1);
+            u(2) = 1; % Choose a valid direction orthogonal to e1
+        else
+            u = u / norm(u); % Normalize u
         end
 
-        % If the vector is close to zero, replace with a random vector
-        if norm(v) < 1e-10
-            v = rand(n, 1); % Generate a random vector
-            for j = 1:i-1
-                v = v - (R(:, j)' * v) * R(:, j); % Re-orthogonalize
-            end
-        end
-
-        % Normalize the vector
-        R(:, i) = v / norm(v);
+        % Compute the Householder reflection matrix implicitly
+        % H = I - 2 * (u * u'), but we avoid forming H explicitly
+        % Instead, we compute R directly
+        R = eye(n) - 2 * (u * u'); % Compute the full rotation matrix
     end
 
-    % % Verify orthogonality (Optional)
-    % fprintf('Orthogonality check: R'' * R (should be identity matrix):\n');
-    % disp(R' * R);
-
-    % % Verify the first column matches x0_hat
-    % fprintf('Does R * e1 match x0 / norm(x0)?\n');
-    % disp(norm(R(:, 1) - x0_hat)); % Should be close to 0
-
     option.direction_set = R;
-
     option.is_noisy = is_noisy;
     x = bds_development(fun, x0, option);
 
