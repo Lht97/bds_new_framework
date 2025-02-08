@@ -773,22 +773,52 @@ end
 function x = cbds_rotated_initial_point_test(fun, x0) 
 
     option.Algorithm = 'cbds';
-    % Get a rotation matrix R such that R * e1 =  x0 / norm(x0)
-        % Normalize the target direction
-        n = length(x0);
-        x0_hat = x0 / norm(x0);
 
-        % Initialize the rotation matrix
-        R = zeros(n, n); 
-        R(:, 1) = x0_hat; % The first column is the target direction
+    % Normalize the target direction
+    x0 = x0(:); % Ensure x0 is a column vector
+    n = length(x0);
+    x0_hat = x0 / norm(x0); % First column of R
 
-        % Use the Gram-Schmidt process to generate the rest of the columns
-        for i = 2:n 
-            v = eye(n, 1, i); 
-            v = v - R(:, 1:i-1) * (R(:, 1:i-1)' * v); % Remove the projection on the previous vectors
-            R(:, i) = v / norm(v); % Normalize the vector
-        end 
+    % Initialize the rotation matrix
+    R = zeros(n, n);
+    % The first column is the normalized target direction and make sure
+    % R * e1 = x0 / norm(x0)
+    R(:, 1) = x0_hat;
+
+    % Generate the remaining orthogonal vectors
+    % We create a basis for the subspace orthogonal to x0
+    for i = 2:n
+        % Initialize a unit vector
+        v = zeros(n, 1);
+        v(i) = 1;
+
+        % Remove the projection on the existing columns
+        for j = 1:i-1
+            v = v - (R(:, j)' * v) * R(:, j); % Remove projection on R(:, j)
+        end
+
+        % If the vector is close to zero, replace with a random vector
+        if norm(v) < 1e-10
+            v = rand(n, 1); % Generate a random vector
+            for j = 1:i-1
+                v = v - (R(:, j)' * v) * R(:, j); % Re-orthogonalize
+            end
+        end
+
+        % Normalize the vector
+        R(:, i) = v / norm(v);
+    end
+
+    % % Verify orthogonality (Optional)
+    % fprintf('Orthogonality check: R'' * R (should be identity matrix):\n');
+    % disp(R' * R);
+
+    % % Verify the first column matches x0_hat
+    % fprintf('Does R * e1 match x0 / norm(x0)?\n');
+    % disp(norm(R(:, 1) - x0_hat)); % Should be close to 0
+
     option.direction_set = R;
+
     x = bds_development(fun, x0, option);
     
 end
@@ -796,22 +826,52 @@ end
 function x = cbds_rotated_initial_point_test_noisy(fun, x0, is_noisy)
 
     option.Algorithm = 'cbds';
-    % Get a rotation matrix R such that R * e1 =  x0 / norm(x0)
-        % Normalize the target direction
-        n = length(x0);
-        x0_hat = x0 / norm(x0);
 
-        % Initialize the rotation matrix
-        R = zeros(n, n); 
-        R(:, 1) = x0_hat; % The first column is the target direction
+    % Normalize the target direction
+    x0 = x0(:); % Ensure x0 is a column vector
+    n = length(x0);
+    x0_hat = x0 / norm(x0); % First column of R
 
-        % Use the Gram-Schmidt process to generate the rest of the columns
-        for i = 2:n 
-            v = eye(n, 1, i); 
-            v = v - R(:, 1:i-1) * (R(:, 1:i-1)' * v); % Remove the projection on the previous vectors
-            R(:, i) = v / norm(v); % Normalize the vector
-        end 
+    % Initialize the rotation matrix
+    R = zeros(n, n);
+    % The first column is the normalized target direction and make sure
+    % R * e1 = x0 / norm(x0)
+    R(:, 1) = x0_hat;
+
+    % Generate the remaining orthogonal vectors
+    % We create a basis for the subspace orthogonal to x0
+    for i = 2:n
+        % Initialize a unit vector
+        v = zeros(n, 1);
+        v(i) = 1;
+
+        % Remove the projection on the existing columns
+        for j = 1:i-1
+            v = v - (R(:, j)' * v) * R(:, j); % Remove projection on R(:, j)
+        end
+
+        % If the vector is close to zero, replace with a random vector
+        if norm(v) < 1e-10
+            v = rand(n, 1); % Generate a random vector
+            for j = 1:i-1
+                v = v - (R(:, j)' * v) * R(:, j); % Re-orthogonalize
+            end
+        end
+
+        % Normalize the vector
+        R(:, i) = v / norm(v);
+    end
+
+    % % Verify orthogonality (Optional)
+    % fprintf('Orthogonality check: R'' * R (should be identity matrix):\n');
+    % disp(R' * R);
+
+    % % Verify the first column matches x0_hat
+    % fprintf('Does R * e1 match x0 / norm(x0)?\n');
+    % disp(norm(R(:, 1) - x0_hat)); % Should be close to 0
+
     option.direction_set = R;
+
     option.is_noisy = is_noisy;
     x = bds_development(fun, x0, option);
 
