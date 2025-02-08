@@ -137,7 +137,7 @@ function profile_optiprofiler(options)
         if ismember('fminunc', options.solver_names)
             options.solver_names(strcmpi(options.solver_names, 'fminunc')) = {'fminunc-adaptive'};
         end
-        bds_Algorithms = {'ds', 'pbds', 'rbds', 'pads', 'scbds', 'cbds', 'cbds-randomized-orthogonal', 'cbds-randomized-gaussian', 'cbds-permuted'};
+        bds_Algorithms = {'ds', 'pbds', 'rbds', 'pads', 'scbds', 'cbds', 'cbds-randomized-orthogonal', 'cbds-randomized-gaussian', 'cbds-permuted', 'cbds-rotated-initial-point'};
         if any(ismember(bds_Algorithms, options.solver_names))
             options.solver_names(strcmpi(options.solver_names, 'ds')) = {'ds-noisy'};
             options.solver_names(strcmpi(options.solver_names, 'pbds')) = {'pbds-noisy'};
@@ -148,6 +148,7 @@ function profile_optiprofiler(options)
             options.solver_names(strcmpi(options.solver_names, 'cbds-randomized-orthogonal')) = {'cbds-randomized-orthogonal-noisy'};
             options.solver_names(strcmpi(options.solver_names, 'cbds-randomized-gaussian')) = {'cbds-randomized-gaussian-noisy'};
             options.solver_names(strcmpi(options.solver_names, 'cbds-permuted')) = {'cbds-permuted-noisy'};
+            options.solver_names(strcmpi(options.solver_names, 'cbds-rotated-initial-point')) = {'cbds-rotated-initial-point-noisy'};
         end
     end
 
@@ -288,6 +289,10 @@ function profile_optiprofiler(options)
                 solvers{i} = @cbds_permuted_test;
             case 'cbds-permuted-noisy'
                 solvers{i} = @(fun, x0) cbds_permuted_test_noisy(fun, x0, true);
+            case 'cbds-rotated-initial-point'
+                solvers{i} = @cbds_rotated_initial_point_test;
+            case 'cbds-rotated-initial-point-noisy'
+                solvers{i} = @(fun, x0) cbds_rotated_initial_point_test_noisy(fun, x0, true);
             case 'pds'
                 solvers{i} = @pds_test;
             case 'bfo'
@@ -763,6 +768,53 @@ function x = cbds_permuted_test_noisy(fun, x0, is_noisy)
     option.is_noisy = is_noisy;
     x = bds(fun, x0, option);
     
+end
+
+function x = cbds_rotated_initial_point_test(fun, x0) 
+
+    option.Algorithm = 'cbds';
+    % Get a rotation matrix R such that R * e1 =  x0 / norm(x0)
+        % Normalize the target direction
+        n = length(x0);
+        x0_hat = x0 / norm(x0);
+
+        % Initialize the rotation matrix
+        R = zeros(n, n); 
+        R(:, 1) = x0_hat; % The first column is the target direction
+
+        % Use the Gram-Schmidt process to generate the rest of the columns
+        for i = 2:n 
+            v = eye(n, 1, i); 
+            v = v - R(:, 1:i-1) * (R(:, 1:i-1)' * v); % Remove the projection on the previous vectors
+            R(:, i) = v / norm(v); % Normalize the vector
+        end 
+    option.direction_set = R;
+    x = bds_development(fun, x0, option);
+    
+end
+
+function x = cbds_rotated_initial_point_test_noisy(fun, x0, is_noisy)
+
+    option.Algorithm = 'cbds';
+    % Get a rotation matrix R such that R * e1 =  x0 / norm(x0)
+        % Normalize the target direction
+        n = length(x0);
+        x0_hat = x0 / norm(x0);
+
+        % Initialize the rotation matrix
+        R = zeros(n, n); 
+        R(:, 1) = x0_hat; % The first column is the target direction
+
+        % Use the Gram-Schmidt process to generate the rest of the columns
+        for i = 2:n 
+            v = eye(n, 1, i); 
+            v = v - R(:, 1:i-1) * (R(:, 1:i-1)' * v); % Remove the projection on the previous vectors
+            R(:, i) = v / norm(v); % Normalize the vector
+        end 
+    option.direction_set = R;
+    option.is_noisy = is_noisy;
+    x = bds_development(fun, x0, option);
+
 end
 
 function x = rbds_test(fun, x0)
