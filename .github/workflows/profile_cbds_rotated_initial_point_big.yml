@@ -19,8 +19,9 @@ jobs:
         matlab: [latest]
         dim: [big]
         with_optim_toolbox: [yes]
-        solver: [cbds-randomized-gaussian]
-        competitor: [cbds-rotated-initial-point]
+        solver: [cbds]
+        competitor1: [cbds-rotated-initial-point]
+        competitor2: [cbds-randomized-gaussian]
         run_plain: [false]
         summarize_log_ratio_profiles: [false]
         feature: [plain, noisy_1e-1, noisy_1e-2, noisy_1e-3, noisy_1e-4, permuted, permuted_noisy_1e-1, permuted_noisy_1e-2, permuted_noisy_1e-3, permuted_noisy_1e-4, linearly_transformed, rotation_noisy_1e-1, rotation_noisy_1e-2, rotation_noisy_1e-3, rotation_noisy_1e-4]
@@ -90,7 +91,7 @@ jobs:
               cd(fullfile(root_dir, 'tests'));
               options = struct();
               options.feature_name = '${{ matrix.feature }}';
-              options.solver_names = {'${{ matrix.solver }}', '${{ matrix.competitor }}'};
+              options.solver_names = {'${{ matrix.solver }}', '${{ matrix.competitor1 }}', '${{ matrix.competitor2 }}'};
               options.dim = '${{ matrix.dim }}';
               options.run_plain = ${{ matrix.run_plain }};
               options.summarize_log_ratio_profiles = ${{ matrix.summarize_log_ratio_profiles }};
@@ -133,7 +134,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: profile_optiprofiler_${{ matrix.solver }}_${{ matrix.competitor }}_${{ matrix.dim }}_${{ matrix.feature }}_${{ matrix.run_plain }}
+          name: profile_optiprofiler_${{ matrix.solver }}_${{ matrix.competitor1 }}_${{ matrix.competitor2 }}_${{ matrix.dim }}_${{ matrix.feature }}
           path: ./tests/out/**
 
   merge_artifacts:
