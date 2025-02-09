@@ -73,8 +73,10 @@ The following tests are implemented by [Optiprofiler](https://github.com/optipro
     - [![Profile original cbds and newuoa using optiprofiler, small](https://github.com/bladesopt/bds/actions/workflows/profile_orig_cbds_newuoa_small.yml/badge.svg)](https://github.com/bladesopt/bds/actions/workflows/profile_orig_cbds_newuoa_small.yml)
 
 - [Tests](https://github.com/derivative-free-optimization/bds/actions) at [derivative-free-optimization/bds](https://github.com/derivative-free-optimization/bds)
+    - [![Profile cbds and cbds with rotated initial point, big](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_cbds_cbds_rotated_initial_point_big.yml/badge.svg)](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_cbds_cbds_rotated_initial_point_big.yml)
+    - [![Profile cbds and cbds with rotated initial point, small](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_cbds_cbds_rotated_initial_point_small.yml/badge.svg)](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_cbds_cbds_rotated_initial_point_small.yml)
     - [![Profile cbds with rotated initial point, big](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_cbds_rotated_initial_point_big.yml/badge.svg)](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_cbds_rotated_initial_point_big.yml)
-    - [![Profile cbds with rotated initial point, small](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_cbds_rotated_initial_point_small.yml/badge.svg)](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_cbds_rotated_initial_point_small.yml)
+    - [![Profile cbds rotated initial point, small](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_cbds_rotated_initial_point_small.yml/badge.svg)](https://github.com/derivative-free-optimization/bds/actions/workflows/profile_cbds_rotated_initial_point_small.yml)
 
   
 - [Tests](https://github.com/dfopt/bds/actions) at [dfopt/bds](https://github.com/dfopt/bds)
