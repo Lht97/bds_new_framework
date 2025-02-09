@@ -94,6 +94,7 @@ jobs:
               options.solver_names = {'${{ matrix.solver }}', '${{ matrix.competitor1 }}', '${{ matrix.competitor2 }}'};
               options.dim = '${{ matrix.dim }}';
               options.run_plain = ${{ matrix.run_plain }};
+              options.n_runs = 2;
               options.summarize_log_ratio_profiles = ${{ matrix.summarize_log_ratio_profiles }};
               profile_optiprofiler(options);
               cd(root_dir);
