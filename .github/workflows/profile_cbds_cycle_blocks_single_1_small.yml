@@ -1,4 +1,4 @@
-name: Profile cbds with cycling blocks based on single feature, small
+name: Profile cbds with cycling blocks using strategy 1, small
 
 on:
   # Trigger the workflow on # push or pull request
@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    name: Profile CBDS with cycling blocks based on single feature, big
+    name: Profile cbds with cycling blocks using strategy 1, small
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
