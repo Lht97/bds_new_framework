@@ -61,38 +61,17 @@ function profile_optiprofiler(options)
         else
             options.significant_digits = 6;
         end
-        % Notice that the function value is set as when the feature is truncated:
-        % f = f + rand_stream_truncated.rand() * 10 ^ (-digits).
-        % Thus, the noise level can be regarded as 10 ^ (-digits).
         switch options.significant_digits
+            % Why we set the noise level like this? See the link below:
+            % https://github.com/Lht97/to_do_list. 
             case 1
-                % The function value can be rewritten as a.bcdefg... * 10 ^ n
-                % Thus, the extreme case would be a = 1, b = c = d = e = f = g = 9 = ...
-                % Then, the truncation error would almost the half of the function value.
-                % The opposite case would be 0, which is the smallest truncation error.
-                % We select the average of the two cases as the noise level.
-                options.noise_level = 0.25;
+                options.noise_level = 10^(-1) / (2 * sqrt(3));
             case 2
-                % The function value can be rewritten as ab.cdefg... * 10 ^ n
-                % Thus, the extreme case would be a = 1, b = 0, c = d = e = f = g = 9 = ...
-                % Then, the truncation error would almost the 0.09 of the function value.
-                % The opposite case would be 0, which is the smallest truncation error.
-                % We select the average of the two cases as the noise level.
-                options.noise_level = 0.045;
+                options.noise_level = 10^(-2) / (2 * sqrt(3));
             case 3
-                % The function value can be rewritten as abc.defg... * 10 ^ n
-                % Thus, the extreme case would be a = 1, b = c = 0, d = e = f = g = 9 = ...
-                % Then, the truncation error would almost the 0.01 of the function value.
-                % The opposite case would be 0, which is the smallest truncation error.
-                % We select the average of the two cases as the noise level.
-                options.noise_level = 0.005;
+                options.noise_level = 10^(-3) / (2 * sqrt(3));
             case 4
-                % The function value can be rewritten as abcd.efg... * 10 ^ n
-                % Thus, the extreme case would be a = 1, b = c = d = 0, e = f = g = 9 = ...
-                % Then, the truncation error would almost the 0.001 of the function value.
-                % The opposite case would be 0, which is the smallest truncation error.
-                % We select the average of the two cases as the noise level.
-                options.noise_level = 0.0005;
+                options.noise_level = 10^(-4) / (2 * sqrt(3));
             otherwise
                 error('Unknown significant digits');
         end
