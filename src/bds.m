@@ -450,6 +450,8 @@ xopt_all = NaN(n, num_blocks);
 
 % Initialize the history of function values.
 fhist = NaN(1, MaxFunctionEvaluations);
+% Initialize the fopt for each iteration.
+fopt_hist = NaN(1, MaxFunctionEvaluations);
 
 % Initialize the boolean variable to indicate whether the algorithm should return the history of visited points.
 if isfield(options, "output_xhist")
@@ -484,12 +486,6 @@ end
 
 use_estimated_gradient_stop = false;
 
-if isfield(options, "is_sufficient_decrease_stop")
-    is_sufficient_decrease_stop = options.is_sufficient_decrease_stop;
-else
-    is_sufficient_decrease_stop = false;
-end
-
 % Initialize the history of sufficient decrease value and the boolean value of whether the sufficient decrease
 % is achieved or not. If output_sufficient_decrease is true and sufficient_decrease_value exceeds the maximum
 % memory size allowed, then we will not output sufficient_decrease_value and sufficient_decrease.
@@ -512,6 +508,8 @@ end
 % iteration. It is an optional termination criterion unless use_estimated_gradient_stop is true.
 is_estimated_gradient_stop = use_estimated_gradient_stop && ~is_noisy && ...
     (((strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds")) && num_blocks == n) ...
+    || (strcmpi(options.Algorithm, "rbds") && num_selected_blocks == n));
+use_function_value_stop = (((strcmpi(options.Algorithm, "cbds") || strcmpi(options.Algorithm, "pbds")) && num_blocks == n) ...
     || (strcmpi(options.Algorithm, "rbds") && num_selected_blocks == n));
 
 % Decide whether to print during the computation.
@@ -557,6 +555,7 @@ if output_xhist
 end
 % When we record fhist, we should use the real function value at xbase, which is fbase_real.
 fhist(nf) = fbase_real;
+fopt_hist(nf) = fbase_real;
 
 terminate = false;
 % Check whether FTARGET is reached by fopt. If it is true, then terminate.
@@ -604,9 +603,16 @@ for iter = 1:maxit
         end
     end
 
-    if is_sufficient_decrease_stop && iter > 5 && all(~sufficient_decrease(:, iter-5:iter-1), 'all')
-        exitflag = get_exitflag("CONSECUTIVE_ITERATIONS_FAILED");
-        break;
+    % Record the best function values calculated in each block after one iteration.
+    if iter > 1
+        fopt_hist(iter) = min(fopt_all);
+    end
+
+    if iter > 10 && use_function_value_stop
+        if (max(fopt_hist(iter-10:iter-1)) - min(fopt_hist(iter-10:iter-1))) / max(1, abs(fopt_hist(iter))) < 1e-6
+            exitflag = get_exitflag("INSUFFICIENT_OBJECTIVE_CHANGE");
+            break;
+        end
     end
 
     % Define block_indices, which is a vector containing the indices of blocks that we
@@ -861,8 +867,8 @@ switch exitflag
         output.message = "The estimated gradient tolerance is reached.";
     case {get_exitflag("ESTIMATED_GRADIENT_FULLY_REDUCED")}
         output.message = "The estimated gradient is fully reduced.";
-    case {get_exitflag("CONSECUTIVE_ITERATIONS_FAILED")}
-        output.message = "The sufficient decrease condition is not achieved in the consecutive iterations.";
+    case {get_exitflag("INSUFFICIENT_OBJECTIVE_CHANGE")}
+        output.message = "The objective function changes insufficiently.";
     otherwise
         output.message = "Unknown exitflag";
 end
